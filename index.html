@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8 клас — Информатика</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --surface2: #1a2340;
+  --border: #1e2d4a;
+  --accent: #00d4aa;
+  --accent2: #7c6fff;
+  --accent3: #ff6b9d;
+  --text: #e8eaf0;
+  --text-dim: #8892a8;
+  --code-bg: #0d1220;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  padding: 80px 32px 60px;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0a0e1a 0%, #0f1a30 40%, #131f3d 70%, #0a0e1a 100%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-glow.g1 {
+  top: -120px; right: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 65%);
+}
+.hero-glow.g2 {
+  bottom: -100px; left: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(124,111,255,0.07) 0%, transparent 65%);
+}
+.hero-glow.g3 {
+  top: 30%; left: 50%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,107,157,0.05) 0%, transparent 65%);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,170,0.10);
+  border: 1px solid rgba(0,212,170,0.25);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.badge::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero h1 {
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 900;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: clamp(15px, 2vw, 19px);
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* LESSONS GRID */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.lessons {
+  display: grid;
+  gap: 20px;
+}
+
+.lesson-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  text-decoration: none;
+  color: var(--text);
+}
+.lesson-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,212,170,0.08);
+}
+
+.card-accent {
+  width: 5px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border-radius: 16px 0 0 16px;
+}
+.lesson-card:nth-child(2) .card-accent {
+  background: linear-gradient(180deg, var(--accent2), var(--accent3));
+}
+
+.card-body {
+  flex: 1;
+  padding: 28px 32px;
+}
+
+.card-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.lesson-card:nth-child(2) .card-number {
+  color: var(--accent2);
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.card-desc {
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: rgba(0,212,170,0.08);
+  border: 1px solid rgba(0,212,170,0.15);
+  color: var(--accent);
+}
+.lesson-card:nth-child(2) .tag {
+  background: rgba(124,111,255,0.08);
+  border-color: rgba(124,111,255,0.15);
+  color: var(--accent2);
+}
+
+.card-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  font-size: 24px;
+  color: var(--text-dim);
+  transition: all 0.3s;
+}
+.lesson-card:hover .card-arrow {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-dim);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+.footer span {
+  color: var(--accent);
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .hero { padding: 60px 20px 40px; }
+  .container { padding: 40px 16px 60px; }
+  .card-body { padding: 20px 20px; }
+  .card-arrow { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-glow g1"></div>
+  <div class="hero-glow g2"></div>
+  <div class="hero-glow g3"></div>
+  <div class="badge">8 клас</div>
+  <h1>Информатика</h1>
+  <p>Интерактивни уроци по програмиране на C# — потоци от данни, четене и запис на файлове</p>
+</section>
+
+<div class="container">
+  <div class="section-title">// Уроци</div>
+
+  <div class="lessons">
+
+    <a href="streamreader-intro.html" class="lesson-card">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-number">УРОК 01</div>
+        <div class="card-title">Потоци от данни — StreamReader</div>
+        <div class="card-desc">Въведение в потоците от данни в C#. Какво е StreamReader, как се чете от текстов файл ред по ред и управление на ресурси с <code>using</code>.</div>
+        <div class="card-tags">
+          <span class="tag">StreamReader</span>
+          <span class="tag">ReadLine()</span>
+          <span class="tag">using</span>
+          <span class="tag">файлове</span>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="streamreader-streamwriter.html" class="lesson-card">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-number">УРОК 02</div>
+        <div class="card-title">StreamReader & StreamWriter</div>
+        <div class="card-desc">Пълна работа с файлове — четене чрез StreamReader и запис чрез StreamWriter. Практически примери за обработка на текстови данни.</div>
+        <div class="card-tags">
+          <span class="tag">StreamReader</span>
+          <span class="tag">StreamWriter</span>
+          <span class="tag">Read / Write</span>
+          <span class="tag">encoding</span>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <span>8 клас Информатика</span> · Интерактивни уроци по C#
+</footer>
+
+</body>
+</html>

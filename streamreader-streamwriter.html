@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamReader & StreamWriter — 8 клас Информатика</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Unbounded:wght@400;700;900&family=Mulish:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #07090f;
+  --surface: #0f1520;
+  --surface2: #161e2e;
+  --border: #1c2d48;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd93d;
+  --pink: #ff6b9d;
+  --orange: #ff9a3c;
+  --purple: #b06bff;
+  --text: #e2e8f0;
+  --muted: #4a6080;
+  --code-bg: #060a10;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Mulish', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(160deg, #07090f 0%, #0a1628 40%, #0d1f3a 70%, #07090f 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 32px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow1 {
+  position: absolute; top: -80px; right: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(0,212,255,0.10) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute; bottom: -80px; left: 5%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,255,136,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-glow3 {
+  position: absolute; top: 40%; right: 25%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(176,107,255,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.10);
+  border: 1px solid rgba(0,212,255,0.25);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  letter-spacing: 1.5px;
+}
+.badge::before { content: '●'; font-size: 8px; }
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(26px, 4.5vw, 52px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.hero h1 .r { color: var(--cyan); }
+.hero h1 .w { color: var(--green); }
+.hero h1 .amp { color: var(--muted); font-size: 0.7em; }
+.hero-sub {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 600px;
+  margin-bottom: 28px;
+}
+.toc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.toc-pills a {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.toc-pills a:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,0.06); }
+
+/* ─── LAYOUT ─── */
+.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+section { padding: 52px 0 0; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 3px 9px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+.section-header h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* ─── CONCEPT BOX ─── */
+.concept {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}
+.concept.cyan  { border-left: 3px solid var(--cyan); }
+.concept.green { border-left: 3px solid var(--green); }
+.concept.yellow{ border-left: 3px solid var(--yellow); }
+.concept.pink  { border-left: 3px solid var(--pink); }
+.concept h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+.concept.cyan  h3 { color: var(--cyan); }
+.concept.green h3 { color: var(--green); }
+.concept.yellow h3 { color: var(--yellow); }
+.concept.pink  h3 { color: var(--pink); }
+.concept p, .concept li { font-size: 14px; color: var(--text); }
+.concept ul { padding-left: 18px; }
+.concept li { margin-bottom: 3px; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rgba(0,212,255,0.08); color: var(--cyan); padding: 1px 6px; border-radius: 3px; }
+
+/* ─── FLOW DIAGRAM ─── */
+.flow-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 24px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.flow-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 540px;
+}
+.flow-node { text-align: center; flex-shrink: 0; }
+.flow-box {
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  white-space: nowrap;
+  min-width: 110px;
+}
+.flow-box.file    { background: rgba(255,107,157,0.12); border: 2px solid var(--pink);   color: var(--pink); }
+.flow-box.reader  { background: rgba(0,212,255,0.12);   border: 2px solid var(--cyan);   color: var(--cyan); }
+.flow-box.writer  { background: rgba(0,255,136,0.12);   border: 2px solid var(--green);  color: var(--green); }
+.flow-box.method  { background: rgba(176,107,255,0.12); border: 2px solid var(--purple); color: var(--purple); }
+.flow-box.program { background: rgba(255,217,61,0.12);  border: 2px solid var(--yellow); color: var(--yellow); }
+.flow-label { font-size: 10px; color: var(--muted); margin-top: 7px; font-family: 'JetBrains Mono', monospace; }
+.flow-arrow { color: var(--muted); font-size: 22px; margin: 0 6px; flex-shrink: 0; padding-bottom: 18px; }
+
+/* ─── COMPARISON GRID ─── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media(max-width:640px){ .compare-grid { grid-template-columns: 1fr; } }
+.compare-card {
+  border-radius: 12px;
+  padding: 22px;
+  border: 2px solid;
+}
+.compare-card.read  { background: rgba(0,212,255,0.04); border-color: rgba(0,212,255,0.3); }
+.compare-card.write { background: rgba(0,255,136,0.04); border-color: rgba(0,255,136,0.3); }
+.compare-card h3 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.compare-card.read  h3 { color: var(--cyan); }
+.compare-card.write h3 { color: var(--green); }
+.compare-card ul { padding-left: 16px; list-style: none; }
+.compare-card ul li { font-size: 13px; color: var(--muted); margin-bottom: 6px; padding-left: 2px; }
+.compare-card ul li::before { content: '→  '; color: inherit; font-family: 'JetBrains Mono', monospace; }
+.compare-card.read  ul li::before { color: var(--cyan); }
+.compare-card.write ul li::before { color: var(--green); }
+
+/* ─── CODE BLOCK ─── */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.code-header {
+  background: var(--surface2);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.code-lang { font-size: 10px; color: var(--cyan); letter-spacing: 1.5px; text-transform: uppercase; }
+.code-title { font-size: 11px; color: var(--muted); }
+.code-body { padding: 22px; font-size: 13px; line-height: 1.9; overflow-x: auto; }
+.kw { color: #ff79c6; }
+.type { color: #8be9fd; }
+.str { color: #f1fa8c; }
+.cm { color: #44577a; font-style: italic; }
+.fn { color: #50fa7b; }
+.num { color: #bd93f9; }
+.prop { color: #ffb86c; }
+
+/* ─── METHODS TABLE ─── */
+.methods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+@media(max-width:580px){ .methods-grid { grid-template-columns: 1fr; } }
+.method-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+.method-card:hover { border-color: var(--cyan); }
+.method-card.w:hover { border-color: var(--green); }
+.method-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.method-card .method-name { color: var(--cyan); }
+.method-card.w .method-name { color: var(--green); }
+.method-return {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+.method-card .method-return { background: rgba(0,212,255,0.08); color: var(--cyan); }
+.method-card.w .method-return { background: rgba(0,255,136,0.08); color: var(--green); }
+.method-desc { font-size: 12px; color: var(--muted); }
+
+/* ─── INTERACTIVE DEMO ─── */
+.demo-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.demo-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.demo-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media(max-width:580px){ .demo-cols { grid-template-columns: 1fr; } }
+.demo-panel {
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+}
+.demo-panel.r { background: rgba(0,212,255,0.03); border-color: rgba(0,212,255,0.2); }
+.demo-panel.w { background: rgba(0,255,136,0.03); border-color: rgba(0,255,136,0.2); }
+.demo-panel h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.demo-panel.r h4 { color: var(--cyan); }
+.demo-panel.w h4 { color: var(--green); }
+.file-display {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 120px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.file-line-item {
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  transition: all 0.4s;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.file-line-item.active { background: rgba(0,255,136,0.08); color: var(--green); }
+.file-line-item.reading { background: rgba(0,212,255,0.08); color: var(--cyan); }
+.ln { color: var(--border); font-size: 10px; min-width: 16px; }
+.demo-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s;
+}
+.demo-btn:hover { opacity: 0.8; }
+.demo-btn.r { background: var(--cyan); color: var(--bg); }
+.demo-btn.w { background: var(--green); color: var(--bg); }
+.demo-btn.reset { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.demo-output {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  margin-top: 8px;
+  color: var(--green);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.demo-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 8px;
+  outline: none;
+}
+.demo-input:focus { border-color: var(--green); }
+
+/* ─── USING BLOCK ─── */
+.using-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+@media(max-width:580px){ .using-compare { grid-template-columns: 1fr; } }
+.using-panel {
+  border-radius: 10px;
+  padding: 18px;
+  border: 2px dashed;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.using-panel.bad  { border-color: rgba(255,107,157,0.4); background: rgba(255,107,157,0.04); }
+.using-panel.good { border-color: rgba(0,255,136,0.4);   background: rgba(0,255,136,0.04); }
+.using-panel h4 { font-size: 12px; margin-bottom: 10px; }
+.using-panel.bad  h4 { color: var(--pink); }
+.using-panel.good h4 { color: var(--green); }
+.using-panel pre { color: var(--muted); line-height: 1.8; font-size: 11px; }
+.using-panel.good pre { color: var(--text); }
+.using-panel span.hl { color: var(--green); font-weight: 700; }
+.using-panel.bad span.hl { color: var(--pink); }
+
+/* ─── EXERCISES ─── */
+.ex-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.ex-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  border-radius: 4px 0 0 4px;
+}
+.ex-card.easy::before   { background: var(--green); }
+.ex-card.medium::before { background: var(--yellow); }
+.ex-card.hard::before   { background: var(--pink); }
+.ex-card.bonus::before  { background: var(--purple); }
+.ex-bg-num {
+  position: absolute; top: 12px; right: 20px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 52px; font-weight: 900;
+  opacity: 0.05; color: var(--text);
+  pointer-events: none; user-select: none;
+}
+.ex-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.diff-badge {
+  font-size: 9px; font-family: 'JetBrains Mono', monospace;
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.easy   .diff-badge { background: rgba(0,255,136,0.10);   color: var(--green);  border: 1px solid rgba(0,255,136,0.25); }
+.medium .diff-badge { background: rgba(255,217,61,0.10);  color: var(--yellow); border: 1px solid rgba(255,217,61,0.25); }
+.hard   .diff-badge { background: rgba(255,107,157,0.10); color: var(--pink);   border: 1px solid rgba(255,107,157,0.25); }
+.bonus  .diff-badge { background: rgba(176,107,255,0.10); color: var(--purple); border: 1px solid rgba(176,107,255,0.25); }
+.ex-title { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; }
+.ex-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.ex-task {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+}
+.ex-task ul { padding-left: 16px; }
+.ex-task li { margin-bottom: 4px; color: var(--text); }
+.ex-task li strong { color: var(--cyan); font-family: 'JetBrains Mono', monospace; }
+.hint-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s;
+}
+.hint-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+.hint-content {
+  display: none;
+  margin-top: 10px;
+  background: rgba(255,217,61,0.05);
+  border: 1px solid rgba(255,217,61,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--yellow);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+.hint-content.show { display: block; }
+
+/* ─── QUIZ ─── */
+.quiz-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 14px;
+}
+.quiz-q { font-weight: 600; margin-bottom: 14px; font-size: 14px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  transition: all 0.2s;
+  color: var(--text);
+  text-align: left;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--cyan); background: rgba(0,212,255,0.04); }
+.quiz-opt.correct { background: rgba(0,255,136,0.08); border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong   { background: rgba(255,107,157,0.08); border-color: var(--pink); color: var(--pink); }
+.quiz-feedback {
+  margin-top: 10px; font-size: 12px; display: none;
+  padding: 8px 14px; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.ok  { background: rgba(0,255,136,0.07); color: var(--green); }
+.quiz-feedback.err { background: rgba(255,107,157,0.07); color: var(--pink); }
+
+#quizScore {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  margin: 48px 0 0;
+}
+
+/* ─── FILE ANATOMY ─── */
+.anatomy {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.file-icon-big {
+  width: 90px; height: 110px;
+  background: var(--surface2);
+  border: 2px solid;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  position: relative;
+  flex-shrink: 0;
+}
+.file-icon-big.read-icon  { border-color: var(--cyan); }
+.file-icon-big.write-icon { border-color: var(--green); }
+.file-icon-big::after {
+  content: '';
+  position: absolute; top: -1px; right: -1px;
+  width: 20px; height: 20px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+.file-icon-big.read-icon::after  { background: var(--cyan); opacity: 0.3; }
+.file-icon-big.write-icon::after { background: var(--green); opacity: 0.3; }
+.file-ext-big {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px; font-weight: 900;
+}
+.read-icon .file-ext-big  { color: var(--cyan); }
+.write-icon .file-ext-big { color: var(--green); }
+.file-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+.anatomy-lines { flex: 1; min-width: 200px; }
+.anat-line {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-bottom: 4px;
+  color: var(--muted);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+}
+.anat-line.hilite { color: var(--text); border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.aln { color: var(--border); min-width: 18px; font-size: 10px; }
+
+/* ─── FOOTER ─── */
+.footer {
+  padding: 36px 0 24px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ HERO ══════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-glow1"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-glow3"></div>
+  <div class="container">
+    <div class="badge">8 КЛАС &nbsp;//&nbsp; ИНФОРМАТИКА &nbsp;//&nbsp; C# &nbsp;//&nbsp; System.IO</div>
+    <h1>
+      <span class="r">StreamReader</span><br>
+      <span class="amp">&amp;&amp;</span><br>
+      <span class="w">StreamWriter</span>
+    </h1>
+    <p class="hero-sub">Научи как програмата чете от файл и пише в файл — с визуализации, сравнения, примери и упражнения за практика.</p>
+    <div class="toc-pills">
+      <a href="#s1">Какво е файл?</a>
+      <a href="#s2">Сравнение</a>
+      <a href="#s3">StreamReader</a>
+      <a href="#s4">StreamWriter</a>
+      <a href="#s5">Методи</a>
+      <a href="#s6">Примери</a>
+      <a href="#s7">using блок</a>
+      <a href="#s8">Упражнения</a>
+      <a href="#s9">Тест</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════ 01. КАКВО Е ФАЙЛ ══════════ -->
+<section id="s1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>Какво е текстов файл?</h2>
+  </div>
+
+  <div class="concept cyan">
+    <h3>📄 Определение</h3>
+    <p>Текстовият файл (<strong>.txt</strong>) съхранява информация като обикновен текст — редове, разделени с нов ред. Програмата може да го <strong style="color:var(--cyan)">чете</strong> (StreamReader) или да <strong style="color:var(--green)">записва</strong> в него (StreamWriter) — точно като да четеш или пишеш в тетрадка.</p>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-title">// ПОТОК НА ДАННИТЕ — ЧЕТЕНЕ (READ)</div>
+    <div class="flow">
+      <div class="flow-node">
+        <div class="flow-box file">📄 data.txt</div>
+        <div class="flow-label">Файл на диска</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-box reader">StreamReader</div>
+        <div class="flow-label">Отваря за четене</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-box method">ReadLine()<br>ReadToEnd()</div>
+        <div class="flow-label">Методи за четене</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-box program">🖥️ Програма</div>
+        <div class="flow-label">Обработва данните</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-title">// ПОТОК НА ДАННИТЕ — ЗАПИС (WRITE)</div>
+    <div class="flow">
+      <div class="flow-node">
+        <div class="flow-box program">🖥️ Програма</div>
+        <div class="flow-label">Генерира данни</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-box method">Write()<br>WriteLine()</div>
+        <div class="flow-label">Методи за запис</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-box writer">StreamWriter</div>
+        <div class="flow-label">Записва в файл</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">
+        <div class="flow-box file">📄 output.txt</div>
+        <div class="flow-label">Файл на диска</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 02. СРАВНЕНИЕ ══════════ -->
+<section id="s2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>StreamReader срещу StreamWriter — сравнение</h2>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card read">
+      <h3>📖 StreamReader</h3>
+      <ul>
+        <li>Чете данни <em>от</em> файл</li>
+        <li>Файлът трябва да съществува</li>
+        <li>Не може да променя файла</li>
+        <li>Използва <code>ReadLine()</code>, <code>ReadToEnd()</code></li>
+        <li>Следи позицията <code>EndOfStream</code></li>
+        <li>Пример: зареждане на резултати</li>
+      </ul>
+    </div>
+    <div class="compare-card write">
+      <h3>✏️ StreamWriter</h3>
+      <ul>
+        <li>Записва данни <em>в</em> файл</li>
+        <li>Ако файлът не съществува — го създава</li>
+        <li>По подразбиране <strong>изтрива</strong> стария съдържание</li>
+        <li>Използва <code>Write()</code>, <code>WriteLine()</code></li>
+        <li>Опция <code>true</code> за добавяне (append)</li>
+        <li>Пример: запазване на резултати</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="concept yellow">
+    <h3>⚙️ Общото между тях</h3>
+    <ul>
+      <li>И двата са в <code>System.IO</code> — трябва <code>using System.IO;</code></li>
+      <li>И двата трябва да бъдат затворени с <code>Close()</code> или <code>using</code> блок</li>
+      <li>И двата работят с текстови файлове ред по ред</li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 03. STREAMREADER ══════════ -->
+<section id="s3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>StreamReader — четене от файл</h2>
+  </div>
+
+  <div class="anatomy">
+    <div class="file-icon-big read-icon">
+      <div class="file-ext-big">.txt</div>
+      <div class="file-sub">students.txt</div>
+    </div>
+    <div class="anatomy-lines">
+      <div class="anat-line"><span class="aln">1</span> Иван Петров</div>
+      <div class="anat-line hilite"><span class="aln">2</span> Мария Георгиева &nbsp;<span style="color:var(--cyan)">← ReadLine() чете този ред</span></div>
+      <div class="anat-line"><span class="aln">3</span> Стефан Колев</div>
+      <div class="anat-line"><span class="aln">4</span> Ана Димитрова</div>
+      <div class="anat-line"><span class="aln"> </span><span style="color:var(--muted); font-size:10px;">EOF — EndOfStream = true</span></div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">C#</span>
+      <span class="code-title">Основен синтаксис — StreamReader</span>
+    </div>
+    <div class="code-body"><span class="cm">// 1. Добавяме namespace</span>
+<span class="kw">using</span> <span class="type">System</span>.IO;
+
+<span class="cm">// 2. Създаваме обект — посочваме файла</span>
+<span class="type">StreamReader</span> reader = <span class="kw">new</span> <span class="type">StreamReader</span>(<span class="str">"students.txt"</span>);
+
+<span class="cm">// 3. Четем ред по ред докато файлът не свърши</span>
+<span class="kw">while</span> (!reader.<span class="prop">EndOfStream</span>)
+{
+    <span class="type">string</span> line = reader.<span class="fn">ReadLine</span>();
+    <span class="type">Console</span>.<span class="fn">WriteLine</span>(line);
+}
+
+<span class="cm">// 4. Затваряме файла</span>
+reader.<span class="fn">Close</span>();</div>
+  </div>
+
+  <!-- INTERACTIVE DEMO -->
+  <div class="demo-wrap">
+    <div class="demo-title" style="color:var(--cyan)">🎮 Симулация — StreamReader чете ред по ред</div>
+    <div class="demo-cols">
+      <div class="demo-panel r">
+        <h4>📄 students.txt</h4>
+        <div class="file-display" id="readFile">
+          <div class="file-line-item" id="rl0"><span class="ln">1</span>Иван Петров</div>
+          <div class="file-line-item" id="rl1"><span class="ln">2</span>Мария Георгиева</div>
+          <div class="file-line-item" id="rl2"><span class="ln">3</span>Стефан Колев</div>
+          <div class="file-line-item" id="rl3"><span class="ln">4</span>Ана Димитрова</div>
+          <div class="file-line-item" id="rl4"><span class="ln"> </span><span style="color:var(--muted);font-size:10px;">— EOF —</span></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="demo-btn r" onclick="startRead()">▶ ReadLine()</button>
+          <button class="demo-btn reset" onclick="resetRead()">↺ Нулирай</button>
+        </div>
+      </div>
+      <div class="demo-panel r">
+        <h4>🖥️ Конзолен изход</h4>
+        <div class="demo-output" id="readOutput">// тук ще се появят прочетените редове...</div>
+        <div id="readStatus" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 04. STREAMWRITER ══════════ -->
+<section id="s4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>StreamWriter — запис в файл</h2>
+  </div>
+
+  <div class="concept green">
+    <h3>✏️ Два режима на StreamWriter</h3>
+    <ul>
+      <li><code>new StreamWriter("file.txt")</code> — <strong>презаписва</strong> файла (ако има нещо — изтрива го)</li>
+      <li><code>new StreamWriter("file.txt", true)</code> — <strong>добавя</strong> в края (append режим)</li>
+    </ul>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">C#</span>
+      <span class="code-title">Основен синтаксис — StreamWriter</span>
+    </div>
+    <div class="code-body"><span class="cm">// Режим 1: ПРЕЗАПИСВАНЕ (изтрива старото съдържание)</span>
+<span class="type">StreamWriter</span> writer = <span class="kw">new</span> <span class="type">StreamWriter</span>(<span class="str">"output.txt"</span>);
+
+writer.<span class="fn">WriteLine</span>(<span class="str">"Иван Петров"</span>);   <span class="cm">// записва ред + нов ред</span>
+writer.<span class="fn">Write</span>(<span class="str">"Без нов ред"</span>);       <span class="cm">// записва БЕЗ нов ред накрая</span>
+writer.<span class="fn">Close</span>();
+
+<span class="cm">// ─────────────────────────────────────────────────</span>
+
+<span class="cm">// Режим 2: ДОБАВЯНЕ (append = true)</span>
+<span class="type">StreamWriter</span> writer2 = <span class="kw">new</span> <span class="type">StreamWriter</span>(<span class="str">"output.txt"</span>, <span class="kw">true</span>);
+
+writer2.<span class="fn">WriteLine</span>(<span class="str">"Нов ред в края"</span>);
+writer2.<span class="fn">Close</span>();</div>
+  </div>
+
+  <!-- INTERACTIVE WRITE DEMO -->
+  <div class="demo-wrap">
+    <div class="demo-title" style="color:var(--green)">🎮 Симулация — StreamWriter записва в файл</div>
+    <div class="demo-cols">
+      <div class="demo-panel w">
+        <h4>⌨️ Въведи текст</h4>
+        <input class="demo-input" id="writeInput" type="text" placeholder="Напиши нещо тук..." />
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="demo-btn w" onclick="writeLineDemo()">✏️ WriteLine()</button>
+          <button class="demo-btn" style="background:var(--orange);color:var(--bg);" onclick="writeDemo()">Write()</button>
+          <button class="demo-btn reset" onclick="resetWrite()">↺ Изчисти файла</button>
+        </div>
+        <div style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);" id="writeMode">Режим: презаписване</div>
+      </div>
+      <div class="demo-panel w">
+        <h4>📄 output.txt</h4>
+        <div class="file-display" id="writeFile" style="min-height:140px;color:var(--green);"></div>
+        <div id="writeCount" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;">0 реда записани</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 05. МЕТОДИ ══════════ -->
+<section id="s5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Методи и свойства</h2>
+  </div>
+
+  <p style="color:var(--muted);margin-bottom:16px;font-size:13px;">StreamReader методи:</p>
+  <div class="methods-grid">
+    <div class="method-card">
+      <div class="method-name">ReadLine()</div>
+      <div class="method-return">→ string | null</div>
+      <div class="method-desc">Чете <strong>един ред</strong>. При края на файла връща <code>null</code>.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-name">ReadToEnd()</div>
+      <div class="method-return">→ string</div>
+      <div class="method-desc">Чете <strong>целия оставащ текст</strong> наведнъж като един низ.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-name">EndOfStream</div>
+      <div class="method-return">свойство: bool</div>
+      <div class="method-desc">Връща <code>true</code> когато сме стигнали края на файла.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-name">Close()</div>
+      <div class="method-return">→ void</div>
+      <div class="method-desc">Затваря файла и освобождава ресурсите. Винаги задължително!</div>
+    </div>
+  </div>
+
+  <p style="color:var(--muted);margin-bottom:16px;font-size:13px;">StreamWriter методи:</p>
+  <div class="methods-grid">
+    <div class="method-card w">
+      <div class="method-name">WriteLine(текст)</div>
+      <div class="method-return">→ void</div>
+      <div class="method-desc">Записва ред и добавя <strong>нов ред</strong> накрая (като Enter).</div>
+    </div>
+    <div class="method-card w">
+      <div class="method-name">Write(текст)</div>
+      <div class="method-return">→ void</div>
+      <div class="method-desc">Записва текст <strong>без нов ред</strong> накрая — продължава на същия ред.</div>
+    </div>
+    <div class="method-card w">
+      <div class="method-name">Flush()</div>
+      <div class="method-return">→ void</div>
+      <div class="method-desc">Принудително записва буфера в файла (обикн. <code>Close()</code> го прави).</div>
+    </div>
+    <div class="method-card w">
+      <div class="method-name">Close()</div>
+      <div class="method-return">→ void</div>
+      <div class="method-desc">Записва буфера и затваря файла. Без <code>Close()</code> данните може да <strong>не се запазят</strong>!</div>
+    </div>
+  </div>
+
+  <div class="concept pink">
+    <h3>⚠️ Честа грешка</h3>
+    <p>Ако забравим <code>Close()</code> на StreamWriter, последните редове може да <strong>не бъдат записани</strong> — те са в паметта (буфера), но не са стигнали до файла!</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 06. ПРИМЕРИ ══════════ -->
+<section id="s6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Примерни програми</h2>
+  </div>
+
+  <p style="color:var(--muted); font-size:13px; margin-bottom:14px;">Работим с файл <strong style="color:var(--cyan)">scores.txt</strong>:</p>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">TXT</span><span class="code-title">scores.txt</span></div>
+    <div class="code-body" style="color:var(--text);">Иван 85
+Мария 92
+Стефан 67
+Ана 78
+Петър 55</div>
+  </div>
+
+  <p style="color:var(--text); font-weight:700; margin-bottom:12px;">Пример 1 — Прочитане и извеждане на всички редове</p>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">C#</span><span class="code-title">StreamReader — четене ред по ред</span></div>
+    <div class="code-body"><span class="kw">using</span> <span class="type">System</span>;
+<span class="kw">using</span> <span class="type">System</span>.IO;
+
+<span class="kw">class</span> <span class="type">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="type">StreamReader</span> reader = <span class="kw">new</span> <span class="type">StreamReader</span>(<span class="str">"scores.txt"</span>);
+
+        <span class="kw">while</span> (!reader.<span class="prop">EndOfStream</span>)
+        {
+            <span class="type">string</span> line = reader.<span class="fn">ReadLine</span>();
+            <span class="type">Console</span>.<span class="fn">WriteLine</span>(line);
+        }
+
+        reader.<span class="fn">Close</span>();
+    }
+}</div>
+  </div>
+
+  <p style="color:var(--text); font-weight:700; margin-bottom:12px;">Пример 2 — Намери средния резултат</p>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">C#</span><span class="code-title">StreamReader — обработка на данни</span></div>
+    <div class="code-body"><span class="type">StreamReader</span> reader = <span class="kw">new</span> <span class="type">StreamReader</span>(<span class="str">"scores.txt"</span>);
+
+<span class="kw">int</span> sum = <span class="num">0</span>, count = <span class="num">0</span>;
+
+<span class="kw">while</span> (!reader.<span class="prop">EndOfStream</span>)
+{
+    <span class="type">string</span> line = reader.<span class="fn">ReadLine</span>();         <span class="cm">// "Иван 85"</span>
+    <span class="type">string</span>[] parts = line.<span class="fn">Split</span>(<span class="str">' '</span>);          <span class="cm">// ["Иван", "85"]</span>
+    <span class="kw">int</span> score = <span class="kw">int</span>.<span class="fn">Parse</span>(parts[<span class="num">1</span>]);             <span class="cm">// 85</span>
+
+    sum += score;
+    count++;
+}
+
+reader.<span class="fn">Close</span>();
+
+<span class="kw">double</span> avg = (<span class="kw">double</span>)sum / count;
+<span class="type">Console</span>.<span class="fn">WriteLine</span>(<span class="str">$"Среден резултат: {avg:F2}"</span>);</div>
+  </div>
+
+  <p style="color:var(--text); font-weight:700; margin-bottom:12px;">Пример 3 — Запис на нови данни в файл</p>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">C#</span><span class="code-title">StreamWriter — запис от конзолата</span></div>
+    <div class="code-body"><span class="type">StreamWriter</span> writer = <span class="kw">new</span> <span class="type">StreamWriter</span>(<span class="str">"names.txt"</span>);
+
+<span class="type">Console</span>.<span class="fn">WriteLine</span>(<span class="str">"Въведи 3 имена:"</span>);
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">3</span>; i++)
+{
+    <span class="type">Console</span>.<span class="fn">Write</span>(<span class="str">$"Ученик {i}: "</span>);
+    <span class="type">string</span> name = <span class="type">Console</span>.<span class="fn">ReadLine</span>();
+    writer.<span class="fn">WriteLine</span>(name);         <span class="cm">// записва в файла</span>
+}
+
+writer.<span class="fn">Close</span>();
+<span class="type">Console</span>.<span class="fn">WriteLine</span>(<span class="str">"Имената са записани в names.txt"</span>);</div>
+  </div>
+
+  <p style="color:var(--text); font-weight:700; margin-bottom:12px;">Пример 4 — Четене и запис заедно (филтриране)</p>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">C#</span><span class="code-title">Прочети scores.txt → запиши само отличниците в top.txt</span></div>
+    <div class="code-body"><span class="type">StreamReader</span> reader = <span class="kw">new</span> <span class="type">StreamReader</span>(<span class="str">"scores.txt"</span>);
+<span class="type">StreamWriter</span> writer = <span class="kw">new</span> <span class="type">StreamWriter</span>(<span class="str">"top.txt"</span>);
+
+<span class="kw">while</span> (!reader.<span class="prop">EndOfStream</span>)
+{
+    <span class="type">string</span> line = reader.<span class="fn">ReadLine</span>();
+    <span class="type">string</span>[] parts = line.<span class="fn">Split</span>(<span class="str">' '</span>);
+    <span class="kw">int</span> score = <span class="kw">int</span>.<span class="fn">Parse</span>(parts[<span class="num">1</span>]);
+
+    <span class="kw">if</span> (score >= <span class="num">80</span>)
+    {
+        writer.<span class="fn">WriteLine</span>(line);       <span class="cm">// записваме само >= 80</span>
+    }
+}
+
+reader.<span class="fn">Close</span>();
+writer.<span class="fn">Close</span>();
+
+<span class="type">Console</span>.<span class="fn">WriteLine</span>(<span class="str">"Отличниците са в top.txt"</span>);</div>
+  </div>
+
+  <p style="color:var(--text); font-weight:700; margin-bottom:12px;">Пример 5 — Добавяне към съществуващ файл (append)</p>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">C#</span><span class="code-title">StreamWriter append — добавяне в края</span></div>
+    <div class="code-body"><span class="cm">// true = добавяме в края, не изтриваме старото</span>
+<span class="type">StreamWriter</span> writer = <span class="kw">new</span> <span class="type">StreamWriter</span>(<span class="str">"log.txt"</span>, <span class="kw">true</span>);
+
+writer.<span class="fn">WriteLine</span>(<span class="str">"Програмата стартира отново"</span>);
+writer.<span class="fn">Close</span>();
+
+<span class="cm">// При всяко стартиране на програмата се добавя нов ред,</span>
+<span class="cm">// без да се изтрива предишното съдържание!</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 07. USING БЛОК ══════════ -->
+<section id="s7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>using блок — препоръчителният начин</h2>
+  </div>
+
+  <div class="concept cyan">
+    <h3>💡 Защо using?</h3>
+    <p>Блокът <code>using</code> автоматично извиква <code>Close()</code> след края — дори ако стане грешка по средата. Не трябва да пишем <code>Close()</code> ръчно.</p>
+  </div>
+
+  <div class="using-compare">
+    <div class="using-panel bad">
+      <h4>❌ Без using (рискован)</h4>
+      <pre><span class="hl">StreamReader r =
+  new StreamReader("f.txt");</span>
+
+// ... код ...
+
+<span class="hl">r.Close();</span>
+<span style="color:var(--muted)">// Ако стане грешка преди
+// Close() → файлът
+// остава заключен!</span></pre>
+    </div>
+    <div class="using-panel good">
+      <h4>✅ С using (правилно)</h4>
+      <pre><span class="hl">using</span> (StreamReader r =
+  new StreamReader("f.txt"))
+{
+    // ... код ...
+}
+<span class="hl">// ← Close() автоматично!
+// Дори при грешка работи!</span></pre>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">C#</span><span class="code-title">using блок — StreamReader и StreamWriter</span></div>
+    <div class="code-body"><span class="cm">// StreamReader с using</span>
+<span class="kw">using</span> (<span class="type">StreamReader</span> reader = <span class="kw">new</span> <span class="type">StreamReader</span>(<span class="str">"scores.txt"</span>))
+{
+    <span class="kw">while</span> (!reader.<span class="prop">EndOfStream</span>)
+    {
+        <span class="type">Console</span>.<span class="fn">WriteLine</span>(reader.<span class="fn">ReadLine</span>());
+    }
+} <span class="cm">// ← Close() автоматично</span>
+
+<span class="cm">// StreamWriter с using</span>
+<span class="kw">using</span> (<span class="type">StreamWriter</span> writer = <span class="kw">new</span> <span class="type">StreamWriter</span>(<span class="str">"output.txt"</span>))
+{
+    writer.<span class="fn">WriteLine</span>(<span class="str">"Ред 1"</span>);
+    writer.<span class="fn">WriteLine</span>(<span class="str">"Ред 2"</span>);
+} <span class="cm">// ← Close() + Flush() автоматично</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 08. УПРАЖНЕНИЯ ══════════ -->
+<section id="s8">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>Упражнения</h2>
+  </div>
+
+  <!-- EX 1 -->
+  <div class="ex-card easy">
+    <div class="ex-bg-num">1</div>
+    <div class="ex-header">
+      <span class="diff-badge">лесно</span>
+      <span class="ex-title">Брой редове</span>
+    </div>
+    <div class="ex-desc">Файлът <strong>names.txt</strong> съдържа имена — по едно на ред. Напишете програма, която брои колко имена има.</div>
+    <div class="ex-task">
+      <ul>
+        <li>Отвори <strong>names.txt</strong> с <code>StreamReader</code></li>
+        <li>С <code>while (!reader.EndOfStream)</code> чети ред по ред</li>
+        <li>Увеличавай брояч <code>count</code> при всеки ред</li>
+        <li>Отпечатай: <code>Брой имена: 5</code></li>
+      </ul>
+    </div>
+    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="hint-content">int count = 0;
+StreamReader r = new StreamReader("names.txt");
+while (!r.EndOfStream) { r.ReadLine(); count++; }
+r.Close();
+Console.WriteLine("Брой имена: " + count);</div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex-card easy">
+    <div class="ex-bg-num">2</div>
+    <div class="ex-header">
+      <span class="diff-badge">лесно</span>
+      <span class="ex-title">Запис на таблица за умножение</span>
+    </div>
+    <div class="ex-desc">Запишете таблицата за умножение на число N (въведено от потребителя) в файл <strong>table.txt</strong>.</div>
+    <div class="ex-task">
+      <ul>
+        <li>Прочети числото N от конзолата</li>
+        <li>Създай <code>StreamWriter</code> за <strong>table.txt</strong></li>
+        <li>С <code>for</code> цикъл от 1 до 10 запиши: <code>N x i = резултат</code></li>
+        <li>Затвори файла и потвърди на екрана</li>
+      </ul>
+    </div>
+    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="hint-content">int n = int.Parse(Console.ReadLine());
+StreamWriter w = new StreamWriter("table.txt");
+for (int i = 1; i <= 10; i++)
+    w.WriteLine(n + " x " + i + " = " + (n * i));
+w.Close();</div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex-card medium">
+    <div class="ex-bg-num">3</div>
+    <div class="ex-header">
+      <span class="diff-badge">средно</span>
+      <span class="ex-title">Максимален резултат</span>
+    </div>
+    <div class="ex-desc">Файлът <strong>numbers.txt</strong> съдържа по едно цяло число на всеки ред. Намерете и отпечатайте най-голямото число.</div>
+    <div class="ex-task">
+      <ul>
+        <li>Прочети <strong>първия ред</strong> и го задай като начален максимум</li>
+        <li>Чети останалите с <code>while</code></li>
+        <li>Ако текущото число > max → обнови max</li>
+        <li>Отпечатай <code>Максимум: X</code></li>
+      </ul>
+    </div>
+    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="hint-content">StreamReader r = new StreamReader("numbers.txt");
+int max = int.Parse(r.ReadLine());
+while (!r.EndOfStream) {
+    int n = int.Parse(r.ReadLine());
+    if (n > max) max = n;
+}
+r.Close();
+Console.WriteLine("Максимум: " + max);</div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="ex-card medium">
+    <div class="ex-bg-num">4</div>
+    <div class="ex-header">
+      <span class="diff-badge">средно</span>
+      <span class="ex-title">Четни числа във файл</span>
+    </div>
+    <div class="ex-desc">Прочети числа от <strong>input.txt</strong> и запиши само <strong>четните</strong> в <strong>even.txt</strong>.</div>
+    <div class="ex-task">
+      <ul>
+        <li>Отвори <code>StreamReader</code> за input.txt и <code>StreamWriter</code> за even.txt</li>
+        <li>Чети ред по ред, конвертирай с <code>int.Parse()</code></li>
+        <li>Ако числото % 2 == 0 → запиши в even.txt</li>
+        <li>Затвори и двата потока</li>
+      </ul>
+    </div>
+    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="hint-content">StreamReader r = new StreamReader("input.txt");
+StreamWriter w = new StreamWriter("even.txt");
+while (!r.EndOfStream) {
+    int n = int.Parse(r.ReadLine());
+    if (n % 2 == 0) w.WriteLine(n);
+}
+r.Close();
+w.Close();</div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="ex-card hard">
+    <div class="ex-bg-num">5</div>
+    <div class="ex-header">
+      <span class="diff-badge">трудно</span>
+      <span class="ex-title">Статистика и запис</span>
+    </div>
+    <div class="ex-desc">Файлът <strong>grades.txt</strong> съдържа само числа 3–6. Намери: брой, сума, средна оценка, брой слаби (&lt;4). Запиши резултатите в <strong>stats.txt</strong>.</div>
+    <div class="ex-task">
+      <ul>
+        <li>Отвори <code>StreamReader</code> + <code>StreamWriter</code> едновременно</li>
+        <li>Натрупвай sum, count, weak</li>
+        <li>Запиши статистиката форматирано в stats.txt</li>
+        <li>Потвърди на екрана с <code>Console.WriteLine</code></li>
+      </ul>
+    </div>
+    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="hint-content">StreamReader r = new StreamReader("grades.txt");
+StreamWriter w = new StreamWriter("stats.txt");
+int sum=0, count=0, weak=0;
+while (!r.EndOfStream) {
+    int g = int.Parse(r.ReadLine());
+    sum += g; count++;
+    if (g < 4) weak++;
+}
+r.Close();
+w.WriteLine("Брой: " + count);
+w.WriteLine($"Средна: {(double)sum/count:F2}");
+w.WriteLine("Слаби: " + weak);
+w.Close();</div>
+  </div>
+
+  <!-- EX 6 BONUS -->
+  <div class="ex-card bonus">
+    <div class="ex-bg-num">★</div>
+    <div class="ex-header">
+      <span class="diff-badge">бонус</span>
+      <span class="ex-title">Дневник (append режим)</span>
+    </div>
+    <div class="ex-desc">Напишете програма — "дневник". При всяко стартиране потребителят въвежда бележка, която се <strong>добавя</strong> в края на файл <strong>diary.txt</strong> (без да изтрива предишните).</div>
+    <div class="ex-task">
+      <ul>
+        <li>Използвай <code>StreamWriter</code> с <code>true</code> (append)</li>
+        <li>Поискай бележката от потребителя</li>
+        <li>Запиши: <code>[Запис #N]: бележката</code></li>
+        <li><strong>Бонус:</strong> Прочети с <code>StreamReader</code> колко записа вече има и покажи броя</li>
+      </ul>
+    </div>
+    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="hint-content">// Брой съществуващи записи
+int count = 0;
+if (File.Exists("diary.txt")) {
+    StreamReader r = new StreamReader("diary.txt");
+    while (!r.EndOfStream) { r.ReadLine(); count++; }
+    r.Close();
+}
+
+// Добавяне на нов
+StreamWriter w = new StreamWriter("diary.txt", true);
+Console.Write("Бележка: ");
+string note = Console.ReadLine();
+w.WriteLine($"[Запис #{count+1}]: " + note);
+w.Close();</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 09. ТЕСТ ══════════ -->
+<section id="s9">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>Тест за разбиране</h2>
+  </div>
+
+  <div class="quiz-card" id="q1">
+    <div class="quiz-q">1. Кой namespace трябва за StreamReader и StreamWriter?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">System.Text</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',true)">System.IO</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">System.Collections</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">System.Net</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q1"></div>
+  </div>
+
+  <div class="quiz-card" id="q2">
+    <div class="quiz-q">2. Какво прави <code>new StreamWriter("file.txt", true)</code>?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">Изтрива файла и пише наново</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',true)">Добавя в края без да изтрива</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">Отваря файла само за четене</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">Хвърля грешка ако файлът не съществува</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q2"></div>
+  </div>
+
+  <div class="quiz-card" id="q3">
+    <div class="quiz-q">3. Каква е разликата между <code>Write()</code> и <code>WriteLine()</code> при StreamWriter?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">Write() е по-бърз от WriteLine()</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">Няма разлика</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',true)">WriteLine() добавя нов ред накрая, Write() не</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">Write() записва числа, WriteLine() записва текст</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q3"></div>
+  </div>
+
+  <div class="quiz-card" id="q4">
+    <div class="quiz-q">4. Защо е важно да извикаме <code>Close()</code> на StreamWriter?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">За да може после да четем файла</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Защото иначе файлът се изтрива</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',true)">Защото буферираните данни може да не се запишат без Close()</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Само за да освободим паметта</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q4"></div>
+  </div>
+
+  <div class="quiz-card" id="q5">
+    <div class="quiz-q">5. Какво се случва ако отворим StreamWriter за файл, който вече съществува (без <code>true</code>)?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">Програмата хвърля грешка</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">Добавя данните в края на съществуващия файл</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',true)">Старото съдържание се изтрива и се записва наново</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">Файлът се заключва и не може да се пише</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q5"></div>
+  </div>
+
+  <div class="quiz-card" id="q6">
+    <div class="quiz-q">6. Кой код е правилен за четене на целия файл наведнъж?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">string s = reader.ReadLine();</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',true)">string s = reader.ReadToEnd();</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">string s = reader.ReadAll();</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">string s = reader.GetContent();</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q6"></div>
+  </div>
+
+  <div id="quizScore">
+    <div style="font-family:'Unbounded',sans-serif;font-size:36px;font-weight:900;" id="scoreText"></div>
+    <div style="color:var(--muted);margin-top:10px;font-size:14px;" id="scoreSub"></div>
+  </div>
+</section>
+
+<div class="footer container">
+  // StreamReader &amp;&amp; StreamWriter — 8 клас — Информатика — C# — System.IO
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ─── READ SIMULATION ───
+let readTimer = null, readStep = 0;
+const readLines = ['Иван Петров','Мария Георгиева','Стефан Колев','Ана Димитрова'];
+
+function startRead() {
+  if (readTimer) return;
+  document.getElementById('readOutput').textContent = '';
+  document.getElementById('readStatus').textContent = 'reader.EndOfStream = false';
+  readStep = 0;
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('rl' + i);
+    if (el) el.className = 'file-line-item';
+  }
+
+  readTimer = setInterval(() => {
+    if (readStep < readLines.length) {
+      const el = document.getElementById('rl' + readStep);
+      if (el) el.className = 'file-line-item reading';
+      if (readStep > 0) {
+        const prev = document.getElementById('rl' + (readStep - 1));
+        if (prev) prev.className = 'file-line-item';
+      }
+      document.getElementById('readOutput').textContent += readLines[readStep] + '\n';
+      document.getElementById('readStatus').textContent = 'ReadLine() → "' + readLines[readStep] + '"';
+      readStep++;
+    } else {
+      clearInterval(readTimer); readTimer = null;
+      const prev = document.getElementById('rl' + (readStep - 1));
+      if (prev) prev.className = 'file-line-item';
+      const eof = document.getElementById('rl4');
+      if (eof) eof.className = 'file-line-item reading';
+      document.getElementById('readStatus').textContent = 'reader.EndOfStream = true → цикълът спира';
+    }
+  }, 850);
+}
+
+function resetRead() {
+  if (readTimer) { clearInterval(readTimer); readTimer = null; }
+  readStep = 0;
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('rl' + i);
+    if (el) el.className = 'file-line-item';
+  }
+  document.getElementById('readOutput').textContent = '// тук ще се появят прочетените редове...';
+  document.getElementById('readStatus').textContent = '';
+}
+
+// ─── WRITE SIMULATION ───
+let writeLines = [];
+let firstWrite = true;
+
+function writeLineDemo() {
+  const val = document.getElementById('writeInput').value.trim();
+  if (!val) return;
+  if (firstWrite) { writeLines = []; firstWrite = false; }
+  writeLines.push(val);
+  renderWriteFile();
+  document.getElementById('writeInput').value = '';
+  document.getElementById('writeMode').textContent = 'Режим: презаписване (без true)';
+}
+
+function writeDemo() {
+  const val = document.getElementById('writeInput').value.trim();
+  if (!val) return;
+  if (firstWrite) { writeLines = []; firstWrite = false; }
+  if (writeLines.length > 0) {
+    writeLines[writeLines.length - 1] += val;
+  } else {
+    writeLines.push(val);
+  }
+  renderWriteFile();
+  document.getElementById('writeInput').value = '';
+  document.getElementById('writeMode').textContent = 'Write() — без нов ред (продължава на същия ред)';
+}
+
+function renderWriteFile() {
+  const el = document.getElementById('writeFile');
+  el.innerHTML = writeLines.map((l, i) =>
+    `<div class="file-line-item active"><span class="ln">${i+1}</span>${l}</div>`
+  ).join('');
+  document.getElementById('writeCount').textContent = writeLines.length + (writeLines.length === 1 ? ' ред записан' : ' реда записани');
+}
+
+function resetWrite() {
+  writeLines = [];
+  firstWrite = true;
+  document.getElementById('writeFile').innerHTML = '';
+  document.getElementById('writeCount').textContent = '0 реда записани';
+  document.getElementById('writeInput').value = '';
+  document.getElementById('writeMode').textContent = 'Режим: презаписване';
+}
+
+// ─── HINTS ───
+function toggleHint(btn) {
+  const h = btn.nextElementSibling;
+  h.classList.toggle('show');
+  btn.textContent = h.classList.contains('show') ? '🙈 Скрий подсказката' : '💡 Подсказка';
+}
+
+// ─── QUIZ ───
+const answered = {};
+let correct = 0;
+const total = 6;
+
+const msgs = {
+  correct: [
+    '✅ Точно! System.IO съдържа всички класове за работа с файлове.',
+    '✅ Точно! Вторият аргумент true включва append (добавяне) режим.',
+    '✅ Точно! WriteLine() добавя \\n в края, Write() не.',
+    '✅ Точно! Без Close() данните в буфера може да не се запишат на диска.',
+    '✅ Точно! По подразбиране StreamWriter изтрива старото съдържание.',
+    '✅ Точно! ReadToEnd() чете целия файл наведнъж.'
+  ],
+  wrong: [
+    '❌ Не точно. Правилният namespace е System.IO.',
+    '❌ Не точно. true означава append режим — добавяне без изтриване.',
+    '❌ Не точно. Разликата е в новия ред — WriteLine() го добавя, Write() не.',
+    '❌ Не точно. Close() е важен за да се запишат буферираните данни.',
+    '❌ Не точно. Без true StreamWriter презаписва (изтрива старото).',
+    '❌ Не точно. ReadToEnd() е правилният метод за целия файл.'
+  ]
+};
+
+const qIdx = { q1:0, q2:1, q3:2, q4:3, q5:4, q6:5 };
+
+function answer(btn, qid, isCorrect) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  const idx = qIdx[qid];
+  const fb = document.getElementById('fb-' + qid);
+  btn.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb.textContent = msgs.correct[idx];
+    fb.className = 'quiz-feedback show ok';
+    correct++;
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = msgs.wrong[idx];
+    fb.className = 'quiz-feedback show err';
+  }
+
+  if (Object.keys(answered).length === total) showScore();
+}
+
+function showScore() {
+  const scoreDiv = document.getElementById('quizScore');
+  const scoreText = document.getElementById('scoreText');
+  const scoreSub = document.getElementById('scoreSub');
+  scoreDiv.style.display = 'block';
+  const pct = Math.round(correct / total * 100);
+  let col = '#ff6b9d';
+  if (pct >= 83) col = '#00ff88';
+  else if (pct >= 50) col = '#ffd93d';
+  scoreText.style.color = col;
+  scoreText.textContent = correct + '/' + total + ' верни (' + pct + '%)';
+  if (pct === 100) scoreSub.textContent = '🏆 Перфектен резултат! Отлично владееш темата!';
+  else if (pct >= 83) scoreSub.textContent = '👏 Много добре! Почти перфектно.';
+  else if (pct >= 50) scoreSub.textContent = '📚 Добре, но прегледай раздели 04 и 05 отново.';
+  else scoreSub.textContent = '💪 Прегледай материала отначало — можеш!';
+}
+</script>
+</body>
+</html>
