@@ -492,6 +492,20 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rg
   transition: all 0.2s;
 }
 .hint-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+.solution-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-left: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s;
+}
+.solution-btn:hover { border-color: var(--green); color: var(--green); }
 .hint-content {
   display: none;
   margin-top: 10px;
@@ -506,6 +520,21 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rg
   white-space: pre-wrap;
 }
 .hint-content.show { display: block; }
+.solution-content {
+  display: none;
+  margin-top: 10px;
+  background: rgba(0,255,136,0.05);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+.solution-content.show { display: block; }
+.ex-buttons { display: flex; flex-wrap: wrap; gap: 0; }
 
 /* ─── QUIZ ─── */
 .quiz-card {
@@ -1178,21 +1207,47 @@ writer.<span class="fn">Close</span>();
       <span class="diff-badge">лесно</span>
       <span class="ex-title">Брой редове</span>
     </div>
-    <div class="ex-desc">Файлът <strong>names.txt</strong> съдържа имена — по едно на ред. Напишете програма, която брои колко имена има.</div>
+    <div class="ex-desc">Файлът <strong>names.txt</strong> съдържа имена — по едно на ред. Напишете програма, която брои колко имена има.<br><em style="color:var(--muted);font-size:13px;">Създайте файла names.txt на удобно място (напр. Desktop) и използвайте пълния път.</em></div>
     <div class="ex-task">
       <ul>
-        <li>Отвори <strong>names.txt</strong> с <code>StreamReader</code></li>
+        <li>Отвори <strong>names.txt</strong> с <code>StreamReader</code> чрез <strong>пълен път</strong></li>
         <li>С <code>while (!reader.EndOfStream)</code> чети ред по ред</li>
         <li>Увеличавай брояч <code>count</code> при всеки ред</li>
         <li>Отпечатай: <code>Брой имена: 5</code></li>
       </ul>
     </div>
-    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+    </div>
     <div class="hint-content">int count = 0;
-StreamReader r = new StreamReader("names.txt");
+StreamReader r = new StreamReader(@"C:\Users\...\names.txt");
+// Замени пътя с реалния път до твоя файл!
 while (!r.EndOfStream) { r.ReadLine(); count++; }
-r.Close();
-Console.WriteLine("Брой имена: " + count);</div>
+r.Close();</div>
+    <div class="solution-content">using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        // Запиши пълния път до файла:
+        string path = @"C:\Users\YourName\Desktop\names.txt";
+
+        int count = 0;
+        StreamReader reader = new StreamReader(path);
+
+        while (!reader.EndOfStream)
+        {
+            reader.ReadLine();
+            count++;
+        }
+        reader.Close();
+
+        Console.WriteLine("Брой имена: " + count);
+    }
+}</div>
   </div>
 
   <!-- EX 2 -->
@@ -1202,21 +1257,46 @@ Console.WriteLine("Брой имена: " + count);</div>
       <span class="diff-badge">лесно</span>
       <span class="ex-title">Запис на таблица за умножение</span>
     </div>
-    <div class="ex-desc">Запишете таблицата за умножение на число N (въведено от потребителя) в файл <strong>table.txt</strong>.</div>
+    <div class="ex-desc">Запишете таблицата за умножение на число N (въведено от потребителя) в файл <strong>table.txt</strong>.<br><em style="color:var(--muted);font-size:13px;">Използвайте пълен път, за да знаете къде ще се създаде файлът.</em></div>
     <div class="ex-task">
       <ul>
         <li>Прочети числото N от конзолата</li>
-        <li>Създай <code>StreamWriter</code> за <strong>table.txt</strong></li>
+        <li>Създай <code>StreamWriter</code> за <strong>table.txt</strong> с <strong>пълен път</strong></li>
         <li>С <code>for</code> цикъл от 1 до 10 запиши: <code>N x i = резултат</code></li>
         <li>Затвори файла и потвърди на екрана</li>
       </ul>
     </div>
-    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+    </div>
     <div class="hint-content">int n = int.Parse(Console.ReadLine());
-StreamWriter w = new StreamWriter("table.txt");
+StreamWriter w = new StreamWriter(@"C:\Users\...\table.txt");
 for (int i = 1; i <= 10; i++)
     w.WriteLine(n + " x " + i + " = " + (n * i));
 w.Close();</div>
+    <div class="solution-content">using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string path = @"C:\Users\YourName\Desktop\table.txt";
+
+        Console.Write("Въведи число: ");
+        int n = int.Parse(Console.ReadLine());
+
+        StreamWriter writer = new StreamWriter(path);
+        for (int i = 1; i <= 10; i++)
+        {
+            writer.WriteLine(n + " x " + i + " = " + (n * i));
+        }
+        writer.Close();
+
+        Console.WriteLine("Таблицата е записана в: " + path);
+    }
+}</div>
   </div>
 
   <!-- EX 3 -->
@@ -1226,7 +1306,7 @@ w.Close();</div>
       <span class="diff-badge">средно</span>
       <span class="ex-title">Максимален резултат</span>
     </div>
-    <div class="ex-desc">Файлът <strong>numbers.txt</strong> съдържа по едно цяло число на всеки ред. Намерете и отпечатайте най-голямото число.</div>
+    <div class="ex-desc">Файлът <strong>numbers.txt</strong> съдържа по едно цяло число на всеки ред. Намерете и отпечатайте най-голямото число.<br><em style="color:var(--muted);font-size:13px;">Създайте numbers.txt с няколко числа и използвайте пълния път до файла.</em></div>
     <div class="ex-task">
       <ul>
         <li>Прочети <strong>първия ред</strong> и го задай като начален максимум</li>
@@ -1235,15 +1315,43 @@ w.Close();</div>
         <li>Отпечатай <code>Максимум: X</code></li>
       </ul>
     </div>
-    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
-    <div class="hint-content">StreamReader r = new StreamReader("numbers.txt");
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+    </div>
+    <div class="hint-content">StreamReader r = new StreamReader(@"C:\Users\...\numbers.txt");
 int max = int.Parse(r.ReadLine());
 while (!r.EndOfStream) {
     int n = int.Parse(r.ReadLine());
     if (n > max) max = n;
 }
-r.Close();
-Console.WriteLine("Максимум: " + max);</div>
+r.Close();</div>
+    <div class="solution-content">using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string path = @"C:\Users\YourName\Desktop\numbers.txt";
+
+        StreamReader reader = new StreamReader(path);
+
+        int max = int.Parse(reader.ReadLine());
+
+        while (!reader.EndOfStream)
+        {
+            int num = int.Parse(reader.ReadLine());
+            if (num > max)
+            {
+                max = num;
+            }
+        }
+        reader.Close();
+
+        Console.WriteLine("Максимум: " + max);
+    }
+}</div>
   </div>
 
   <!-- EX 4 -->
@@ -1253,24 +1361,54 @@ Console.WriteLine("Максимум: " + max);</div>
       <span class="diff-badge">средно</span>
       <span class="ex-title">Четни числа във файл</span>
     </div>
-    <div class="ex-desc">Прочети числа от <strong>input.txt</strong> и запиши само <strong>четните</strong> в <strong>even.txt</strong>.</div>
+    <div class="ex-desc">Прочети числа от <strong>input.txt</strong> и запиши само <strong>четните</strong> в <strong>even.txt</strong>.<br><em style="color:var(--muted);font-size:13px;">И двата файла трябва да са с пълен път — входният и изходният.</em></div>
     <div class="ex-task">
       <ul>
-        <li>Отвори <code>StreamReader</code> за input.txt и <code>StreamWriter</code> за even.txt</li>
+        <li>Отвори <code>StreamReader</code> за input.txt и <code>StreamWriter</code> за even.txt с <strong>пълни пътища</strong></li>
         <li>Чети ред по ред, конвертирай с <code>int.Parse()</code></li>
         <li>Ако числото % 2 == 0 → запиши в even.txt</li>
         <li>Затвори и двата потока</li>
       </ul>
     </div>
-    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
-    <div class="hint-content">StreamReader r = new StreamReader("input.txt");
-StreamWriter w = new StreamWriter("even.txt");
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+    </div>
+    <div class="hint-content">StreamReader r = new StreamReader(@"C:\Users\...\input.txt");
+StreamWriter w = new StreamWriter(@"C:\Users\...\even.txt");
 while (!r.EndOfStream) {
     int n = int.Parse(r.ReadLine());
     if (n % 2 == 0) w.WriteLine(n);
 }
-r.Close();
-w.Close();</div>
+r.Close(); w.Close();</div>
+    <div class="solution-content">using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string inputPath = @"C:\Users\YourName\Desktop\input.txt";
+        string outputPath = @"C:\Users\YourName\Desktop\even.txt";
+
+        StreamReader reader = new StreamReader(inputPath);
+        StreamWriter writer = new StreamWriter(outputPath);
+
+        while (!reader.EndOfStream)
+        {
+            int num = int.Parse(reader.ReadLine());
+            if (num % 2 == 0)
+            {
+                writer.WriteLine(num);
+            }
+        }
+
+        reader.Close();
+        writer.Close();
+
+        Console.WriteLine("Четните числа са записани в: " + outputPath);
+    }
+}</div>
   </div>
 
   <!-- EX 5 -->
@@ -1280,18 +1418,21 @@ w.Close();</div>
       <span class="diff-badge">трудно</span>
       <span class="ex-title">Статистика и запис</span>
     </div>
-    <div class="ex-desc">Файлът <strong>grades.txt</strong> съдържа само числа 3–6. Намери: брой, сума, средна оценка, брой слаби (&lt;4). Запиши резултатите в <strong>stats.txt</strong>.</div>
+    <div class="ex-desc">Файлът <strong>grades.txt</strong> съдържа само числа 3–6. Намери: брой, сума, средна оценка, брой слаби (&lt;4). Запиши резултатите в <strong>stats.txt</strong>.<br><em style="color:var(--muted);font-size:13px;">Използвайте пълни пътища и за двата файла.</em></div>
     <div class="ex-task">
       <ul>
-        <li>Отвори <code>StreamReader</code> + <code>StreamWriter</code> едновременно</li>
+        <li>Отвори <code>StreamReader</code> + <code>StreamWriter</code> с <strong>пълни пътища</strong></li>
         <li>Натрупвай sum, count, weak</li>
         <li>Запиши статистиката форматирано в stats.txt</li>
         <li>Потвърди на екрана с <code>Console.WriteLine</code></li>
       </ul>
     </div>
-    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
-    <div class="hint-content">StreamReader r = new StreamReader("grades.txt");
-StreamWriter w = new StreamWriter("stats.txt");
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+    </div>
+    <div class="hint-content">StreamReader r = new StreamReader(@"C:\Users\...\grades.txt");
+StreamWriter w = new StreamWriter(@"C:\Users\...\stats.txt");
 int sum=0, count=0, weak=0;
 while (!r.EndOfStream) {
     int g = int.Parse(r.ReadLine());
@@ -1303,6 +1444,38 @@ w.WriteLine("Брой: " + count);
 w.WriteLine($"Средна: {(double)sum/count:F2}");
 w.WriteLine("Слаби: " + weak);
 w.Close();</div>
+    <div class="solution-content">using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string gradesPath = @"C:\Users\YourName\Desktop\grades.txt";
+        string statsPath = @"C:\Users\YourName\Desktop\stats.txt";
+
+        StreamReader reader = new StreamReader(gradesPath);
+        int sum = 0, count = 0, weak = 0;
+
+        while (!reader.EndOfStream)
+        {
+            int grade = int.Parse(reader.ReadLine());
+            sum += grade;
+            count++;
+            if (grade < 4) weak++;
+        }
+        reader.Close();
+
+        StreamWriter writer = new StreamWriter(statsPath);
+        writer.WriteLine("Брой оценки: " + count);
+        writer.WriteLine("Сума: " + sum);
+        writer.WriteLine($"Средна оценка: {(double)sum / count:F2}");
+        writer.WriteLine("Брой слаби (под 4): " + weak);
+        writer.Close();
+
+        Console.WriteLine("Статистиката е записана в: " + statsPath);
+    }
+}</div>
   </div>
 
   <!-- EX 6 BONUS -->
@@ -1312,30 +1485,65 @@ w.Close();</div>
       <span class="diff-badge">бонус</span>
       <span class="ex-title">Дневник (append режим)</span>
     </div>
-    <div class="ex-desc">Напишете програма — "дневник". При всяко стартиране потребителят въвежда бележка, която се <strong>добавя</strong> в края на файл <strong>diary.txt</strong> (без да изтрива предишните).</div>
+    <div class="ex-desc">Напишете програма — "дневник". При всяко стартиране потребителят въвежда бележка, която се <strong>добавя</strong> в края на файл <strong>diary.txt</strong> (без да изтрива предишните).<br><em style="color:var(--muted);font-size:13px;">Използвайте пълен път — файлът ще се създаде автоматично при първото стартиране.</em></div>
     <div class="ex-task">
       <ul>
-        <li>Използвай <code>StreamWriter</code> с <code>true</code> (append)</li>
+        <li>Използвай <code>StreamWriter</code> с <code>true</code> (append) и <strong>пълен път</strong></li>
         <li>Поискай бележката от потребителя</li>
         <li>Запиши: <code>[Запис #N]: бележката</code></li>
         <li><strong>Бонус:</strong> Прочети с <code>StreamReader</code> колко записа вече има и покажи броя</li>
       </ul>
     </div>
-    <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
-    <div class="hint-content">// Брой съществуващи записи
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+    </div>
+    <div class="hint-content">string path = @"C:\Users\...\diary.txt";
 int count = 0;
-if (File.Exists("diary.txt")) {
-    StreamReader r = new StreamReader("diary.txt");
+if (File.Exists(path)) {
+    StreamReader r = new StreamReader(path);
     while (!r.EndOfStream) { r.ReadLine(); count++; }
     r.Close();
 }
-
-// Добавяне на нов
-StreamWriter w = new StreamWriter("diary.txt", true);
+StreamWriter w = new StreamWriter(path, true);
 Console.Write("Бележка: ");
 string note = Console.ReadLine();
 w.WriteLine($"[Запис #{count+1}]: " + note);
 w.Close();</div>
+    <div class="solution-content">using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string path = @"C:\Users\YourName\Desktop\diary.txt";
+
+        // Първо: брой съществуващи записи
+        int count = 0;
+        if (File.Exists(path))
+        {
+            StreamReader reader = new StreamReader(path);
+            while (!reader.EndOfStream)
+            {
+                reader.ReadLine();
+                count++;
+            }
+            reader.Close();
+        }
+
+        Console.WriteLine("Дневникът има " + count + " записа.");
+        Console.Write("Нова бележка: ");
+        string note = Console.ReadLine();
+
+        // Добавяне (append = true)
+        StreamWriter writer = new StreamWriter(path, true);
+        writer.WriteLine($"[Запис #{count + 1}]: {note}");
+        writer.Close();
+
+        Console.WriteLine("Записано в: " + path);
+    }
+}</div>
   </div>
 </section>
 
@@ -1519,11 +1727,18 @@ function resetWrite() {
   document.getElementById('writeMode').textContent = 'Режим: презаписване';
 }
 
-// ─── HINTS ───
+// ─── HINTS & SOLUTIONS ───
 function toggleHint(btn) {
-  const h = btn.nextElementSibling;
+  const container = btn.closest('.ex-card');
+  const h = container.querySelector('.hint-content');
   h.classList.toggle('show');
   btn.textContent = h.classList.contains('show') ? '🙈 Скрий подсказката' : '💡 Подсказка';
+}
+function toggleSolution(btn) {
+  const container = btn.closest('.ex-card');
+  const s = container.querySelector('.solution-content');
+  s.classList.toggle('show');
+  btn.textContent = s.classList.contains('show') ? '🙈 Скрий решението' : '✅ Пълно решение';
 }
 
 // ─── QUIZ ───
