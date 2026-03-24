@@ -626,9 +626,29 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rg
   margin-top: 48px;
   letter-spacing: 1px;
 }
+.back-home {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  text-decoration: none;
+  color: var(--cyan);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  background: rgba(0, 212, 255, 0.10);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  backdrop-filter: blur(16px);
+  transition: all 0.25s;
+  font-family: 'Mulish', sans-serif;
+}
+.back-home:hover { background: rgba(0, 212, 255, 0.25); }
 </style>
 </head>
 <body>
+
+<a href="index.html" class="back-home">⌂ Начало</a>
 
 <!-- ══════════════════════════════════════ HERO ══════════════════════════════════════ -->
 <div class="hero">

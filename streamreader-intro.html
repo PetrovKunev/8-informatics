@@ -95,6 +95,20 @@ body {
 }
 .nav-btn:hover { background: rgba(0, 212, 170, 0.25); }
 .nav-btn:disabled { opacity: 0.3; cursor: default; }
+.nav-home {
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(124, 111, 255, 0.12);
+  border: 1px solid rgba(124, 111, 255, 0.25);
+  transition: all 0.2s;
+  font-family: 'Nunito', sans-serif;
+  white-space: nowrap;
+}
+.nav-home:hover { background: rgba(124, 111, 255, 0.30); }
 
 /* SECTIONS */
 .section {
@@ -455,6 +469,7 @@ pre {
 
 <!-- NAVIGATION -->
 <nav class="nav">
+  <a href="index.html" class="nav-home" title="Начална страница">⌂ Начало</a>
   <div class="nav-title">C# Потоци от данни</div>
   <div class="nav-steps" id="navDots"></div>
   <div class="nav-arrows">
