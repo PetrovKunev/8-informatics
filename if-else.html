@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>if/else — 8 клас Информатика</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Unbounded:wght@400;700;900&family=Mulish:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #07090f;
+  --surface: #0f1520;
+  --surface2: #161e2e;
+  --border: #1c2d48;
+  --cyan: #00d4ff;
+  --green: #00ff88;
+  --yellow: #ffd93d;
+  --pink: #ff6b9d;
+  --orange: #ff9a3c;
+  --purple: #b06bff;
+  --text: #e2e8f0;
+  --muted: #4a6080;
+  --code-bg: #060a10;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Mulish', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(160deg, #07090f 0%, #0a1628 40%, #0d1f3a 70%, #07090f 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 32px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow1 {
+  position: absolute; top: -80px; right: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(0,212,255,0.10) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute; bottom: -80px; left: 5%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,255,136,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-glow3 {
+  position: absolute; top: 40%; right: 25%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(176,107,255,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.10);
+  border: 1px solid rgba(0,212,255,0.25);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  letter-spacing: 1.5px;
+}
+.badge::before { content: '●'; font-size: 8px; }
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(26px, 4.5vw, 52px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.hero h1 .if { color: var(--cyan); }
+.hero h1 .else { color: var(--pink); }
+.hero h1 .slash { color: var(--muted); }
+.hero-sub {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 600px;
+  margin-bottom: 28px;
+}
+.toc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.toc-pills a {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.toc-pills a:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,0.06); }
+
+/* ─── LAYOUT ─── */
+.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+section { padding: 52px 0 0; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 3px 9px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+.section-header h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* ─── CONCEPT BOX ─── */
+.concept {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}
+.concept.cyan  { border-left: 3px solid var(--cyan); }
+.concept.green { border-left: 3px solid var(--green); }
+.concept.yellow{ border-left: 3px solid var(--yellow); }
+.concept.pink  { border-left: 3px solid var(--pink); }
+.concept h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+.concept.cyan  h3 { color: var(--cyan); }
+.concept.green h3 { color: var(--green); }
+.concept.yellow h3 { color: var(--yellow); }
+.concept.pink  h3 { color: var(--pink); }
+.concept p, .concept li { font-size: 14px; color: var(--text); }
+.concept ul { padding-left: 18px; }
+.concept li { margin-bottom: 3px; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rgba(0,212,255,0.08); color: var(--cyan); padding: 1px 6px; border-radius: 3px; }
+
+/* ─── FLOW DIAGRAM ─── */
+.flow-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 24px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.flow-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 540px;
+}
+.flow-node { text-align: center; flex-shrink: 0; }
+.flow-box {
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  white-space: nowrap;
+  min-width: 110px;
+}
+.flow-box.condition { background: rgba(0,212,255,0.12); border: 2px solid var(--cyan);   color: var(--cyan); }
+.flow-box.true { background: rgba(0,255,136,0.12);   border: 2px solid var(--green);  color: var(--green); }
+.flow-box.false { background: rgba(255,107,157,0.12); border: 2px solid var(--pink); color: var(--pink); }
+.flow-label { font-size: 10px; color: var(--muted); margin-top: 7px; font-family: 'JetBrains Mono', monospace; }
+.flow-arrow { color: var(--muted); font-size: 22px; margin: 0 6px; flex-shrink: 0; padding-bottom: 18px; }
+
+/* ─── COMPARISON GRID ─── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media(max-width:640px){ .compare-grid { grid-template-columns: 1fr; } }
+.compare-card {
+  border-radius: 12px;
+  padding: 22px;
+  border: 2px solid;
+}
+.compare-card.true { background: rgba(0,255,136,0.04); border-color: rgba(0,255,136,0.3); }
+.compare-card.false { background: rgba(255,107,157,0.04); border-color: rgba(255,107,157,0.3); }
+.compare-card h3 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.compare-card.true h3 { color: var(--green); }
+.compare-card.false h3 { color: var(--pink); }
+.compare-card ul { padding-left: 16px; list-style: none; }
+.compare-card ul li { font-size: 13px; color: var(--muted); margin-bottom: 6px; padding-left: 2px; }
+.compare-card ul li::before { content: '→  '; color: inherit; font-family: 'JetBrains Mono', monospace; }
+.compare-card.true ul li::before { color: var(--green); }
+.compare-card.false ul li::before { color: var(--pink); }
+
+/* ─── CODE BLOCK ─── */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.code-header {
+  background: var(--surface2);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.code-lang { font-size: 10px; color: var(--cyan); letter-spacing: 1.5px; text-transform: uppercase; }
+.code-title { font-size: 11px; color: var(--muted); }
+.code-body { padding: 22px; font-size: 13px; line-height: 1.9; overflow-x: auto; }
+.kw { color: #ff79c6; }
+.type { color: #8be9fd; }
+.str { color: #f1fa8c; }
+.cm { color: #44577a; font-style: italic; }
+.fn { color: #50fa7b; }
+.num { color: #bd93f9; }
+.prop { color: #ffb86c; }
+
+/* ─── OPERATOR TABLE ─── */
+.operator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.op-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+.op-card:hover { border-color: var(--cyan); }
+.op-symbol {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+.op-name {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.op-desc {
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* ─── INTERACTIVE DEMO ─── */
+.demo-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.demo-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.demo-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media(max-width:580px){ .demo-cols { grid-template-columns: 1fr; } }
+.demo-panel {
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+}
+.demo-panel.input { background: rgba(0,212,255,0.03); border-color: rgba(0,212,255,0.2); }
+.demo-panel.output { background: rgba(0,255,136,0.03); border-color: rgba(0,255,136,0.2); }
+.demo-panel h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.demo-panel.input h4 { color: var(--cyan); }
+.demo-panel.output h4 { color: var(--green); }
+.demo-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 8px;
+  outline: none;
+}
+.demo-input:focus { border-color: var(--green); }
+.demo-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s;
+  background: var(--cyan);
+  color: var(--bg);
+}
+.demo-btn:hover { opacity: 0.8; }
+.demo-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+.demo-code .highlight { color: var(--green); font-weight: 700; }
+.demo-output {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  min-height: 60px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  color: var(--green);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ─── EXERCISES ─── */
+.ex-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.ex-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  border-radius: 4px 0 0 4px;
+}
+.ex-card.easy::before   { background: var(--green); }
+.ex-card.medium::before { background: var(--yellow); }
+.ex-card.hard::before   { background: var(--pink); }
+.ex-card.bonus::before  { background: var(--purple); }
+.ex-bg-num {
+  position: absolute; top: 12px; right: 20px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 52px; font-weight: 900;
+  opacity: 0.05; color: var(--text);
+  pointer-events: none; user-select: none;
+}
+.ex-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.diff-badge {
+  font-size: 9px; font-family: 'JetBrains Mono', monospace;
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.easy   .diff-badge { background: rgba(0,255,136,0.10);   color: var(--green);  border: 1px solid rgba(0,255,136,0.25); }
+.medium .diff-badge { background: rgba(255,217,61,0.10);  color: var(--yellow); border: 1px solid rgba(255,217,61,0.25); }
+.hard   .diff-badge { background: rgba(255,107,157,0.10); color: var(--pink);   border: 1px solid rgba(255,107,157,0.25); }
+.bonus  .diff-badge { background: rgba(176,107,255,0.10); color: var(--purple); border: 1px solid rgba(176,107,255,0.25); }
+.ex-title { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; }
+.ex-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.ex-task {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+}
+.ex-task ul { padding-left: 16px; }
+.ex-task li { margin-bottom: 4px; color: var(--text); }
+.ex-task li strong { color: var(--cyan); font-family: 'JetBrains Mono', monospace; }
+.hint-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s;
+}
+.hint-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+.solution-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-left: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s;
+}
+.solution-btn:hover { border-color: var(--green); color: var(--green); }
+.hint-content {
+  display: none;
+  margin-top: 10px;
+  background: rgba(255,217,61,0.05);
+  border: 1px solid rgba(255,217,61,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--yellow);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+.hint-content.show { display: block; }
+.solution-content {
+  display: none;
+  margin-top: 10px;
+  background: rgba(0,255,136,0.05);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+.solution-content.show { display: block; }
+.ex-buttons { display: flex; flex-wrap: wrap; gap: 0; }
+
+/* ─── QUIZ ─── */
+.quiz-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 14px;
+}
+.quiz-q { font-weight: 600; margin-bottom: 14px; font-size: 14px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  transition: all 0.2s;
+  color: var(--text);
+  text-align: left;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--cyan); background: rgba(0,212,255,0.04); }
+.quiz-opt.correct { background: rgba(0,255,136,0.08); border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong   { background: rgba(255,107,157,0.08); border-color: var(--pink); color: var(--pink); }
+.quiz-feedback {
+  margin-top: 10px; font-size: 12px; display: none;
+  padding: 8px 14px; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.ok  { background: rgba(0,255,136,0.07); color: var(--green); }
+.quiz-feedback.err { background: rgba(255,107,157,0.07); color: var(--pink); }
+
+#quizScore {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  margin: 48px 0 0;
+}
+
+/* ─── BACK HOME ─── */
+.back-home {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  text-decoration: none;
+  color: var(--cyan);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  background: rgba(0, 212, 255, 0.10);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  backdrop-filter: blur(16px);
+  transition: all 0.25s;
+  font-family: 'Mulish', sans-serif;
+}
+.back-home:hover { background: rgba(0, 212, 255, 0.25); }
+
+/* ─── FOOTER ─── */
+.footer {
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-align: center;
+  padding: 32px 0;
+  margin-top: 60px;
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">⌂ Начало</a>
+
+<div class="container">
+
+<div class="hero">
+  <div class="hero-glow1"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-glow3"></div>
+
+  <div class="badge">8 КЛАС // ИНФОРМАТИКА // C# // УСЛОВНИ ОПЕРАТОРИ</div>
+
+  <h1><span class="if">if</span><span class="slash">/</span><span class="else">else</span></h1>
+  <p class="hero-sub">Научи как да вземаш решения в твоя код! Научи условни оператори и как да управляваш различни сценарии в задачите си.</p>
+
+  <div class="toc-pills">
+    <a href="#s01">01 Концепция</a>
+    <a href="#s02">02 if синтаксис</a>
+    <a href="#s03">03 if...else</a>
+    <a href="#s04">04 Оператори</a>
+    <a href="#s05">05 Примери</a>
+    <a href="#s06">06 Вложени условия</a>
+    <a href="#s07">07 Демонстрация</a>
+    <a href="#s08">08 Упражнения</a>
+    <a href="#s09">09 Тест</a>
+  </div>
+</div>
+
+<!-- ════ 01 CONCEPT ════ -->
+<section id="s01">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Какво е условен оператор?</h2>
+    </div>
+
+    <div class="concept cyan">
+      <h3>💡 Основна идея</h3>
+      <p>В реалния живот всеки ден вземаме <strong>решения на основата на условия</strong>:</p>
+      <ul>
+        <li><strong>АКО</strong> светофарът е червен → спирам</li>
+        <li><strong>АКО</strong> светофарът е зелен → отивам напред</li>
+        <li><strong>АКО</strong> оценката е под 2 → печаля, <strong>ИНАЧЕ</strong> съм доволен</li>
+      </ul>
+      <p style="margin-top: 12px;">Програмирането е точно същото! Казваме на компютъра: "<strong>АКО условието е вярно, направи това, ИНАЧЕ направи онова</strong>".</p>
+    </div>
+
+    <div class="concept green">
+      <h3>🎯 За какво служат?</h3>
+      <ul>
+        <li>Проверяване на стойности (четно ли е число, положително ли е)</li>
+        <li>Вземане на различни действия според ситуацията</li>
+        <li>Проверка на възрастта, на пароли, на резултати</li>
+        <li>Всичко което зависи от някакво условие!</li>
+      </ul>
+    </div>
+
+    <div class="concept pink">
+      <h3>🚦 Пример: Светофар</h3>
+      <p>Представи си светофар:</p>
+      <ul>
+        <li>Червено светло (true) → Спирам и чакам</li>
+        <li>Зелено светло (true) → Отивам напред</li>
+        <li>Жълто светло (true) → Подготвям се</li>
+      </ul>
+      <p style="margin-top: 12px;">Точно така работят условните оператори в C# — проверяват условие и действат според резултата!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 02 SIMPLE IF ════ -->
+<section id="s02">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Синтаксис на if</h2>
+    </div>
+
+    <div class="concept yellow">
+      <h3>📝 Основен синтаксис</h3>
+      <p>Всяка проверка в C# има следния шаблон:</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">Обикновен if</span>
+      </div>
+      <div class="code-body"><span class="kw">if</span> (условие)
+{
+    <span class="cm">// код, който се изпълнява АКО условието е TRUE</span>
+}
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>❓ Как се чете?</h3>
+      <p><code>if</code> = АКО (проверяем условието)
+      <br><code>(условие)</code> = вътрешността на скобите трябва да е TRUE или FALSE
+      <br><code>{ ... }</code> = ако е TRUE, изпълни всичко в скобите
+      </p>
+    </div>
+
+    <div class="flow-wrap">
+      <div class="flow-title">Поток на простия if</div>
+      <div class="flow">
+        <div class="flow-node">
+          <div class="flow-box condition">Начало</div>
+          <div class="flow-label">Стартирай</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">
+          <div class="flow-box condition">условие?</div>
+          <div class="flow-label">Провери</div>
+        </div>
+        <div class="flow-arrow">TRUE ↓</div>
+        <div class="flow-node">
+          <div class="flow-box true">Изпълни код</div>
+          <div class="flow-label">В скобите</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">
+          <div class="flow-box condition">Край</div>
+          <div class="flow-label">Готово</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">Реален пример</span>
+      </div>
+      <div class="code-body"><span class="kw">int</span> възраст = <span class="num">16</span>;
+
+<span class="kw">if</span> (възраст >= <span class="num">18</span>)
+{
+    Console.WriteLine(<span class="str">"Дойде на 18 години, много добре!"</span>);
+}
+
+<span class="cm">// Ако възраст НЯМА 18, нищо не се случва</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 03 IF...ELSE ════ -->
+<section id="s03">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>if...else и else if</h2>
+    </div>
+
+    <div class="concept pink">
+      <h3>⚡ Еска — что се случва когда условието е FALSE?</h3>
+      <p>А ако е условието е <strong>грешно</strong> (FALSE)? С помощта на <code>else</code> казваме: "Ако първото условие е грешно, тогава направи ТОА!"</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">if...else синтаксис</span>
+      </div>
+      <div class="code-body"><span class="kw">if</span> (условие)
+{
+    <span class="cm">// код АКО условието е TRUE</span>
+}
+<span class="kw">else</span>
+{
+    <span class="cm">// код АКО условието е FALSE</span>
+}
+      </div>
+    </div>
+
+    <div class="flow-wrap">
+      <div class="flow-title">Поток на if...else</div>
+      <div class="flow" style="min-width: 650px;">
+        <div class="flow-node">
+          <div class="flow-box condition">условие?</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="font-size:10px;color:var(--muted);">TRUE</div>
+          <div class="flow-arrow" style="margin:0 4px;padding:0;">↙</div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-box true">Изпълни if</div>
+          <div class="flow-label">този блок</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="font-size:10px;color:var(--muted);">FALSE</div>
+          <div class="flow-arrow" style="margin:0 4px;padding:0;">↘</div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-box false">Изпълни else</div>
+          <div class="flow-label">този блок</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">Пример с else</span>
+      </div>
+      <div class="code-body"><span class="kw">int</span> възраст = <span class="num">15</span>;
+
+<span class="kw">if</span> (възраст >= <span class="num">18</span>)
+{
+    Console.WriteLine(<span class="str">"Можеш да управляваш кола!"</span>);
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(<span class="str">"Много млад си още, почакай!"</span>);
+}
+<span class="cm">// Отпечатва: "Много млад си още, почакай!"</span>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>🔄 else if — множество условия</h3>
+      <p>А ако имаш <strong>три или повече варианта</strong>? Използвай <code>else if</code>!</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">if...else if...else синтаксис</span>
+      </div>
+      <div class="code-body"><span class="kw">if</span> (условие1)
+{
+    <span class="cm">// ако условие1 е TRUE</span>
+}
+<span class="kw">else if</span> (условие2)
+{
+    <span class="cm">// ако условие1 е FALSE И условие2 е TRUE</span>
+}
+<span class="kw">else if</span> (условие3)
+{
+    <span class="cm">// ако условие1 И условие2 са FALSE, И условие3 е TRUE</span>
+}
+<span class="kw">else</span>
+{
+    <span class="cm">// ако всички са FALSE</span>
+}
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">Класификация на оценки</span>
+      </div>
+      <div class="code-body"><span class="kw">int</span> оценка = <span class="num">4</span>;
+
+<span class="kw">if</span> (оценка == <span class="num">6</span>)
+{
+    Console.WriteLine(<span class="str">"Отличен!"</span>);
+}
+<span class="kw">else if</span> (оценка == <span class="num">5</span>)
+{
+    Console.WriteLine(<span class="str">"Много добър!"</span>);
+}
+<span class="kw">else if</span> (оценка == <span class="num">4</span>)
+{
+    Console.WriteLine(<span class="str">"Добър"</span>);
+}
+<span class="kw">else if</span> (оценка == <span class="num">3</span>)
+{
+    Console.WriteLine(<span class="str">"Среден"</span>);
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(<span class="str">"Слаб резултат"</span>);
+}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 04 OPERATORS ════ -->
+<section id="s04">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Оператори за сравнение</h2>
+    </div>
+
+    <div class="concept cyan">
+      <h3>🔍 Какво са оператори за сравнение?</h3>
+      <p>Всяко условие има нещо, което проверяваме. Това се прави с <strong>оператори за сравнение</strong>. Те казват на програмата: "Сравни две стойности и каза ми дали са еднакви, различни, по-малки и т.н."</p>
+    </div>
+
+    <h3 style="font-family:'Unbounded',sans-serif;font-size:14px;margin-bottom:16px;margin-top:24px;">Оператори за сравнение</h3>
+    <div class="operator-grid">
+      <div class="op-card">
+        <div class="op-symbol">==</div>
+        <div class="op-name">Равно</div>
+        <div class="op-desc">Проверява дали две стойности са еднакви</div>
+        <code style="display:block;margin-top:6px;text-align:center;">5 == 5 → TRUE</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">!=</div>
+        <div class="op-name">Не е равно</div>
+        <div class="op-desc">Проверява дали две стойности са различни</div>
+        <code style="display:block;margin-top:6px;text-align:center;">5 != 3 → TRUE</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">&lt;</div>
+        <div class="op-name">По-малко</div>
+        <div class="op-desc">Проверява дали първото е по-малко от второто</div>
+        <code style="display:block;margin-top:6px;text-align:center;">3 &lt; 5 → TRUE</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">&gt;</div>
+        <div class="op-name">По-голямо</div>
+        <div class="op-desc">Проверява дали първото е по-голямо от второто</div>
+        <code style="display:block;margin-top:6px;text-align:center;">5 &gt; 3 → TRUE</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">&lt;=</div>
+        <div class="op-name">По-малко или равно</div>
+        <div class="op-desc">По-малко ИЛИ точно равно</div>
+        <code style="display:block;margin-top:6px;text-align:center;">5 &lt;= 5 → TRUE</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">&gt;=</div>
+        <div class="op-name">По-голямо или равно</div>
+        <div class="op-desc">По-голямо ИЛИ точно равно</div>
+        <code style="display:block;margin-top:6px;text-align:center;">5 &gt;= 3 → TRUE</code>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Unbounded',sans-serif;font-size:14px;margin-bottom:16px;margin-top:32px;">Логически оператори</h3>
+    <div class="operator-grid">
+      <div class="op-card">
+        <div class="op-symbol">&&</div>
+        <div class="op-name">И (AND)</div>
+        <div class="op-desc">Двете условия трябва да са верни</div>
+        <code style="display:block;margin-top:6px;text-align:center;font-size:11px;">(възраст >= 18) && (име != "")</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">||</div>
+        <div class="op-name">ИЛИ (OR)</div>
+        <div class="op-desc">Поне едно условие трябва да е вярно</div>
+        <code style="display:block;margin-top:6px;text-align:center;font-size:11px;">(дата == Събота) || (дата == Неделя)</code>
+      </div>
+      <div class="op-card">
+        <div class="op-symbol">!</div>
+        <div class="op-name">НЕ (NOT)</div>
+        <div class="op-desc">Обрача истинската стойност (TRUE станало FALSE)</div>
+        <code style="display:block;margin-top:6px;text-align:center;">!(възраст < 18) → дорастнал</code>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">Използване на логически оператори</span>
+      </div>
+      <div class="code-body"><span class="cm">// && означава И (ДВЕ условия)</span>
+<span class="kw">if</span> (възраст >= <span class="num">18</span> && има_паспорт == <span class="kw">true</span>)
+{
+    Console.WriteLine(<span class="str">"Можеш да пътуваш в чужбина!"</span>);
+}
+
+<span class="cm">// || означава ИЛИ (ПОНЕ ЕДНО условие)</span>
+<span class="kw">if</span> (име == <span class="str">"Иван"</span> || име == <span class="str">"Мария"</span>)
+{
+    Console.WriteLine(<span class="str">"Вече имам това име!"</span>);
+}
+
+<span class="cm">// ! означава НЕ (обръща значението)</span>
+<span class="kw">if</span> (!(възраст < <span class="num">18</span>))
+{
+    Console.WriteLine(<span class="str">"Дорастнал си"</span>);
+}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 05 EXAMPLES ════ -->
+<section id="s05">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Примери</h2>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <h3 style="font-family:'Unbounded',sans-serif;font-size:14px;margin-bottom:12px;color:var(--yellow);">Пример 1️⃣ : Четност на число</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">C#</span>
+          <span class="code-title">Проверка дали число е четно или нечетно</span>
+        </div>
+        <div class="code-body"><span class="kw">int</span> число = <span class="num">7</span>;
+
+<span class="kw">if</span> (число % <span class="num">2</span> == <span class="num">0</span>)
+{
+    Console.WriteLine(<span class="str">"Числото е ЧЕТНО"</span>);
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(<span class="str">"Числото е НЕЧЕТНО"</span>);
+}
+<span class="cm">// % е модулна операция (остатък от деление)</span>
+<span class="cm">// Ако число % 2 == 0, значи няма остатък → четно</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <h3 style="font-family:'Unbounded',sans-serif;font-size:14px;margin-bottom:12px;color:var(--green);">Пример 2️⃣ : Класификация на оценка</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">C#</span>
+          <span class="code-title">От числова оценка до словна оценка</span>
+        </div>
+        <div class="code-body"><span class="kw">int</span> оценка = <span class="num">5</span>;
+
+<span class="kw">if</span> (оценка == <span class="num">6</span>)
+{
+    Console.WriteLine(<span class="str">"Отличен! 🏆"</span>);
+}
+<span class="kw">else if</span> (оценка == <span class="num">5</span>)
+{
+    Console.WriteLine(<span class="str">"Много добър! 👍"</span>);
+}
+<span class="kw">else if</span> (оценка == <span class="num">4</span>)
+{
+    Console.WriteLine(<span class="str">"Добър 👌"</span>);
+}
+<span class="kw">else if</span> (оценка == <span class="num">3</span>)
+{
+    Console.WriteLine(<span class="str">"Среден 😐"</span>);
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(<span class="str">"Нужна ти помощ 😟"</span>);
+}
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <h3 style="font-family:'Unbounded',sans-serif;font-size:14px;margin-bottom:12px;color:var(--cyan);">Пример 3️⃣ : Проверка на високосна година</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">C#</span>
+          <span class="code-title">Е ли горната година високосна?</span>
+        </div>
+        <div class="code-body"><span class="kw">int</span> година = <span class="num">2024</span>;
+
+<span class="kw">if</span> ((година % <span class="num">4</span> == <span class="num">0</span> && година % <span class="num">100</span> != <span class="num">0</span>) || година % <span class="num">400</span> == <span class="num">0</span>)
+{
+    Console.WriteLine(година + <span class="str">" е високосна година!"</span>);
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(година + <span class="str">" НЕ е високосна година"</span>);
+}
+<span class="cm">// Правило: дели се на 4 И НЕ на 100, ИЛИ дели се на 400</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <h3 style="font-family:'Unbounded',sans-serif;font-size:14px;margin-bottom:12px;color:var(--pink);">Пример 4️⃣ : Намиране на минимума</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">C#</span>
+          <span class="code-title">От три числа намери най-малкото</span>
+        </div>
+        <div class="code-body"><span class="kw">int</span> a = <span class="num">15</span>, b = <span class="num">8</span>, c = <span class="num">12</span>;
+
+<span class="kw">if</span> (a < b && a < c)
+{
+    Console.WriteLine(<span class="str">"Минимум: "</span> + a);
+}
+<span class="kw">else if</span> (b < a && b < c)
+{
+    Console.WriteLine(<span class="str">"Минимум: "</span> + b);
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(<span class="str">"Минимум: "</span> + c);
+}
+<span class="cm">// Отпечатва: "Минимум: 8"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 06 NESTED & SWITCH ════ -->
+<section id="s06">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Вложени условия и switch</h2>
+    </div>
+
+    <div class="concept cyan">
+      <h3>🪆 Вложени условия (if вътре в if)</h3>
+      <p>Понякога трябва да проверяваш условие, а след това трябва да проверяваш ново условие вътре в първото. Това се нарича <strong>вложени условия</strong>.</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">Вложено условие</span>
+      </div>
+      <div class="code-body"><span class="kw">int</span> възраст = <span class="num">20</span>;
+<span class="kw">string</span> водачски = <span class="str">"има"</span>;
+
+<span class="kw">if</span> (възраст >= <span class="num">18</span>)
+{
+    <span class="cm">// Първото условие е верно, сега проверяваме второ</span>
+    <span class="kw">if</span> (водачски == <span class="str">"има"</span>)
+    {
+        Console.WriteLine(<span class="str">"Можеш да управляваш кола!"</span>);
+    }
+    <span class="kw">else</span>
+    {
+        Console.WriteLine(<span class="str">"Трябва водачски"</span>);
+    }
+}
+<span class="kw">else</span>
+{
+    Console.WriteLine(<span class="str">"Твърде млад си"</span>);
+}
+      </div>
+    </div>
+
+    <div class="concept pink">
+      <h3>🎯 switch — много условия</h3>
+      <p>Когато имаш <strong>много условия по един и същ факт</strong>, използвай <code>switch</code>. Той е като дърво решения!</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">switch синтаксис</span>
+      </div>
+      <div class="code-body"><span class="kw">switch</span> (променлива)
+{
+    <span class="kw">case</span> стойност1:
+        <span class="cm">// код ако променлива == стойност1</span>
+        <span class="kw">break</span>;
+    <span class="kw">case</span> стойност2:
+        <span class="cm">// код ако променлива == стойност2</span>
+        <span class="kw">break</span>;
+    <span class="kw">default</span>:
+        <span class="cm">// код ако НИ ЕДИН case не се съвпада</span>
+        <span class="kw">break</span>;
+}
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">C#</span>
+        <span class="code-title">switch пример</span>
+      </div>
+      <div class="code-body"><span class="kw">int</span> ден = <span class="num">3</span>;
+
+<span class="kw">switch</span> (ден)
+{
+    <span class="kw">case</span> <span class="num">1</span>:
+        Console.WriteLine(<span class="str">"Понеделник"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">2</span>:
+        Console.WriteLine(<span class="str">"Вторник"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">3</span>:
+        Console.WriteLine(<span class="str">"Сряда"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">4</span>:
+        Console.WriteLine(<span class="str">"Четвъртък"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">5</span>:
+        Console.WriteLine(<span class="str">"Петък"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">6</span>:
+    <span class="kw">case</span> <span class="num">7</span>:
+        Console.WriteLine(<span class="str">"Уикенд!"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">default</span>:
+        Console.WriteLine(<span class="str">"Грешен ден"</span>);
+        <span class="kw">break</span>;
+}
+<span class="cm">// Отпечатва: "Сряда"</span>
+      </div>
+    </div>
+
+    <div class="concept yellow">
+      <h3>⚠️ Важно: break;</h3>
+      <p><code>break;</code> означава "излез от switch" - без него ще се продължи проверката!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 07 INTERACTIVE DEMO ════ -->
+<section id="s07">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Интерактивна демонстрация</h2>
+    </div>
+
+    <div class="demo-wrap">
+      <div class="demo-title">📊 Интерактивен калкулатор на оценки</div>
+      <div class="demo-cols">
+        <div class="demo-panel input">
+          <h4>Вход</h4>
+          <p style="font-size:12px;margin-bottom:10px;">Въведи оценка (2-6):</p>
+          <input type="number" id="demoGrade" class="demo-input" placeholder="4" min="2" max="6" value="4">
+          <button class="demo-btn" onclick="runDemo()">Изпълни демонстрация</button>
+          <button class="demo-btn" style="background:var(--surface2);color:var(--muted);margin-left:6px;" onclick="resetDemo()">Изчистване</button>
+        </div>
+        <div class="demo-panel output">
+          <h4>Изход &amp; Визуализация</h4>
+          <div class="demo-code" id="demoCode">// Кодът ще бъде визуализиран тук</div>
+          <div class="demo-output" id="demoOutput">// Резултатът ще се появи тук</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-wrap">
+      <div class="demo-title">🎂 Интерактивна проверка на възраст</div>
+      <div class="demo-cols">
+        <div class="demo-panel input">
+          <h4>Вход</h4>
+          <p style="font-size:12px;margin-bottom:10px;">Въведи възраст:</p>
+          <input type="number" id="demoAge" class="demo-input" placeholder="15" value="15">
+          <button class="demo-btn" onclick="runAgeDemo()">Проверка</button>
+          <button class="demo-btn" style="background:var(--surface2);color:var(--muted);margin-left:6px;" onclick="resetAgeDemo()">Изчистване</button>
+        </div>
+        <div class="demo-panel output">
+          <h4>Резултат</h4>
+          <div class="demo-output" id="demoAgeOutput">// Резултатът ще се появи тук</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 08 EXERCISES ════ -->
+<section id="s08">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Упражнения</h2>
+    </div>
+
+    <div class="ex-card easy">
+      <div class="ex-bg-num">1</div>
+      <div class="ex-header">
+        <span class="diff-badge">ЛЕСНА</span>
+        <span class="ex-title">Проверка на старт</span>
+      </div>
+      <p class="ex-desc">Напиши код, който проверява дали число е положително или отрицателно.</p>
+      <div class="ex-task">
+        <ul>
+          <li>Въведи променлива <strong>число</strong> със стойност -5</li>
+          <li>Ако е >= 0: отпечатай "Положително"</li>
+          <li>Ако е < 0: отпечатай "Отрицателно"</li>
+        </ul>
+      </div>
+      <div class="ex-buttons">
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+        <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+      </div>
+      <div class="hint-content">Използвай if/else структура:
+if (число >= 0) → положително
+else → отрицателно</div>
+      <div class="solution-content">int число = -5;
+
+if (число >= 0)
+{
+    Console.WriteLine("Положително");
+}
+else
+{
+    Console.WriteLine("Отрицателно");
+}</div>
+    </div>
+
+    <div class="ex-card easy">
+      <div class="ex-bg-num">2</div>
+      <div class="ex-header">
+        <span class="diff-badge">ЛЕСНА</span>
+        <span class="ex-title">Четност</span>
+      </div>
+      <p class="ex-desc">Напиши код, който проверява дали число е четно или нечетно.</p>
+      <div class="ex-task">
+        <ul>
+          <li>Въведи число 7</li>
+          <li>Ако число % 2 == 0: "Четно"</li>
+          <li>Иначе: "Нечетно"</li>
+        </ul>
+      </div>
+      <div class="ex-buttons">
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+        <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+      </div>
+      <div class="hint-content">Използвай % оператор:
+число % 2 == 0 → четно
+число % 2 != 0 → нечетно</div>
+      <div class="solution-content">int число = 7;
+
+if (число % 2 == 0)
+{
+    Console.WriteLine("Четно");
+}
+else
+{
+    Console.WriteLine("Нечетно");
+}</div>
+    </div>
+
+    <div class="ex-card medium">
+      <div class="ex-bg-num">3</div>
+      <div class="ex-header">
+        <span class="diff-badge">СРЕДНА</span>
+        <span class="ex-title">Съвет за летни дрехи</span>
+      </div>
+      <p class="ex-desc">Напиши код, който дава съвет за облекло въз основа на температура.</p>
+      <div class="ex-task">
+        <ul>
+          <li>Дай променлива температура = 28</li>
+          <li>Ако >= 25: "Лятна облека!"</li>
+          <li>Ако 15-25: "Пулувер е идеален"</li>
+          <li>Ако < 15: "Нужен ти е палто"</li>
+        </ul>
+      </div>
+      <div class="ex-buttons">
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+        <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+      </div>
+      <div class="hint-content">Използвай else if за три варианта:
+- ако >= 25
+- else if >= 15 (и < 25)
+- else < 15</div>
+      <div class="solution-content">int температура = 28;
+
+if (температура >= 25)
+{
+    Console.WriteLine("Лятна облека!");
+}
+else if (температура >= 15)
+{
+    Console.WriteLine("Пулувер е идеален");
+}
+else
+{
+    Console.WriteLine("Нужен ти е палто");
+}</div>
+    </div>
+
+    <div class="ex-card medium">
+      <div class="ex-bg-num">4</div>
+      <div class="ex-header">
+        <span class="diff-badge">СРЕДНА</span>
+        <span class="ex-title">Детелинското число</span>
+      </div>
+      <p class="ex-desc">Проверка дали число е едноцифрено, двуцифрено или трицифрено.</p>
+      <div class="ex-task">
+        <ul>
+          <li>число = 42</li>
+          <li>Ако число е между 0-9: "Едноцифрено"</li>
+          <li>Ако между 10-99: "Двуцифрено"</li>
+          <li>Ако >= 100: "Трицифрено"</li>
+        </ul>
+      </div>
+      <div class="ex-buttons">
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+        <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+      </div>
+      <div class="hint-content">Използвай сравнения:
+- ако < 10 → едноцифрено
+- else if < 100 → двуцифрено
+- else → трицифрено</div>
+      <div class="solution-content">int число = 42;
+
+if (число < 10)
+{
+    Console.WriteLine("Едноцифрено");
+}
+else if (число < 100)
+{
+    Console.WriteLine("Двуцифрено");
+}
+else
+{
+    Console.WriteLine("Трицифрено");
+}</div>
+    </div>
+
+    <div class="ex-card hard">
+      <div class="ex-bg-num">5</div>
+      <div class="ex-header">
+        <span class="diff-badge">ТРУДНА</span>
+        <span class="ex-title">Тест за пароля</span>
+      </div>
+      <p class="ex-desc">Напиши код, който проверява дали парола е силна (най-малко 8 символа И съдържа цифра).</p>
+      <div class="ex-task">
+        <ul>
+          <li>пароля = "Test1234"</li>
+          <li>Проверка дължина >= 8</li>
+          <li>Проверка съдържа ли цифра (0-9)</li>
+          <li>Ако двете верни: "Силна парола" иначе "Слаба парола"</li>
+        </ul>
+      </div>
+      <div class="ex-buttons">
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+        <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+      </div>
+      <div class="hint-content">Използвай && логически оператор:
+if (пароля.Length >= 8 && пароля.Any(char.IsDigit))</div>
+      <div class="solution-content">string пароля = "Test1234";
+
+if (пароля.Length >= 8 && пароля.Any(char.IsDigit))
+{
+    Console.WriteLine("Силна парола");
+}
+else
+{
+    Console.WriteLine("Слаба парола");
+}
+
+// Забележка: char.IsDigit() е вградена функция за проверка на цифра</div>
+    </div>
+
+    <div class="ex-card bonus">
+      <div class="ex-bg-num">6</div>
+      <div class="ex-header">
+        <span class="diff-badge">БОНУС</span>
+        <span class="ex-title">Триъгълник Valide</span>
+      </div>
+      <p class="ex-desc">Дадени три страни, проверка дали могат да образуват триъгълник (сума на две страни > третата).</p>
+      <div class="ex-task">
+        <ul>
+          <li>a = 3, b = 4, c = 5</li>
+          <li>Всички условия: a+b > c && b+c > a && a+c > b</li>
+          <li>Ако верни: "Валиден триъгълник", иначе: "Невалиден"</li>
+        </ul>
+      </div>
+      <div class="ex-buttons">
+        <button class="hint-btn" onclick="toggleHint(this)">💡 Подсказка</button>
+        <button class="solution-btn" onclick="toggleSolution(this)">✅ Пълно решение</button>
+      </div>
+      <div class="hint-content">Проверка с && оператор:
+if ((a+b > c) && (b+c > a) && (a+c > b))</div>
+      <div class="solution-content">int a = 3, b = 4, c = 5;
+
+if ((a + b > c) && (b + c > a) && (a + c > b))
+{
+    Console.WriteLine("Валиден триъгълник");
+}
+else
+{
+    Console.WriteLine("Невалиден триъгълник");
+}</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 09 QUIZ ════ -->
+<section id="s09">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Тест - Проверка знанията</h2>
+    </div>
+
+    <div class="quiz-card" id="q1">
+      <div class="quiz-q">1. Какво означава оператора ==?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q1',false)">Присвояване на стойност</button>
+        <button class="quiz-opt" onclick="answer(this,'q1',true)">Проверка дали две стойности са еднакви</button>
+        <button class="quiz-opt" onclick="answer(this,'q1',false)">Добавяне на две числа</button>
+        <button class="quiz-opt" onclick="answer(this,'q1',false)">Намаляне на число</button>
+      </div>
+      <div class="quiz-feedback" id="fb-q1"></div>
+    </div>
+
+    <div class="quiz-card" id="q2">
+      <div class="quiz-q">2. Какъв е резултатът на израза: 5 != 5?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q2',false)">TRUE</button>
+        <button class="quiz-opt" onclick="answer(this,'q2',true)">FALSE</button>
+        <button class="quiz-opt" onclick="answer(this,'q2',false)">Error</button>
+        <button class="quiz-opt" onclick="answer(this,'q2',false)">0</button>
+      </div>
+      <div class="quiz-feedback" id="fb-q2"></div>
+    </div>
+
+    <div class="quiz-card" id="q3">
+      <div class="quiz-q">3. Как се проверява дали ДВЕТЕ условия са верни?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q3',false)">||</button>
+        <button class="quiz-opt" onclick="answer(this,'q3',false)">!</button>
+        <button class="quiz-opt" onclick="answer(this,'q3',true)">&&</button>
+        <button class="quiz-opt" onclick="answer(this,'q3',false)">==</button>
+      </div>
+      <div class="quiz-feedback" id="fb-q3"></div>
+    </div>
+
+    <div class="quiz-card" id="q4">
+      <div class="quiz-q">4. Какво означава else блокът?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q4',false)">Спирание на програмата</button>
+        <button class="quiz-opt" onclick="answer(this,'q4',true)">Код, който се изпълнява ако условието е FALSE</button>
+        <button class="quiz-opt" onclick="answer(this,'q4',false)">Проверка на ново условие</button>
+        <button class="quiz-opt" onclick="answer(this,'q4',false)">Повторение на цикъл</button>
+      </div>
+      <div class="quiz-feedback" id="fb-q4"></div>
+    </div>
+
+    <div class="quiz-card" id="q5">
+      <div class="quiz-q">5. Кой оператор се използва за модула (остатък)?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q5',false)">+</button>
+        <button class="quiz-opt" onclick="answer(this,'q5',true)">%</button>
+        <button class="quiz-opt" onclick="answer(this,'q5',false)">^</button>
+        <button class="quiz-opt" onclick="answer(this,'q5',false)">~</button>
+      </div>
+      <div class="quiz-feedback" id="fb-q5"></div>
+    </div>
+
+    <div class="quiz-card" id="q6">
+      <div class="quiz-q">6. В switch структурата, какво означава break;?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q6',false)">Спирание на компютъра</button>
+        <button class="quiz-opt" onclick="answer(this,'q6',true)">Излизане от switch структурата</button>
+        <button class="quiz-opt" onclick="answer(this,'q6',false)">Повтаряне на switch</button>
+        <button class="quiz-opt" onclick="answer(this,'q6',false)">Проверка на ново условие</button>
+      </div>
+      <div class="quiz-feedback" id="fb-q6"></div>
+    </div>
+
+    <div id="quizScore">
+      <div style="font-family:'Unbounded',sans-serif;font-size:36px;font-weight:900;" id="scoreText"></div>
+      <div style="color:var(--muted);margin-top:10px;font-size:14px;" id="scoreSub"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<div class="footer container">
+  // if/else — 8 клас — Информатика — C# — условни оператори
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ─── GRADE DEMO ───
+function runDemo() {
+  const gradeInput = document.getElementById('demoGrade');
+  const grade = parseInt(gradeInput.value);
+
+  if (!grade || grade < 2 || grade > 6) {
+    document.getElementById('demoOutput').textContent = '❌ Въведи число между 2 и 6!';
+    return;
+  }
+
+  let code = `int оценка = ${grade};\n\n`;
+  let result = '';
+
+  if (grade === 6) {
+    code += 'if (оценка == 6)\n{\n    ← Условието е ВЕРНО!\n    Console.WriteLine("Отличен! 🏆");\n}';
+    result = 'Отличен! 🏆';
+  } else if (grade === 5) {
+    code += 'if (оценка == 6)\n    ← Условието е ГРЕШНО\nelse if (оценка == 5)\n{\n    ← Условието е ВЕРНО!\n    Console.WriteLine("Много добър! 👍");\n}';
+    result = 'Много добър! 👍';
+  } else if (grade === 4) {
+    code += 'if (оценка == 6)\n    ← ГРЕШНО\nelse if (оценка == 5)\n    ← ГРЕШНО\nelse if (оценка == 4)\n{\n    ← Условието е ВЕРНО!\n    Console.WriteLine("Добър 👌");\n}';
+    result = 'Добър 👌';
+  } else if (grade === 3) {
+    code += 'if (оценка == 6)\n    ← ГРЕШНО\nelse if (оценка == 5)\n    ← ГРЕШНО\nelse if (оценка == 4)\n    ← ГРЕШНО\nelse if (оценка == 3)\n{\n    ← Условието е ВЕРНО!\n    Console.WriteLine("Среден 😐");\n}';
+    result = 'Среден 😐';
+  } else {
+    code += 'if (оценка == 6)\n    ← ГРЕШНО\nelse if (оценка == 5)\n    ← ГРЕШНО\nelse if (оценка == 4)\n    ← ГРЕШНО\nelse if (оценка == 3)\n    ← ГРЕШНО\nelse\n{\n    ← Този блок се изпълнява!\n    Console.WriteLine("Нужна ти помощ 😟");\n}';
+    result = 'Нужна ти помощ 😟';
+  }
+
+  document.getElementById('demoCode').textContent = code;
+  document.getElementById('demoOutput').textContent = '📤 Изход:\n' + result;
+}
+
+function resetDemo() {
+  document.getElementById('demoGrade').value = '4';
+  document.getElementById('demoCode').textContent = '// Кодът ще бъде визуализиран тук';
+  document.getElementById('demoOutput').textContent = '// Резултатът ще се появи тук';
+}
+
+// ─── AGE DEMO ───
+function runAgeDemo() {
+  const ageInput = document.getElementById('demoAge');
+  const age = parseInt(ageInput.value);
+
+  if (!age || age < 0) {
+    document.getElementById('demoAgeOutput').textContent = '❌ Въведи валидна възраст!';
+    return;
+  }
+
+  let result = '';
+  if (age >= 18) {
+    result = `✅ Възраст: ${age}\n\nТи си дорастнал/а!\nМожеш:\n• Управлявай кола\n• Имаш права\n• Избирай`;
+  } else if (age >= 13) {
+    result = `ℹ️ Възраст: ${age}\n\nТи си тийнейджър!\n• Скоро ще си 18\n• Учи добре за будещното`;
+  } else {
+    result = `🧒 Възраст: ${age}\n\nТи си дете!\n• Още много време\n• Наслаждай се на детството`;
+  }
+
+  document.getElementById('demoAgeOutput').textContent = result;
+}
+
+function resetAgeDemo() {
+  document.getElementById('demoAge').value = '15';
+  document.getElementById('demoAgeOutput').textContent = '// Резултатът ще се появи тук';
+}
+
+// ─── HINTS & SOLUTIONS ───
+function toggleHint(btn) {
+  const container = btn.closest('.ex-card');
+  const h = container.querySelector('.hint-content');
+  h.classList.toggle('show');
+  btn.textContent = h.classList.contains('show') ? '🙈 Скрий подсказката' : '💡 Подсказка';
+}
+
+function toggleSolution(btn) {
+  const container = btn.closest('.ex-card');
+  const s = container.querySelector('.solution-content');
+  s.classList.toggle('show');
+  btn.textContent = s.classList.contains('show') ? '🙈 Скрий решението' : '✅ Пълно решение';
+}
+
+// ─── QUIZ ───
+const answered = {};
+let correct = 0;
+const total = 6;
+
+const msgs = {
+  correct: [
+    '✅ Точно! == е оператор за сравнение на равенство.',
+    '✅ Точно! 5 != 5 означава "5 НЕ е равно на 5", което е FALSE.',
+    '✅ Точно! && означава И — двете условия трябва да са верни.',
+    '✅ Точно! else блокът се изпълнява когато условието е FALSE.',
+    '✅ Точно! % е операторът за остатък от деление.',
+    '✅ Точно! break; излиза от switch структурата.'
+  ],
+  wrong: [
+    '❌ Не точно. == е за сравнение, не за присвояване (което е =).',
+    '❌ Не точно. 5 != 5 е FALSE защото 5 е равно на 5.',
+    '❌ Не точно. && е И, || е ИЛИ.',
+    '❌ Не точно. else се изпълнява когато условието е FALSE.',
+    '❌ Не точно. % е оператор за остатък.',
+    '❌ Не точно. break; излиза от switch структурата.'
+  ]
+};
+
+const qIdx = { q1:0, q2:1, q3:2, q4:3, q5:4, q6:5 };
+
+function answer(btn, qid, isCorrect) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  const idx = qIdx[qid];
+  const fb = document.getElementById('fb-' + qid);
+  btn.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb.textContent = msgs.correct[idx];
+    fb.className = 'quiz-feedback show ok';
+    correct++;
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = msgs.wrong[idx];
+    fb.className = 'quiz-feedback show err';
+  }
+
+  if (Object.keys(answered).length === total) showScore();
+}
+
+function showScore() {
+  const scoreDiv = document.getElementById('quizScore');
+  const scoreText = document.getElementById('scoreText');
+  const scoreSub = document.getElementById('scoreSub');
+  scoreDiv.style.display = 'block';
+  const pct = Math.round(correct / total * 100);
+  let col = '#ff6b9d';
+  if (pct >= 83) col = '#00ff88';
+  else if (pct >= 50) col = '#ffd93d';
+  scoreText.style.color = col;
+  scoreText.textContent = correct + '/' + total + ' верни (' + pct + '%)';
+  if (pct === 100) scoreSub.textContent = '🏆 Перфектен резултат! Отлично владееш условните оператори!';
+  else if (pct >= 83) scoreSub.textContent = '👏 Много добре! Почти перфектно.';
+  else if (pct >= 50) scoreSub.textContent = '📚 Добре, но прегледай раздели 02, 03 и 04 отново.';
+  else scoreSub.textContent = '💪 Прегледай материала отначало — можеш!';
+}
+</script>
+
+</body>
+</html>
