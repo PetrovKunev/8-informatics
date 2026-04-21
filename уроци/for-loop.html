@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 02 · for цикъл — C# Академия</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f1e8; --paper-2:#ece7d6; --paper-3:#e0d9c2;
+  --ink:#1a1814; --ink-2:#3d3932; --ink-3:#6b6558; --muted:#8a8472;
+  --red:#8b5a8c; --red-ink:#6b3e6e;
+  --teal:#2d8d8f; --teal-ink:#1d6568;
+  --mustard:#d4a017; --mustard-ink:#a67a0c;
+  --leaf:#5a8a3a; --leaf-ink:#3f6a28;
+  --rose:#c76b7a; --rose-ink:#9b4a59;
+  --line:#d4cdb8; --line-2:#b8b09a;
+  --shadow:6px 6px 0 0 var(--ink);
+  --shadow-sm:3px 3px 0 0 var(--ink);
+  --sans:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --pixel:'Press Start 2P',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden;}
+body{
+  background-image:radial-gradient(circle at 1px 1px, rgba(26,24,20,0.06) 1px, transparent 0);
+  background-size:22px 22px; min-height:100vh; line-height:1.65;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+code{font-family:var(--mono);background:var(--paper-2);padding:1px 6px;border:1.5px solid var(--line);font-size:0.92em;}
+strong{color:var(--ink);}
+
+.topbar{
+  position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:2px solid var(--ink);
+  padding:10px 20px;display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--pixel);font-size:11px;}
+.brand-mark{
+  width:28px;height:28px;background:var(--teal);border:2px solid var(--ink);
+  display:grid;place-items:center;color:#fff;font-family:var(--pixel);font-size:11px;
+  box-shadow:var(--shadow-sm);
+}
+.breadcrumb{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:0.5px;}
+.breadcrumb .sep{color:var(--line-2);margin:0 6px;}
+.breadcrumb a{color:var(--ink-2);border-bottom:1.5px solid var(--line-2);}
+.breadcrumb a:hover{color:var(--teal-ink);border-color:var(--teal-ink);}
+.hud{display:flex;gap:8px;font-family:var(--mono);font-size:11px;align-items:center;}
+.hud .chip{background:#fff;border:2px solid var(--ink);padding:5px 10px;box-shadow:var(--shadow-sm);}
+.hud .chip b{font-family:var(--pixel);font-size:9px;color:var(--teal-ink);margin-right:5px;}
+
+.hero{
+  padding:64px 24px 48px; text-align:center; position:relative;
+  border-bottom:2px dashed var(--line-2);
+  background:linear-gradient(180deg,transparent,rgba(45,141,143,0.06));
+}
+.hero .lv-tag{
+  display:inline-block; font-family:var(--pixel); font-size:10px;
+  background:var(--ink); color:var(--paper); padding:6px 12px; letter-spacing:0.5px;
+  margin-bottom:24px;
+}
+.hero h1{font-family:var(--pixel); font-size:clamp(26px,5vw,48px); line-height:1.2; margin-bottom:18px;}
+.hero h1 .kw{color:var(--teal-ink);}
+.hero h1 .br{color:var(--ink-3);}
+.hero p{max-width:620px;margin:0 auto 28px;font-size:17px;color:var(--ink-2);}
+.hero-stars{display:inline-flex;gap:8px;margin-bottom:20px;font-size:20px;color:var(--mustard);}
+.hero-stars .off{color:var(--line-2);}
+.toc{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.toc a{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:6px 12px;background:#fff;border:2px solid var(--ink);
+  box-shadow:var(--shadow-sm);transition:all .15s;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.toc a:hover{background:var(--ink);color:var(--paper);transform:translate(-2px,-2px);}
+
+.page{max-width:920px;margin:0 auto;padding:48px 24px 80px;}
+section{margin-bottom:56px;scroll-margin-top:90px;}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:26px;border-bottom:2.5px solid var(--ink);padding-bottom:12px;}
+.section-num{
+  font-family:var(--pixel);font-size:11px;
+  background:var(--teal);color:#fff;padding:6px 10px;
+  border:2px solid var(--ink);box-shadow:var(--shadow-sm);
+}
+.section-header h2{font-family:var(--pixel);font-size:clamp(14px,2.2vw,18px);line-height:1.3;flex:1;}
+
+.concept{
+  background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);
+  padding:20px 24px; margin-bottom:18px; position:relative;
+}
+.concept::before{content:'';position:absolute;left:-2.5px;top:-2.5px;bottom:-2.5px;width:8px;background:var(--teal);}
+.concept.red::before{background:var(--red);}
+.concept.mustard::before{background:var(--mustard);}
+.concept.leaf::before{background:var(--leaf);}
+.concept.rose::before{background:var(--rose);}
+.concept h3{font-family:var(--pixel);font-size:11px;color:var(--teal-ink);margin-bottom:12px;letter-spacing:0.5px;line-height:1.4;}
+.concept.red h3{color:var(--red-ink);}
+.concept.mustard h3{color:var(--mustard-ink);}
+.concept.leaf h3{color:var(--leaf-ink);}
+.concept.rose h3{color:var(--rose-ink);}
+.concept p, .concept li{font-size:15px;color:var(--ink-2);margin-bottom:6px;}
+.concept p:last-child, .concept li:last-child{margin-bottom:0;}
+.concept ul{padding-left:22px;margin:8px 0;}
+
+.code-block{background:var(--ink);border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden;}
+.code-header{background:var(--ink-2);color:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:2px solid var(--ink);font-family:var(--mono);font-size:11px;}
+.code-header .dots{display:flex;gap:5px;}
+.code-header .dots span{width:10px;height:10px;border:1.5px solid var(--paper);}
+.code-header .dots span:nth-child(1){background:var(--red);}
+.code-header .dots span:nth-child(2){background:var(--mustard);}
+.code-header .dots span:nth-child(3){background:var(--leaf);}
+.code-lang{font-family:var(--pixel);font-size:9px;color:var(--mustard);letter-spacing:1px;}
+.code-title{color:var(--paper-3);font-size:11px;}
+.code-body{padding:20px 24px;color:#e6e0cf;font-family:var(--mono);font-size:13.5px;line-height:1.8;overflow-x:auto;white-space:pre;}
+.code-body .kw{color:#f4a066;}
+.code-body .type{color:#8ec5fc;}
+.code-body .str{color:#b8d898;}
+.code-body .cm{color:#7d8a7a;font-style:italic;}
+.code-body .num{color:#d4a017;}
+.code-body .fn{color:#95c98a;}
+
+.flow-wrap{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:28px 20px;margin-bottom:22px;overflow-x:auto;}
+.flow-title{font-family:var(--pixel);font-size:10px;color:var(--ink-3);letter-spacing:1px;text-align:center;margin-bottom:22px;text-transform:uppercase;}
+.flow-vertical{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.flow-box{padding:14px 20px;font-family:var(--mono);font-size:12.5px;font-weight:700;border:2.5px solid var(--ink);white-space:nowrap;min-width:200px;text-align:center;box-shadow:3px 3px 0 0 var(--ink);}
+.flow-box.init{background:#e8f0d8;color:var(--leaf-ink);}
+.flow-box.cond{background:#fff;color:var(--ink);}
+.flow-box.body{background:#d8ebec;color:var(--teal-ink);}
+.flow-box.step{background:#f8e8c0;color:var(--mustard-ink);}
+.flow-box.stop{background:#f5d9de;color:var(--rose-ink);}
+.flow-label{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:4px;}
+.flow-arrow{font-family:var(--pixel);font-size:14px;color:var(--ink);}
+.flow-arrow.loop{color:var(--teal-ink);}
+
+/* TRACE TABLE */
+.trace-wrap{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;overflow-x:auto;}
+table.trace{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;min-width:560px;}
+table.trace th{background:var(--ink);color:var(--paper);font-family:var(--pixel);font-size:9px;padding:10px 12px;letter-spacing:0.5px;text-align:left;border-right:1px solid var(--ink-2);}
+table.trace th:last-child{border-right:none;}
+table.trace td{padding:10px 12px;border-top:1.5px solid var(--line);border-right:1px solid var(--line);color:var(--ink-2);}
+table.trace td:last-child{border-right:none;}
+table.trace tbody tr:hover{background:var(--paper);}
+table.trace tbody tr:last-child td{color:var(--rose-ink);font-weight:700;background:#fbeaee;}
+
+/* COMPARE GRID */
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:22px;}
+.compare-card{padding:18px 20px;border:2.5px solid var(--ink);box-shadow:var(--shadow-sm);}
+.compare-card.bad{background:#f5d9de;}
+.compare-card.good{background:#e8f0d8;}
+.compare-card h4{font-family:var(--pixel);font-size:10px;margin-bottom:10px;letter-spacing:0.5px;}
+.compare-card.bad h4{color:var(--rose-ink);}
+.compare-card.good h4{color:var(--leaf-ink);}
+.compare-card p{font-size:13px;color:var(--ink-2);margin-bottom:8px;}
+.compare-card code{background:rgba(0,0,0,0.05);border:1.5px solid var(--line-2);font-size:12px;display:inline-block;padding:4px 8px;}
+.compare-card pre{background:var(--ink);color:#e6e0cf;padding:10px 12px;font-family:var(--mono);font-size:11px;overflow-x:auto;margin-top:6px;}
+
+/* DEMO */
+.demo-wrap{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;}
+.demo-head{background:var(--paper-2);border-bottom:2px solid var(--ink);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.demo-head .badge{font-family:var(--pixel);font-size:9px;background:var(--mustard);border:2px solid var(--ink);padding:4px 8px;}
+.demo-head h4{font-family:var(--pixel);font-size:12px;color:var(--ink);}
+.demo-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.demo-panel{padding:20px 22px;}
+.demo-panel.input{border-right:2px solid var(--ink);background:var(--paper);}
+.demo-panel h5{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-3);margin-bottom:10px;margin-top:14px;}
+.demo-panel h5:first-child{margin-top:0;}
+.demo-input{width:100%;padding:10px 14px;font-family:var(--mono);font-size:15px;background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:var(--shadow-sm);margin-bottom:12px;}
+.demo-input:focus{outline:none;border-color:var(--teal);}
+.demo-btn{font-family:var(--pixel);font-size:9px;padding:10px 14px;background:var(--teal);color:#fff;border:2px solid var(--ink);box-shadow:var(--shadow-sm);margin-right:6px;letter-spacing:0.5px;transition:transform .1s;}
+.demo-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
+.demo-btn.alt{background:#fff;color:var(--ink);}
+.demo-output{background:var(--ink);color:#e6e0cf;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;min-height:140px;border:2px solid var(--ink);max-height:300px;overflow-y:auto;}
+.demo-status{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:8px;}
+
+/* EXERCISES */
+.ex-card{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;position:relative;}
+.ex-bg-num{position:absolute;top:10px;right:18px;font-family:var(--pixel);font-size:36px;color:var(--paper-2);opacity:0.9;pointer-events:none;}
+.ex-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.diff-badge{font-family:var(--pixel);font-size:9px;background:var(--leaf);color:#fff;border:2px solid var(--ink);padding:4px 8px;letter-spacing:0.5px;}
+.ex-card.med .diff-badge{background:var(--mustard);color:var(--ink);}
+.ex-card.hard .diff-badge{background:var(--rose);color:#fff;}
+.ex-card.bonus .diff-badge{background:var(--teal);color:#fff;}
+.ex-title{font-family:var(--sans);font-size:17px;font-weight:700;}
+.ex-desc{font-size:14.5px;color:var(--ink-2);margin-bottom:12px;}
+.ex-task{background:var(--paper);border:2px solid var(--line-2);padding:12px 16px;margin-bottom:12px;}
+.ex-task ul{padding-left:20px;}
+.ex-task li{font-size:13.5px;color:var(--ink-2);font-family:var(--mono);margin-bottom:4px;}
+.ex-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+.hint-btn, .solution-btn{font-family:var(--pixel);font-size:9px;padding:8px 12px;border:2px solid var(--ink);background:#fff;box-shadow:var(--shadow-sm);letter-spacing:0.5px;transition:transform .1s;}
+.hint-btn{background:var(--mustard);}
+.solution-btn{background:var(--leaf);color:#fff;}
+.hint-btn:hover, .solution-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
+.hint-content, .solution-content{display:none;margin-top:12px;padding:14px 16px;background:var(--ink);color:#e6e0cf;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;border:2px solid var(--ink);}
+.hint-content.show, .solution-content.show{display:block;}
+
+/* QUIZ */
+.quiz-card{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px;}
+.quiz-q{font-family:var(--sans);font-weight:700;font-size:16px;margin-bottom:14px;}
+.quiz-q code{font-size:13px;display:inline-block;margin-top:6px;}
+.quiz-options{display:grid;gap:8px;}
+.quiz-opt{text-align:left;padding:12px 16px;font-family:var(--mono);font-size:13px;background:var(--paper);border:2px solid var(--line-2);transition:all .15s;}
+.quiz-opt:hover:not(:disabled){background:#fff;border-color:var(--ink);transform:translateX(3px);}
+.quiz-opt:disabled{cursor:default;opacity:0.7;}
+.quiz-opt.correct{background:#d6e7c2;border-color:var(--leaf-ink);color:var(--leaf-ink);font-weight:700;opacity:1;}
+.quiz-opt.wrong{background:#f5d9de;border-color:var(--rose-ink);color:var(--rose-ink);font-weight:700;opacity:1;}
+.quiz-feedback{display:none;margin-top:12px;padding:10px 14px;font-family:var(--mono);font-size:12.5px;border:2px solid var(--ink);}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.ok{background:#e8f0d8;color:var(--leaf-ink);}
+.quiz-feedback.err{background:#f5d9de;color:var(--rose-ink);}
+
+#quizScore{display:none;background:var(--ink);color:var(--paper);border:2.5px solid var(--ink);padding:28px 24px;text-align:center;margin-top:20px;box-shadow:var(--shadow);}
+#scoreText{font-family:var(--pixel);font-size:20px;}
+#scoreSub{font-family:var(--mono);font-size:13px;margin-top:10px;color:var(--paper-3);}
+
+/* NAV */
+.lesson-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;padding:28px 0;border-top:2px solid var(--ink);margin-top:48px;align-items:center;}
+.nav-link{font-family:var(--mono);font-size:13px;padding:14px 18px;background:#fff;border:2px solid var(--ink);box-shadow:var(--shadow-sm);transition:all .15s;}
+.nav-link:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow);}
+.nav-link.next{background:var(--teal);color:#fff;text-align:right;}
+.nav-link.prev{text-align:left;}
+.nav-link .dir{font-family:var(--pixel);font-size:8px;opacity:0.7;display:block;margin-bottom:4px;letter-spacing:1px;}
+.home-btn{width:50px;height:50px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--pixel);font-size:16px;box-shadow:var(--shadow-sm);}
+.home-btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow);}
+
+.footer{border-top:2px solid var(--ink);background:var(--paper-2);padding:22px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+.footer b{color:var(--teal-ink);}
+
+@media(max-width:720px){
+  .demo-cols{grid-template-columns:1fr;}
+  .demo-panel.input{border-right:none;border-bottom:2px solid var(--ink);}
+  .lesson-nav{grid-template-columns:1fr;}
+  .hero h1{font-size:28px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">C#</div>
+    <span>C# АКАДЕМИЯ</span>
+  </div>
+  <div class="breadcrumb">
+    <a href="../index.html">⌂ начало</a>
+    <span class="sep">/</span>
+    <span>урок 02</span>
+    <span class="sep">/</span>
+    <span style="color:var(--teal-ink);">for цикъл</span>
+  </div>
+  <div class="hud">
+    <span class="chip"><b>LV</b>02</span>
+    <span class="chip"><b>XP</b>+120</span>
+    <span class="chip">⏱ 30 мин</span>
+  </div>
+</div>
+
+<section class="hero">
+  <span class="lv-tag">НИВО 02 · ЦИКЛИ</span>
+  <h1><span class="kw">for</span> <span class="br">(</span> i++ <span class="br">)</span></h1>
+  <div class="hero-stars"><span>★</span><span>★</span><span class="off">★</span></div>
+  <p>Повтори блок код N пъти — без да копираш същия ред 100 пъти. Научи брояча, условието и стъпката.</p>
+  <nav class="toc">
+    <a href="#s01">01 · Какво е цикъл</a>
+    <a href="#s02">02 · Синтаксис</a>
+    <a href="#s03">03 · Стъпка по стъпка</a>
+    <a href="#s04">04 · Примери</a>
+    <a href="#s05">05 · Чести грешки</a>
+    <a href="#s06">06 · Вложени</a>
+    <a href="#s07">07 · Демо</a>
+    <a href="#s08">08 · Упражнения</a>
+    <a href="#s09">09 · Тест</a>
+  </nav>
+</section>
+
+<main class="page">
+
+<!-- 01 -->
+<section id="s01">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>КАКВО Е ЦИКЪЛ?</h2>
+  </div>
+
+  <div class="concept">
+    <h3>↻ ОСНОВНА ИДЕЯ</h3>
+    <p>Цикълът е структура, която <strong>повтаря блок код</strong> определен брой пъти. Вместо да копираш един и същ ред 100 пъти, казваш на компютъра: "направи това 100 пъти".</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">без цикъл vs. с цикъл</span></div>
+<pre class="code-body"><span class="cm">// БЕЗ ЦИКЪЛ — 100 копия на един и същ ред</span>
+Console.WriteLine(<span class="str">"Привет"</span>);
+Console.WriteLine(<span class="str">"Привет"</span>);
+Console.WriteLine(<span class="str">"Привет"</span>);
+<span class="cm">// ...още 97 пъти — ужасно!</span>
+
+<span class="cm">// С ЦИКЪЛ — същото, но на 4 реда</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">100</span>; i++)
+{
+    Console.WriteLine(<span class="str">"Привет"</span>);
+}</pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>✓ КОГА ГИ ПОЛЗВАМЕ?</h3>
+    <ul>
+      <li>Да отпечатаме числа от 1 до 1000</li>
+      <li>Да сумираме числа</li>
+      <li>Да обработваме елементи на масив</li>
+      <li>Да рисуваме шаблони (триъгълник, правоъгълник)</li>
+      <li>Да четем редове от файл</li>
+      <li>Всяко "повтаряй N пъти" задание</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="s02">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>СИНТАКСИС НА FOR ЦИКЪЛ</h2>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">общ синтаксис</span></div>
+<pre class="code-body"><span class="kw">for</span> ( <span class="type">тип</span> i = начало; условие; стъпка )
+{
+    <span class="cm">// това се повтаря</span>
+}</pre>
+  </div>
+
+  <div class="concept mustard">
+    <h3>⚙ ЧЕТИРИТЕ ЧАСТИ НА FOR ЦИКЪЛА</h3>
+    <ul>
+      <li><strong>Инициализация</strong> (<code>i = 0</code>) — начална стойност на брояча</li>
+      <li><strong>Условие</strong> (<code>i &lt; 10</code>) — "повтаряй, докато е true"</li>
+      <li><strong>Тяло</strong> (<code>{ ... }</code>) — кодът, който се повтаря</li>
+      <li><strong>Стъпка</strong> (<code>i++</code>) — промяна на брояча след всяка итерация</li>
+    </ul>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-title">жизнен цикъл на for</div>
+    <div class="flow-vertical">
+      <div class="flow-box init">1. i = 0</div>
+      <div class="flow-label">инициализация</div>
+      <div class="flow-arrow">▼</div>
+      <div class="flow-box cond">2. i &lt; 10 ?</div>
+      <div class="flow-label">провери условието</div>
+      <div class="flow-arrow">▼ TRUE</div>
+      <div class="flow-box body">3. Изпълни тялото</div>
+      <div class="flow-label">кодът в { }</div>
+      <div class="flow-arrow">▼</div>
+      <div class="flow-box step">4. i++</div>
+      <div class="flow-label">увеличи брояча</div>
+      <div class="flow-arrow loop">↻ обратно към 2</div>
+      <div class="flow-box stop">FALSE → СТОП</div>
+      <div class="flow-label">цикълът е приключил</div>
+    </div>
+  </div>
+
+  <div class="concept rose">
+    <h3>◈ МНЕМОТЕХНИКА: INIT → CHECK → DO → STEP</h3>
+    <p><strong>INIT</strong> → начало: <code>int i = 0</code><br>
+    <strong>CHECK</strong> → проверка: <code>i &lt; 10</code><br>
+    <strong>DO</strong> → действие: блокът в { }<br>
+    <strong>STEP</strong> → стъпка: <code>i++</code>, после отново CHECK</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="s03">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>СТЪПКА ПО СТЪПКА</h2>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">числа от 1 до 5</span></div>
+<pre class="code-body"><span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++)
+{
+    Console.WriteLine(i);
+}</pre>
+  </div>
+
+  <p style="font-size:13px;margin-bottom:14px;color:var(--ink-3);font-family:var(--mono);">// какво се случва всяка итерация:</p>
+
+  <div class="trace-wrap">
+    <table class="trace">
+      <thead>
+        <tr><th>ИТЕРАЦИЯ</th><th>i</th><th>i &lt;= 5 ?</th><th>ДЕЙСТВИЕ</th><th>СЛЕД ТОВА</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>начало</td><td>i = 1</td><td>true</td><td>отпечатай 1</td><td>i++ → i = 2</td></tr>
+        <tr><td>2</td><td>i = 2</td><td>true</td><td>отпечатай 2</td><td>i++ → i = 3</td></tr>
+        <tr><td>3</td><td>i = 3</td><td>true</td><td>отпечатай 3</td><td>i++ → i = 4</td></tr>
+        <tr><td>4</td><td>i = 4</td><td>true</td><td>отпечатай 4</td><td>i++ → i = 5</td></tr>
+        <tr><td>5</td><td>i = 5</td><td>true</td><td>отпечатай 5</td><td>i++ → i = 6</td></tr>
+        <tr><td>6</td><td>i = 6</td><td>FALSE</td><td>СТОП</td><td>цикълът приключи</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="concept leaf">
+    <h3>▸ ИЗХОД НА КОНЗОЛАТА</h3>
+<pre style="background:var(--ink);color:#e6e0cf;padding:12px 14px;font-family:var(--mono);font-size:12.5px;border:2px solid var(--ink);margin-top:6px;">1
+2
+3
+4
+5</pre>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="s04">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>ПРИМЕРИ</h2>
+  </div>
+
+  <div class="concept mustard">
+    <h3>① СУМА НА ЧИСЛА ОТ 1 ДО N</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="cm">// Сумираме: 1 + 2 + 3 + ... + 10</span>
+<span class="type">int</span> sum = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">10</span>; i++)
+{
+    sum += i;  <span class="cm">// добавяме i към сумата</span>
+}
+Console.WriteLine(<span class="str">"Сума: "</span> + sum); <span class="cm">// изход: 55</span></pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>② ЧЕТНИ ЧИСЛА</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="cm">// Четни числа от 2 до 10 — стъпката е 2</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">2</span>; i &lt;= <span class="num">10</span>; i += <span class="num">2</span>)
+{
+    Console.WriteLine(i);
+}
+<span class="cm">// изход: 2, 4, 6, 8, 10</span></pre>
+  </div>
+
+  <div class="concept teal" style="position:relative;">
+    <h3>③ ТАБЛИЦА ЗА УМНОЖЕНИЕ НА 5</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span> n = <span class="num">5</span>;
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">10</span>; i++)
+{
+    Console.WriteLine(n + <span class="str">" x "</span> + i + <span class="str">" = "</span> + (n * i));
+}
+<span class="cm">// 5 x 1 = 5, 5 x 2 = 10, ... 5 x 10 = 50</span></pre>
+  </div>
+
+  <div class="concept rose">
+    <h3>④ ОБРАТНО БРОЕНЕ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="cm">// От 10 до 1 — i-- намалява брояча</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">10</span>; i >= <span class="num">1</span>; i--)
+{
+    Console.WriteLine(i);
+}
+<span class="cm">// изход: 10, 9, 8, 7, 6, 5, 4, 3, 2, 1</span></pre>
+  </div>
+</section>
+
+<!-- 05 MISTAKES -->
+<section id="s05">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>ЧЕСТИ ГРЕШКИ</h2>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:11px;margin:0 0 12px;color:var(--ink);">// ГРЕШКА 1: OFF-BY-ONE</h3>
+  <div class="compare">
+    <div class="compare-card bad">
+      <h4>✕ ГРЕШНО</h4>
+      <p>Искаме 10 числа, получаваме 11:</p>
+      <code>for (int i = 0; i &lt;= 10; i++)</code>
+      <p>Това дава 0,1,2...10 = 11 числа</p>
+    </div>
+    <div class="compare-card bad">
+      <h4>✕ ГРЕШНО</h4>
+      <p>Искаме 1-10, получаваме 0-9:</p>
+      <code>for (int i = 0; i &lt; 10; i++)</code>
+      <p>Това дава 0,1,2...9</p>
+    </div>
+    <div class="compare-card good">
+      <h4>✓ ПРАВИЛНО</h4>
+      <p>За числа 1 до 10:</p>
+      <code>for (int i = 1; i &lt;= 10; i++)</code>
+      <p>Точно 10 числа: 1,2,3...10</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:11px;margin:26px 0 12px;color:var(--ink);">// ГРЕШКА 2: БЕЗКРАЕН ЦИКЪЛ</h3>
+  <div class="compare">
+    <div class="compare-card bad">
+      <h4>✕ ГРЕШНО</h4>
+      <p>Условието винаги е true:</p>
+      <code>for (int i = 0; i &lt; 100; i--)</code>
+      <p>i намалява, но условието е i &lt; 100 → никога не спира</p>
+    </div>
+    <div class="compare-card bad">
+      <h4>✕ ГРЕШНО</h4>
+      <p>Броячът не се променя:</p>
+      <code>for (int i = 0; i &lt; 100;)</code>
+      <p>Няма i++, i остава 0 завинаги</p>
+    </div>
+    <div class="compare-card good">
+      <h4>✓ ПРАВИЛНО</h4>
+      <p>Условие и стъпка си пасват:</p>
+      <code>for (int i = 0; i &lt; 100; i++)</code>
+      <p>i расте с i++, краят е ясен</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:11px;margin:26px 0 12px;color:var(--ink);">// ГРЕШКА 3: МОДИФИЦИРАНЕ НА БРОЯЧА ОТВЪТРЕ</h3>
+  <div class="compare">
+    <div class="compare-card bad">
+      <h4>✕ ОПАСНО</h4>
+<pre><span class="kw">for</span> (<span class="type">int</span> i=0; i&lt;5; i++)
+{
+    i += <span class="num">2</span>; <span class="cm">// промяна тук!</span>
+    Console.WriteLine(i);
+}</pre>
+      <p>Резултат: 2, 5 (не е това, което очакваш)</p>
+    </div>
+    <div class="compare-card good">
+      <h4>✓ ПРАВИЛНО</h4>
+<pre><span class="kw">for</span> (<span class="type">int</span> i=0; i&lt;10; i+=<span class="num">2</span>)
+{
+    Console.WriteLine(i);
+}</pre>
+      <p>Стъпката в третата част е по-ясна</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 NESTED -->
+<section id="s06">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>ВЛОЖЕНИ ЦИКЛИ</h2>
+  </div>
+
+  <div class="concept leaf">
+    <h3>⊞ ЦИКЪЛ ВЪВ ЦИКЪЛ</h3>
+    <p>Цикъл <strong>вътре в</strong> друг цикъл. Външният се повтаря N пъти, вътрешният — M пъти за всяка итерация на външния. Общо: <strong>N × M итерации</strong>.</p>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:11px;margin:0 0 12px;color:var(--ink);">// ПРИМЕР: ПРАВОЪГЪЛНИК ОТ ЗВЕЗДИЧКИ</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">3 реда × 4 звездички</span></div>
+<pre class="code-body"><span class="cm">// външен цикъл = редове</span>
+<span class="kw">for</span> (<span class="type">int</span> row = <span class="num">1</span>; row &lt;= <span class="num">3</span>; row++)
+{
+    <span class="cm">// вътрешен цикъл = колони</span>
+    <span class="kw">for</span> (<span class="type">int</span> col = <span class="num">1</span>; col &lt;= <span class="num">4</span>; col++)
+    {
+        Console.Write(<span class="str">"* "</span>);
+    }
+    Console.WriteLine(); <span class="cm">// нов ред</span>
+}</pre>
+  </div>
+
+  <div class="concept teal">
+    <h3>▸ ИЗХОД</h3>
+<pre style="background:var(--ink);color:#e6e0cf;padding:12px 14px;font-family:var(--mono);font-size:12.5px;border:2px solid var(--ink);margin-top:6px;">* * * *
+* * * *
+* * * *</pre>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:11px;margin:26px 0 12px;color:var(--ink);">// ПРИМЕР 2: ТАБЛИЦА 3×3</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">3</span>; i++)
+{
+    <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">1</span>; j &lt;= <span class="num">3</span>; j++)
+    {
+        Console.Write((i * j) + <span class="str">" "</span>);
+    }
+    Console.WriteLine();
+}</pre>
+  </div>
+  <div class="concept teal">
+    <h3>▸ ИЗХОД (3×3)</h3>
+<pre style="background:var(--ink);color:#e6e0cf;padding:12px 14px;font-family:var(--mono);font-size:12.5px;border:2px solid var(--ink);margin-top:6px;">1 2 3
+2 4 6
+3 6 9</pre>
+  </div>
+</section>
+
+<!-- 07 DEMO -->
+<section id="s07">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>ИНТЕРАКТИВНА ДЕМОНСТРАЦИЯ</h2>
+  </div>
+
+  <div class="demo-wrap">
+    <div class="demo-head">
+      <span class="badge">DEMO</span>
+      <h4>СИМУЛАТОР НА FOR ЦИКЪЛ</h4>
+    </div>
+    <div class="demo-cols">
+      <div class="demo-panel input">
+        <h5>НАСТРОЙКИ</h5>
+        <p style="font-size:13px;color:var(--ink-2);margin-bottom:10px;">Начало:</p>
+        <input class="demo-input" id="demoStart" type="number" value="1">
+        <p style="font-size:13px;color:var(--ink-2);margin-bottom:10px;">Край:</p>
+        <input class="demo-input" id="demoEnd" type="number" value="10">
+        <p style="font-size:13px;color:var(--ink-2);margin-bottom:10px;">Стъпка:</p>
+        <input class="demo-input" id="demoStep" type="number" value="1">
+        <div>
+          <button class="demo-btn" onclick="runDemo()">СТАРТ ▶</button>
+          <button class="demo-btn alt" onclick="resetDemo()">НУЛИРАЙ</button>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <h5>ИЗПЪЛНЕНИЕ</h5>
+        <div class="demo-output" id="demoOutput">// резултатът ще се появи тук</div>
+        <div class="demo-status" id="demoStatus"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 EXERCISES -->
+<section id="s08">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>УПРАЖНЕНИЯ</h2>
+  </div>
+
+  <div class="ex-card">
+    <div class="ex-bg-num">1</div>
+    <div class="ex-header"><span class="diff-badge">ЛЕСНО</span><span class="ex-title">Числа от 1 до 20</span></div>
+    <p class="ex-desc">Напиши програма, която отпечатва всички числа от 1 до 20 на отделни редове.</p>
+    <div class="ex-task"><ul>
+      <li>for цикъл с начало 1, край 20</li>
+      <li>Console.WriteLine(i) за всяко число</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">for (int i = 1; i &lt;= 20; i++)
+{
+    Console.WriteLine(i);
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        for (int i = 1; i &lt;= 20; i++)
+        {
+            Console.WriteLine(i);
+        }
+    }
+}</div>
+  </div>
+
+  <div class="ex-card">
+    <div class="ex-bg-num">2</div>
+    <div class="ex-header"><span class="diff-badge">ЛЕСНО</span><span class="ex-title">Таблица за умножение</span></div>
+    <p class="ex-desc">Чети N от потребителя и отпечатай таблицата за умножение на N (1 до 10).</p>
+    <div class="ex-task"><ul>
+      <li>int.Parse(Console.ReadLine()) за да прочетеш N</li>
+      <li>for от 1 до 10</li>
+      <li>Отпечатай: N × i = резултат</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int n = int.Parse(Console.ReadLine());
+for (int i = 1; i &lt;= 10; i++)
+{
+    Console.WriteLine(n + " x " + i + " = " + (n * i));
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Въведи число: ");
+        int n = int.Parse(Console.ReadLine());
+
+        for (int i = 1; i &lt;= 10; i++)
+        {
+            Console.WriteLine(n + " x " + i + " = " + (n * i));
+        }
+    }
+}</div>
+  </div>
+
+  <div class="ex-card med">
+    <div class="ex-bg-num">3</div>
+    <div class="ex-header"><span class="diff-badge">СРЕДНО</span><span class="ex-title">Сума на числа</span></div>
+    <p class="ex-desc">Програма, която сумира всички числа от 1 до N (N прочетено от потребителя).</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N от конзолата</li>
+      <li>Сумирай в променлива sum = 0</li>
+      <li>Използвай sum += i</li>
+      <li>Отпечатай резултата</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int n = int.Parse(Console.ReadLine());
+int sum = 0;
+for (int i = 1; i &lt;= n; i++)
+{
+    sum += i;
+}
+Console.WriteLine("Сума: " + sum);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Въведи N: ");
+        int n = int.Parse(Console.ReadLine());
+
+        int sum = 0;
+        for (int i = 1; i &lt;= n; i++)
+        {
+            sum += i;
+        }
+
+        Console.WriteLine("Сума от 1 до " + n + " е: " + sum);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card med">
+    <div class="ex-bg-num">4</div>
+    <div class="ex-header"><span class="diff-badge">СРЕДНО</span><span class="ex-title">Четни числа</span></div>
+    <p class="ex-desc">Програма, която брои колко четни числа има в диапазона от 1 до 100.</p>
+    <div class="ex-task"><ul>
+      <li>for от 1 до 100</li>
+      <li>if (i % 2 == 0) увеличи брояч</li>
+      <li>Отпечатай броя</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int count = 0;
+for (int i = 1; i &lt;= 100; i++)
+{
+    if (i % 2 == 0) count++;
+}
+Console.WriteLine("Четни: " + count);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int count = 0;
+        for (int i = 1; i &lt;= 100; i++)
+        {
+            if (i % 2 == 0) count++;
+        }
+        Console.WriteLine("Брой четни числа от 1 до 100: " + count);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card hard">
+    <div class="ex-bg-num">5</div>
+    <div class="ex-header"><span class="diff-badge">ТРУДНО</span><span class="ex-title">Факториел</span></div>
+    <p class="ex-desc">Програма за факториел: N! = 1 × 2 × 3 × ... × N.</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N</li>
+      <li>factorial = 1</li>
+      <li>Умножи с всяко число от 1 до N</li>
+      <li>Отпечатай резултата</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int n = int.Parse(Console.ReadLine());
+int factorial = 1;
+for (int i = 1; i &lt;= n; i++)
+{
+    factorial *= i;
+}
+Console.WriteLine(n + "! = " + factorial);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Въведи N: ");
+        int n = int.Parse(Console.ReadLine());
+
+        int factorial = 1;
+        for (int i = 1; i &lt;= n; i++)
+        {
+            factorial *= i;
+        }
+
+        Console.WriteLine(n + "! = " + factorial);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card bonus">
+    <div class="ex-bg-num">★</div>
+    <div class="ex-header"><span class="diff-badge">БОНУС</span><span class="ex-title">Триъгълник от звездички</span></div>
+    <p class="ex-desc">Програма, която отпечатва триъгълник с N реда, където ред i има i звездички.</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N</li>
+      <li>Външен цикъл за редовете (1 до N)</li>
+      <li>Вътрешен цикъл за звездичките (1 до номер на ред)</li>
+      <li>WriteLine() след всеки ред</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int n = int.Parse(Console.ReadLine());
+for (int i = 1; i &lt;= n; i++)
+{
+    for (int j = 1; j &lt;= i; j++)
+    {
+        Console.Write("* ");
+    }
+    Console.WriteLine();
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Въведи височина: ");
+        int n = int.Parse(Console.ReadLine());
+
+        for (int i = 1; i &lt;= n; i++)
+        {
+            for (int j = 1; j &lt;= i; j++)
+            {
+                Console.Write("* ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+/* За n = 4:
+*
+* *
+* * *
+* * * *
+*/</div>
+  </div>
+</section>
+
+<!-- 09 QUIZ -->
+<section id="s09">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>ТЕСТ ЗА РАЗБИРАНЕ</h2>
+  </div>
+
+  <div class="quiz-card" id="q1">
+    <div class="quiz-q">1. Кой е редът на изпълнение на for цикъла?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">Инициализация → Стъпка → Условие → Тяло</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',true)">Инициализация → Условие → Тяло → Стъпка</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">Тяло → Условие → Стъпка → Инициализация</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">Условие → Инициализация → Тяло → Стъпка</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q1"></div>
+  </div>
+
+  <div class="quiz-card" id="q2">
+    <div class="quiz-q">2. Какво отпечатва този код?<br><code>for (int i = 0; i &lt; 5; i++) Console.WriteLine(i);</code></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">1, 2, 3, 4, 5</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',true)">0, 1, 2, 3, 4</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">5, 4, 3, 2, 1</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">0, 1, 2, 3, 4, 5</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q2"></div>
+  </div>
+
+  <div class="quiz-card" id="q3">
+    <div class="quiz-q">3. Колко пъти се изпълнява тялото?<br><code>for (int i = 0; i &lt;= 10; i++) { }</code></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">10 пъти</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',true)">11 пъти</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">9 пъти</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">12 пъти</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q3"></div>
+  </div>
+
+  <div class="quiz-card" id="q4">
+    <div class="quiz-q">4. Какво прави?<br><code>for (int i = 10; i &gt;= 1; i--) Console.WriteLine(i);</code></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Отпечатва 1, 2, 3... 10</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',true)">Отпечатва 10, 9, 8... 1</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Отпечатва 10 два пъти</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">Програмата дава грешка</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q4"></div>
+  </div>
+
+  <div class="quiz-card" id="q5">
+    <div class="quiz-q">5. Кой код сумира числата от 1 до 100?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">int sum = 0; for (int i = 0; i &lt; 100; i++) sum = sum + i;</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',true)">int sum = 0; for (int i = 1; i &lt;= 100; i++) sum += i;</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">int sum = 100; for (int i = 1; i &lt;= 100; i++) sum = i;</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">for (int i = 1; i &lt;= 100; i++) int sum = i;</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q5"></div>
+  </div>
+
+  <div class="quiz-card" id="q6">
+    <div class="quiz-q">6. Какво отпечатва вложеният цикъл?<br><code>for (int i = 1; i &lt;= 2; i++) for (int j = 1; j &lt;= 3; j++) Console.Write(i*j + " ");</code></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q6',true)">1 2 3 2 4 6</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">1 2 3</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">2 3 4</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">1 2 1 2 1 2</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q6"></div>
+  </div>
+
+  <div id="quizScore">
+    <div id="scoreText"></div>
+    <div id="scoreSub"></div>
+  </div>
+</section>
+
+<nav class="lesson-nav">
+  <a href="if-else.html" class="nav-link prev">
+    <span class="dir">◀ НАЗАД</span>
+    LV 01 · if / else
+  </a>
+  <a href="../index.html" class="home-btn">⌂</a>
+  <a href="while-loop.html" class="nav-link next">
+    <span class="dir">СЛЕДВАЩ УРОК ▶</span>
+    LV 03 · Цикъл while
+  </a>
+</nav>
+
+</main>
+
+<footer class="footer">
+  <b>C# АКАДЕМИЯ</b> · 8 КЛАС ИНФОРМАТИКА · УРОК 02 — for цикъл
+</footer>
+
+<script>
+function runDemo(){
+  const start = parseInt(document.getElementById('demoStart').value);
+  const end = parseInt(document.getElementById('demoEnd').value);
+  const step = parseInt(document.getElementById('demoStep').value);
+  const out = document.getElementById('demoOutput');
+  const status = document.getElementById('demoStatus');
+  if(isNaN(start) || isNaN(end) || isNaN(step) || step===0){
+    out.textContent = '✕ Въведи валидни числа (стъпка ≠ 0)';
+    status.textContent = '';
+    return;
+  }
+  let output = '';
+  let count = 0;
+  const limit = 500;
+  if(step > 0){
+    for(let i = start; i <= end && count < limit; i += step){
+      output += i + '\n';
+      count++;
+    }
+  } else {
+    for(let i = start; i >= end && count < limit; i += step){
+      output += i + '\n';
+      count++;
+    }
+  }
+  out.textContent = output || '// нито една итерация — провери настройките';
+  status.textContent = '▸ Изпълнени: ' + count + ' итерации';
+}
+function resetDemo(){
+  document.getElementById('demoStart').value = '1';
+  document.getElementById('demoEnd').value = '10';
+  document.getElementById('demoStep').value = '1';
+  document.getElementById('demoOutput').textContent = '// резултатът ще се появи тук';
+  document.getElementById('demoStatus').textContent = '';
+}
+
+function toggleHint(btn){
+  const c = btn.closest('.ex-card').querySelector('.hint-content');
+  c.classList.toggle('show');
+  btn.textContent = c.classList.contains('show') ? 'СКРИЙ' : 'ПОДСКАЗКА';
+}
+function toggleSolution(btn){
+  const c = btn.closest('.ex-card').querySelector('.solution-content');
+  c.classList.toggle('show');
+  btn.textContent = c.classList.contains('show') ? 'СКРИЙ' : 'РЕШЕНИЕ';
+}
+
+const answered = {};
+let correct = 0;
+const total = 6;
+const msgs = {
+  ok: [
+    '✓ Точно! Init → Check → Do → Step → обратно към Check.',
+    '✓ Точно! i < 5 дава 0, 1, 2, 3, 4.',
+    '✓ Точно! i <= 10 значи 0..10 включително = 11 стойности.',
+    '✓ Точно! i-- намалява, от 10 до 1.',
+    '✓ Точно! sum = 0, i от 1 до 100, sum += i.',
+    '✓ Точно! 2 × 3 = 6 итерации общо.'
+  ],
+  no: [
+    '✕ Редът е: Init → Check → Do → Step.',
+    '✕ i < 5 дава 0, 1, 2, 3, 4 (без 5).',
+    '✕ <= включва крайната стойност → 11 пъти.',
+    '✕ i-- намалява брояча, >= 1 значи докато i е >= 1.',
+    '✕ Правилното е sum = 0; for (i=1; i<=100; i++) sum += i.',
+    '✕ Вложеният цикъл дава 2 × 3 = 6 числа: 1,2,3 (от i=1) и 2,4,6 (от i=2).'
+  ]
+};
+const qIdx = {q1:0,q2:1,q3:2,q4:3,q5:4,q6:5};
+function answer(btn, qid, isCorrect){
+  if(answered[qid]) return;
+  answered[qid] = true;
+  const idx = qIdx[qid];
+  const fb = document.getElementById('fb-'+qid);
+  btn.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  if(isCorrect){
+    btn.classList.add('correct');
+    fb.textContent = msgs.ok[idx];
+    fb.className = 'quiz-feedback show ok';
+    correct++;
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = msgs.no[idx];
+    fb.className = 'quiz-feedback show err';
+  }
+  if(Object.keys(answered).length === total) showScore();
+}
+function showScore(){
+  const box = document.getElementById('quizScore');
+  const text = document.getElementById('scoreText');
+  const sub = document.getElementById('scoreSub');
+  box.style.display = 'block';
+  const pct = Math.round(correct/total*100);
+  text.textContent = correct + '/' + total + '  •  ' + pct + '%';
+  if(pct===100) sub.textContent = '★★★ ПЕРФЕКТНО! Владееш for цикъла.';
+  else if(pct>=83) sub.textContent = '★★ МНОГО ДОБРЕ!';
+  else if(pct>=50) sub.textContent = '★ Прегледай раздели 02, 03 и 05.';
+  else sub.textContent = '↻ Прегледай материала отначало.';
+}
+
+document.querySelectorAll('.toc a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const id = a.getAttribute('href');
+    if(id && id.startsWith('#')){
+      const el = document.querySelector(id);
+      if(el){ e.preventDefault(); window.scrollTo({top:el.offsetTop-80, behavior:'smooth'}); }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 06 · Масиви — C# Академия</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f1e8; --paper-2:#ece7d6; --paper-3:#e0d9c2;
+  --ink:#1a1814; --ink-2:#3d3932; --ink-3:#6b6558; --muted:#8a8472;
+  --red:#d14836; --red-ink:#a32d1e;
+  --teal:#2d8d8f; --teal-ink:#1d6568;
+  --mustard:#d4a017; --mustard-ink:#a67a0c;
+  --leaf:#5a8a3a; --leaf-ink:#3f6a28;
+  --rose:#c76b7a; --rose-ink:#9b4a59;
+  --plum:#8b5a8c; --plum-ink:#6b3e6e;
+  --line:#d4cdb8; --line-2:#b8b09a;
+  --shadow:6px 6px 0 0 var(--ink);
+  --shadow-sm:3px 3px 0 0 var(--ink);
+  --sans:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --pixel:'Press Start 2P',monospace;
+  --accent:var(--plum); --accent-ink:var(--plum-ink);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden;}
+body{
+  background-image:radial-gradient(circle at 1px 1px, rgba(26,24,20,0.06) 1px, transparent 0);
+  background-size:22px 22px; min-height:100vh; line-height:1.65;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+code{font-family:var(--mono);background:var(--paper-2);padding:1px 6px;border:1.5px solid var(--line);font-size:0.92em;}
+strong{color:var(--ink);}
+
+.topbar{
+  position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:2px solid var(--ink);
+  padding:10px 20px;display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--pixel);font-size:11px;}
+.brand-mark{
+  width:28px;height:28px;background:var(--accent);border:2px solid var(--ink);
+  display:grid;place-items:center;color:#fff;font-family:var(--pixel);font-size:11px;
+  box-shadow:var(--shadow-sm);
+}
+.breadcrumb{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:0.5px;}
+.breadcrumb .sep{color:var(--line-2);margin:0 6px;}
+.breadcrumb a{color:var(--ink-2);border-bottom:1.5px solid var(--line-2);}
+.breadcrumb a:hover{color:var(--accent-ink);border-color:var(--accent-ink);}
+.hud{display:flex;gap:8px;font-family:var(--mono);font-size:11px;align-items:center;}
+.hud .chip{background:#fff;border:2px solid var(--ink);padding:5px 10px;box-shadow:var(--shadow-sm);}
+.hud .chip b{font-family:var(--pixel);font-size:9px;color:var(--accent-ink);margin-right:5px;}
+
+.hero{
+  padding:64px 24px 48px; text-align:center; position:relative;
+  border-bottom:2px dashed var(--line-2);
+  background:linear-gradient(180deg,transparent,rgba(139,90,140,0.10));
+}
+.hero .lv-tag{
+  display:inline-block; font-family:var(--pixel); font-size:10px;
+  background:var(--ink); color:var(--paper); padding:6px 12px; letter-spacing:0.5px;
+  margin-bottom:24px;
+}
+.hero h1{font-family:var(--pixel); font-size:clamp(24px,5vw,44px); line-height:1.25; margin-bottom:18px;}
+.hero h1 .kw{color:var(--accent-ink);}
+.hero h1 .br{color:var(--ink-3);}
+.hero p{max-width:640px;margin:0 auto 28px;font-size:17px;color:var(--ink-2);}
+.hero-stars{display:inline-flex;gap:8px;margin-bottom:20px;font-size:20px;color:var(--mustard);}
+.hero-stars .off{color:var(--line-2);}
+.toc{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.toc a{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:6px 12px;background:#fff;border:2px solid var(--ink);
+  box-shadow:var(--shadow-sm);transition:all .15s;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.toc a:hover{background:var(--ink);color:var(--paper);transform:translate(-2px,-2px);}
+
+.page{max-width:920px;margin:0 auto;padding:48px 24px 80px;}
+section{margin-bottom:56px;scroll-margin-top:90px;}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:26px;border-bottom:2.5px solid var(--ink);padding-bottom:12px;}
+.section-num{
+  font-family:var(--pixel);font-size:11px;
+  background:var(--accent);color:#fff;padding:6px 10px;
+  border:2px solid var(--ink);box-shadow:var(--shadow-sm);
+}
+.section-header h2{font-family:var(--pixel);font-size:clamp(14px,2.2vw,18px);line-height:1.3;flex:1;}
+
+.concept{
+  background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);
+  padding:20px 24px; margin-bottom:18px; position:relative;
+}
+.concept::before{content:'';position:absolute;left:-2.5px;top:-2.5px;bottom:-2.5px;width:8px;background:var(--accent);}
+.concept.red::before{background:var(--red);}
+.concept.teal::before{background:var(--teal);}
+.concept.leaf::before{background:var(--leaf);}
+.concept.rose::before{background:var(--rose);}
+.concept.mustard::before{background:var(--mustard);}
+.concept h3{font-family:var(--pixel);font-size:11px;color:var(--accent-ink);margin-bottom:12px;letter-spacing:0.5px;line-height:1.5;}
+.concept.red h3{color:var(--red-ink);}
+.concept.teal h3{color:var(--teal-ink);}
+.concept.leaf h3{color:var(--leaf-ink);}
+.concept.rose h3{color:var(--rose-ink);}
+.concept.mustard h3{color:var(--mustard-ink);}
+.concept p, .concept li{font-size:15px;color:var(--ink-2);margin-bottom:6px;}
+.concept p:last-child, .concept li:last-child{margin-bottom:0;}
+.concept ul{padding-left:22px;margin:8px 0;}
+
+.code-block{background:var(--ink);border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden;}
+.code-header{background:var(--ink-2);color:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:2px solid var(--ink);font-family:var(--mono);font-size:11px;gap:10px;}
+.code-header .dots{display:flex;gap:5px;}
+.code-header .dots span{width:10px;height:10px;border:1.5px solid var(--paper);}
+.code-header .dots span:nth-child(1){background:var(--red);}
+.code-header .dots span:nth-child(2){background:var(--mustard);}
+.code-header .dots span:nth-child(3){background:var(--leaf);}
+.code-lang{font-family:var(--pixel);font-size:9px;color:var(--mustard);letter-spacing:1px;}
+.code-title{color:var(--paper-3);font-size:11px;}
+.code-body{padding:20px 24px;color:#e6e0cf;font-family:var(--mono);font-size:13.5px;line-height:1.8;overflow-x:auto;white-space:pre;}
+.code-body .kw{color:#f4a066;}
+.code-body .type{color:#8ec5fc;}
+.code-body .str{color:#b8d898;}
+.code-body .cm{color:#7d8a7a;font-style:italic;}
+.code-body .num{color:#d4a017;}
+.code-body .fn{color:#95c98a;}
+.code-body .prop{color:#ffb86c;}
+
+/* ARRAY VISUALIZATION (pixel-style boxes) */
+.arr-vis{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:28px 20px;margin-bottom:22px;overflow-x:auto;}
+.arr-vis-title{font-family:var(--pixel);font-size:10px;color:var(--ink-3);letter-spacing:1px;text-align:center;margin-bottom:18px;text-transform:uppercase;}
+.arr-row{display:flex;justify-content:center;gap:0;min-width:max-content;}
+.arr-cell{
+  width:68px;height:68px;
+  border:2.5px solid var(--ink);
+  background:var(--paper);
+  font-family:var(--mono);font-size:17px;font-weight:700;color:var(--ink);
+  display:grid;place-items:center;
+  box-shadow:inset 0 0 0 3px #fff;
+  flex-shrink:0;
+}
+.arr-cell + .arr-cell{border-left:none;}
+.arr-cell.hi{background:var(--accent);color:#fff;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.2);}
+.arr-cell.new{background:var(--leaf);color:#fff;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.2);}
+.arr-cell.old{background:var(--rose);color:#fff;box-shadow:inset 0 0 0 3px rgba(255,255,255,0.2);}
+.arr-idx-row{display:flex;justify-content:center;gap:0;min-width:max-content;margin-top:6px;}
+.arr-idx{width:68px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--ink-3);padding-top:4px;flex-shrink:0;}
+.arr-idx.hi{color:var(--accent-ink);font-weight:700;}
+.arr-legend{text-align:center;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+.arr-legend .val{color:var(--accent-ink);}
+.arr-legend .idx{color:var(--leaf-ink);}
+
+/* COMPARE */
+.compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;}
+.compare.two{grid-template-columns:1fr 1fr;}
+.compare-card{padding:20px 22px;border:2.5px solid var(--ink);box-shadow:var(--shadow-sm);background:#fff;}
+.compare-card.bad{background:#f5d9de;}
+.compare-card.good{background:#e8f0d8;}
+.compare-card.alt{background:var(--paper-2);}
+.compare-card h4{font-family:var(--pixel);font-size:11px;margin-bottom:10px;letter-spacing:0.5px;line-height:1.4;}
+.compare-card.bad h4{color:var(--rose-ink);}
+.compare-card.good h4{color:var(--leaf-ink);}
+.compare-card ul{padding-left:20px;margin:6px 0;}
+.compare-card li{font-size:13.5px;color:var(--ink-2);margin-bottom:6px;}
+.compare-card p{font-size:13.5px;color:var(--ink-2);margin-bottom:6px;}
+.compare-card pre{background:var(--ink);color:#e6e0cf;padding:10px 12px;font-family:var(--mono);font-size:11.5px;line-height:1.6;overflow-x:auto;margin:8px 0;}
+@media(max-width:820px){.compare{grid-template-columns:1fr 1fr;}}
+@media(max-width:580px){.compare,.compare.two{grid-template-columns:1fr;}}
+
+/* DEMO */
+.demo-wrap{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;}
+.demo-head{background:var(--paper-2);border-bottom:2px solid var(--ink);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.demo-head .badge{font-family:var(--pixel);font-size:9px;background:var(--accent);color:#fff;border:2px solid var(--ink);padding:4px 8px;}
+.demo-head h4{font-family:var(--pixel);font-size:12px;color:var(--ink);}
+.demo-body{padding:22px;}
+.demo-input{width:100%;padding:10px 14px;font-family:var(--mono);font-size:15px;background:var(--paper);color:var(--ink);border:2px solid var(--ink);box-shadow:var(--shadow-sm);margin-bottom:12px;}
+.demo-input:focus{outline:none;border-color:var(--accent);}
+.demo-btn{font-family:var(--pixel);font-size:9px;padding:10px 14px;background:var(--accent);color:#fff;border:2px solid var(--ink);box-shadow:var(--shadow-sm);margin-right:6px;letter-spacing:0.5px;transition:transform .1s;}
+.demo-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
+.demo-btn.alt{background:#fff;color:var(--ink);}
+.demo-status{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:10px;min-height:18px;}
+.demo-output{background:var(--ink);color:#e6e0cf;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;min-height:80px;border:2px solid var(--ink);max-height:280px;overflow-y:auto;margin-top:14px;}
+
+/* EXERCISES */
+.ex-card{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;position:relative;}
+.ex-bg-num{position:absolute;top:10px;right:18px;font-family:var(--pixel);font-size:36px;color:var(--paper-2);opacity:0.9;pointer-events:none;}
+.ex-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.diff-badge{font-family:var(--pixel);font-size:9px;background:var(--leaf);color:#fff;border:2px solid var(--ink);padding:4px 8px;letter-spacing:0.5px;}
+.ex-card.med .diff-badge{background:var(--mustard);color:var(--ink);}
+.ex-card.hard .diff-badge{background:var(--rose);color:#fff;}
+.ex-card.bonus .diff-badge{background:var(--teal);color:#fff;}
+.ex-title{font-family:var(--sans);font-size:17px;font-weight:700;}
+.ex-desc{font-size:14.5px;color:var(--ink-2);margin-bottom:12px;}
+.ex-task{background:var(--paper);border:2px solid var(--line-2);padding:12px 16px;margin-bottom:12px;}
+.ex-task ul{padding-left:20px;}
+.ex-task li{font-size:13.5px;color:var(--ink-2);font-family:var(--mono);margin-bottom:4px;}
+.ex-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+.hint-btn, .solution-btn{font-family:var(--pixel);font-size:9px;padding:8px 12px;border:2px solid var(--ink);background:#fff;box-shadow:var(--shadow-sm);letter-spacing:0.5px;transition:transform .1s;}
+.hint-btn{background:var(--mustard);}
+.solution-btn{background:var(--leaf);color:#fff;}
+.hint-btn:hover, .solution-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
+.hint-content, .solution-content{display:none;margin-top:12px;padding:14px 16px;background:var(--ink);color:#e6e0cf;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;border:2px solid var(--ink);}
+.hint-content.show, .solution-content.show{display:block;}
+
+/* QUIZ */
+.quiz-card{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px;}
+.quiz-q{font-family:var(--sans);font-weight:700;font-size:16px;margin-bottom:14px;}
+.quiz-q code{font-size:13px;display:inline-block;margin-top:6px;}
+.quiz-options{display:grid;gap:8px;}
+.quiz-opt{text-align:left;padding:12px 16px;font-family:var(--mono);font-size:13px;background:var(--paper);border:2px solid var(--line-2);transition:all .15s;}
+.quiz-opt:hover:not(:disabled){background:#fff;border-color:var(--ink);transform:translateX(3px);}
+.quiz-opt:disabled{cursor:default;opacity:0.7;}
+.quiz-opt.correct{background:#d6e7c2;border-color:var(--leaf-ink);color:var(--leaf-ink);font-weight:700;opacity:1;}
+.quiz-opt.wrong{background:#f5d9de;border-color:var(--rose-ink);color:var(--rose-ink);font-weight:700;opacity:1;}
+.quiz-feedback{display:none;margin-top:12px;padding:10px 14px;font-family:var(--mono);font-size:12.5px;border:2px solid var(--ink);}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.ok{background:#e8f0d8;color:var(--leaf-ink);}
+.quiz-feedback.err{background:#f5d9de;color:var(--rose-ink);}
+
+#quizScore{display:none;background:var(--ink);color:var(--paper);border:2.5px solid var(--ink);padding:28px 24px;text-align:center;margin-top:20px;box-shadow:var(--shadow);}
+#quizScore h3{font-family:var(--pixel);font-size:18px;margin-bottom:10px;}
+#quizScore p{font-family:var(--mono);font-size:13px;color:var(--paper-3);}
+
+/* NAV */
+.lesson-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;padding:28px 0;border-top:2px solid var(--ink);margin-top:48px;align-items:center;}
+.nav-link{font-family:var(--mono);font-size:13px;padding:14px 18px;background:#fff;border:2px solid var(--ink);box-shadow:var(--shadow-sm);transition:all .15s;}
+.nav-link:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow);}
+.nav-link.next{background:var(--accent);color:#fff;text-align:right;}
+.nav-link.prev{text-align:left;}
+.nav-link .dir{font-family:var(--pixel);font-size:8px;opacity:0.7;display:block;margin-bottom:4px;letter-spacing:1px;}
+.home-btn{width:50px;height:50px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--pixel);font-size:16px;box-shadow:var(--shadow-sm);}
+.home-btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow);}
+
+.footer{border-top:2px solid var(--ink);background:var(--paper-2);padding:22px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+.footer b{color:var(--accent-ink);}
+
+@media(max-width:720px){
+  .lesson-nav{grid-template-columns:1fr;}
+  .hero h1{font-size:26px;}
+  .arr-cell{width:52px;height:52px;font-size:14px;}
+  .arr-idx{width:52px;font-size:10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">C#</div>
+    <span>C# АКАДЕМИЯ</span>
+  </div>
+  <div class="breadcrumb">
+    <a href="../index.html">⌂ начало</a>
+    <span class="sep">/</span>
+    <span>урок 06</span>
+    <span class="sep">/</span>
+    <span style="color:var(--accent-ink);">масиви</span>
+  </div>
+  <div class="hud">
+    <span class="chip"><b>LV</b>06</span>
+    <span class="chip"><b>XP</b>+160</span>
+    <span class="chip">⏱ 35 мин</span>
+  </div>
+</div>
+
+<section class="hero">
+  <span class="lv-tag">НИВО 06 · КОЛЕКЦИИ</span>
+  <h1><span class="kw">int[]</span> <span class="br">{</span> масиви <span class="br">}</span></h1>
+  <div class="hero-stars"><span>★</span><span>★</span><span>★</span></div>
+  <p>Една променлива — много стойности. Научи как да съхраняваш подредени данни в кутийки с индекси и как да ги обхождаш с <code>for</code>.</p>
+  <nav class="toc">
+    <a href="#s01">01 · Защо масив</a>
+    <a href="#s02">02 · Какво е</a>
+    <a href="#s03">03 · Създаване</a>
+    <a href="#s04">04 · Индекси</a>
+    <a href="#s05">05 · Достъп</a>
+    <a href="#s06">06 · Обхождане</a>
+    <a href="#s07">07 · Примери</a>
+    <a href="#s08">08 · Грешки</a>
+    <a href="#s09">09 · Демо</a>
+    <a href="#s10">10 · Упражнения</a>
+    <a href="#s11">11 · Тест</a>
+  </nav>
+</section>
+
+<main class="page">
+
+<!-- 01 -->
+<section id="s01">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>ЗАЩО НИ ТРЯБВАТ МАСИВИ?</h2>
+  </div>
+
+  <div class="concept rose">
+    <h3>✕ ПРОБЛЕМ — МНОГО ПРОМЕНЛИВИ</h3>
+    <p>Искаш да пазиш оценките на <strong>5 ученика</strong>. Досега би написал:</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">стар начин — 5 променливи</span></div>
+<pre class="code-body"><span class="type">int</span> оценка1 = <span class="num">5</span>;
+<span class="type">int</span> оценка2 = <span class="num">6</span>;
+<span class="type">int</span> оценка3 = <span class="num">4</span>;
+<span class="type">int</span> оценка4 = <span class="num">6</span>;
+<span class="type">int</span> оценка5 = <span class="num">5</span>;
+<span class="cm">// а ако са 30? 1000? 😱</span></pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>◉ РЕШЕНИЕ — МАСИВ</h3>
+    <p>Един масив пази <strong>много стойности под едно име</strong>:</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">нов начин — един масив</span></div>
+<pre class="code-body"><span class="type">int</span>[] оценки = { <span class="num">5</span>, <span class="num">6</span>, <span class="num">4</span>, <span class="num">6</span>, <span class="num">5</span> };
+<span class="cm">// една променлива — пет стойности ✨</span></pre>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="s02">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>КАКВО Е МАСИВ?</h2>
+  </div>
+
+  <div class="concept">
+    <h3>◈ ОПРЕДЕЛЕНИЕ</h3>
+    <p><strong>Масив</strong> е редица от <strong>кутийки</strong>, подредени една до друга. Всяка кутийка:</p>
+    <ul>
+      <li>съдържа <strong>една стойност</strong> от един и същ тип</li>
+      <li>има <strong>номер</strong> — нарича се <strong>индекс</strong></li>
+    </ul>
+    <p>Всички кутийки са под <strong>едно общо име</strong> (името на масива).</p>
+  </div>
+
+  <div class="arr-vis">
+    <div class="arr-vis-title">// int[] оценки = { 5, 6, 4, 6, 5 }</div>
+    <div class="arr-row">
+      <div class="arr-cell hi">5</div>
+      <div class="arr-cell hi">6</div>
+      <div class="arr-cell hi">4</div>
+      <div class="arr-cell hi">6</div>
+      <div class="arr-cell hi">5</div>
+    </div>
+    <div class="arr-idx-row">
+      <div class="arr-idx">[0]</div>
+      <div class="arr-idx">[1]</div>
+      <div class="arr-idx">[2]</div>
+      <div class="arr-idx">[3]</div>
+      <div class="arr-idx">[4]</div>
+    </div>
+    <div class="arr-legend"><span class="val">■ стойности</span> &nbsp;&nbsp; <span class="idx">■ индекси</span></div>
+  </div>
+
+  <div class="concept mustard">
+    <h3>▲ НАЙ-ВАЖНОТО — ИНДЕКСИТЕ ЗАПОЧВАТ ОТ 0</h3>
+    <p>Първият елемент е на индекс <code>0</code>, не на <code>1</code>. Ако масивът има 5 елемента, индексите са <code>0, 1, 2, 3, 4</code> — <strong>не</strong> <code>1, 2, 3, 4, 5</code>.</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="s03">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>СЪЗДАВАНЕ</h2>
+  </div>
+
+  <div class="concept">
+    <h3>① НАЧИН 1 — С ГОТОВИ СТОЙНОСТИ</h3>
+    <p>Когато още отначало знаеш какво ще сложиш в масива.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="cm">// 5 оценки, подредени директно</span>
+<span class="type">int</span>[] оценки = { <span class="num">5</span>, <span class="num">6</span>, <span class="num">4</span>, <span class="num">6</span>, <span class="num">5</span> };
+
+<span class="cm">// имена — масив от текстове</span>
+<span class="type">string</span>[] имена = { <span class="str">"Ана"</span>, <span class="str">"Иван"</span>, <span class="str">"Петя"</span> };
+
+<span class="cm">// числа с плаваща запетая</span>
+<span class="type">double</span>[] цени = { <span class="num">1.20</span>, <span class="num">2.50</span>, <span class="num">3.99</span> };</pre>
+  </div>
+
+  <div class="concept teal">
+    <h3>② НАЧИН 2 — ПРАЗЕН МАСИВ С РАЗМЕР</h3>
+    <p>Когато ще пълниш стойностите по-късно — от потребителя или от файл.</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="cm">// масив за 10 числа — всички започват с 0</span>
+<span class="type">int</span>[] числа = <span class="kw">new</span> <span class="type">int</span>[<span class="num">10</span>];
+
+<span class="cm">// масив за 3 текста — всички започват с null</span>
+<span class="type">string</span>[] думи = <span class="kw">new</span> <span class="type">string</span>[<span class="num">3</span>];</pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>◎ КОГА КОЙ НАЧИН?</h3>
+    <ul>
+      <li><strong>Начин 1</strong> — когато знаеш стойностите (напр. дните на седмицата)</li>
+      <li><strong>Начин 2</strong> — когато ще четеш от потребителя или файл, а само знаеш броя</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="s04">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>КАК РАБОТЯТ ИНДЕКСИТЕ</h2>
+  </div>
+
+  <div class="concept">
+    <h3>◉ ИНДЕКСЪТ Е АДРЕС</h3>
+    <p>Индексът е <strong>адресът</strong> на кутийка вътре в масива. Пишем го в квадратни скоби: <code>масив[индекс]</code>.</p>
+  </div>
+
+  <div class="arr-vis">
+    <div class="arr-vis-title">// string[] имена = { "Ана", "Иван", "Петя", "Мая" }</div>
+    <div class="arr-row">
+      <div class="arr-cell hi">Ана</div>
+      <div class="arr-cell hi">Иван</div>
+      <div class="arr-cell hi">Петя</div>
+      <div class="arr-cell hi">Мая</div>
+    </div>
+    <div class="arr-idx-row">
+      <div class="arr-idx">[0]</div>
+      <div class="arr-idx">[1]</div>
+      <div class="arr-idx">[2]</div>
+      <div class="arr-idx">[3]</div>
+    </div>
+  </div>
+
+  <div class="concept leaf">
+    <h3>▣ БРОЙ ЕЛЕМЕНТИ И ПОСЛЕДЕН ИНДЕКС</h3>
+    <p>Масивът <code>имена</code> има <strong>4 елемента</strong>. Индексите са <code>0, 1, 2, 3</code>.</p>
+    <p>⚡ Запомни тази формула:</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">FORMULA</span></div>
+<pre class="code-body">индекс на последния елемент  =  брой елементи − 1</pre>
+  </div>
+
+  <div class="concept mustard">
+    <h3>◆ СВОЙСТВОТО .Length</h3>
+    <p>За да разбереш <strong>колко елемента</strong> има в масива, използваш <code>.Length</code>:</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span>[] числа = { <span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span> };
+Console.WriteLine(числа.<span class="prop">Length</span>); <span class="cm">// 4</span>
+
+<span class="cm">// последният индекс</span>
+Console.WriteLine(числа[числа.<span class="prop">Length</span> - <span class="num">1</span>]); <span class="cm">// 40</span></pre>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="s05">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>ДОСТЪП И ПРОМЯНА</h2>
+  </div>
+
+  <div class="concept">
+    <h3>◉ ПРОЧИТАНЕ НА ЕЛЕМЕНТ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">string</span>[] имена = { <span class="str">"Ана"</span>, <span class="str">"Иван"</span>, <span class="str">"Петя"</span>, <span class="str">"Мая"</span> };
+
+Console.WriteLine(имена[<span class="num">0</span>]);  <span class="cm">// Ана</span>
+Console.WriteLine(имена[<span class="num">2</span>]);  <span class="cm">// Петя</span>
+Console.WriteLine(имена[<span class="num">3</span>]);  <span class="cm">// Мая — последният</span></pre>
+  </div>
+
+  <div class="concept teal">
+    <h3>✎ ПРОМЯНА НА ЕЛЕМЕНТ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span>[] точки = { <span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span> };
+
+<span class="cm">// променяме елемента на индекс 1</span>
+точки[<span class="num">1</span>] = <span class="num">99</span>;
+
+Console.WriteLine(точки[<span class="num">1</span>]); <span class="cm">// 99 (вече не е 20)</span></pre>
+  </div>
+
+  <div class="arr-vis">
+    <div class="arr-vis-title">// преди: точки[1] = 20</div>
+    <div class="arr-row">
+      <div class="arr-cell">10</div>
+      <div class="arr-cell old">20</div>
+      <div class="arr-cell">30</div>
+    </div>
+    <div class="arr-idx-row">
+      <div class="arr-idx">[0]</div>
+      <div class="arr-idx" style="color:var(--rose-ink);font-weight:700;">[1]</div>
+      <div class="arr-idx">[2]</div>
+    </div>
+    <div class="arr-vis-title" style="margin-top:24px;">// след: точки[1] = 99</div>
+    <div class="arr-row">
+      <div class="arr-cell">10</div>
+      <div class="arr-cell new">99</div>
+      <div class="arr-cell">30</div>
+    </div>
+    <div class="arr-idx-row">
+      <div class="arr-idx">[0]</div>
+      <div class="arr-idx" style="color:var(--leaf-ink);font-weight:700;">[1]</div>
+      <div class="arr-idx">[2]</div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="s06">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>ОБХОЖДАНЕ С for ЦИКЪЛ</h2>
+  </div>
+
+  <div class="concept">
+    <h3>↻ МАСИВИ + FOR = НАЙ-ДОБРИТЕ ПРИЯТЕЛИ</h3>
+    <p>За да обходим всички елементи, използваме <code>for</code> от <code>0</code> до <code>.Length - 1</code>:</p>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">отпечатване на всички елементи</span></div>
+<pre class="code-body"><span class="type">string</span>[] имена = { <span class="str">"Ана"</span>, <span class="str">"Иван"</span>, <span class="str">"Петя"</span> };
+
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; имена.<span class="prop">Length</span>; i++)
+{
+    Console.WriteLine(имена[i]);
+}
+<span class="cm">// изход: Ана, Иван, Петя</span></pre>
+  </div>
+
+  <div class="concept mustard">
+    <h3>◆ ЗАБЕЛЕЖИ УСЛОВИЕТО: i &lt; имена.Length</h3>
+    <p>Пишем <code>&lt;</code> (по-малко), <strong>не</strong> <code>&lt;=</code>. Защото:</p>
+    <ul>
+      <li><code>имена.Length</code> = 3</li>
+      <li>валидни индекси = <code>0, 1, 2</code></li>
+      <li>индекс <code>3</code> не съществува → <code>i &lt;= 3</code> дава грешка!</li>
+    </ul>
+  </div>
+
+  <div class="concept teal">
+    <h3>◈ ЧЕТЕНЕ ОТ ПОТРЕБИТЕЛ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">пълним празен масив с for</span></div>
+<pre class="code-body"><span class="cm">// празен масив за 5 числа</span>
+<span class="type">int</span>[] числа = <span class="kw">new</span> <span class="type">int</span>[<span class="num">5</span>];
+
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; числа.<span class="prop">Length</span>; i++)
+{
+    Console.Write(<span class="str">"Число "</span> + (i + <span class="num">1</span>) + <span class="str">": "</span>);
+    числа[i] = <span class="type">int</span>.Parse(Console.ReadLine());
+}</pre>
+  </div>
+</section>
+
+<!-- 07 -->
+<section id="s07">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>КЛАСИЧЕСКИ ПРИМЕРИ</h2>
+  </div>
+
+  <div class="concept">
+    <h3>① СУМА НА ВСИЧКИ ЕЛЕМЕНТИ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span>[] числа = { <span class="num">3</span>, <span class="num">7</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">4</span> };
+<span class="type">int</span> сума = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; числа.<span class="prop">Length</span>; i++)
+{
+    сума += числа[i];
+}
+
+Console.WriteLine(<span class="str">"Сума: "</span> + сума); <span class="cm">// 24</span></pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>② НАЙ-ГОЛЯМОТО ЧИСЛО</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span>[] числа = { <span class="num">3</span>, <span class="num">7</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">4</span> };
+
+<span class="cm">// започваме с първия като "най-голям засега"</span>
+<span class="type">int</span> max = числа[<span class="num">0</span>];
+
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt; числа.<span class="prop">Length</span>; i++)
+{
+    <span class="kw">if</span> (числа[i] &gt; max)
+    {
+        max = числа[i];
+    }
+}
+
+Console.WriteLine(<span class="str">"Най-голямо: "</span> + max); <span class="cm">// 9</span></pre>
+  </div>
+
+  <div class="concept teal">
+    <h3>③ ТЪРСЕНЕ НА СТОЙНОСТ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">string</span>[] имена = { <span class="str">"Ана"</span>, <span class="str">"Иван"</span>, <span class="str">"Петя"</span>, <span class="str">"Мая"</span> };
+<span class="type">string</span> търсено = <span class="str">"Петя"</span>;
+<span class="type">bool</span> намерено = <span class="kw">false</span>;
+
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; имена.<span class="prop">Length</span>; i++)
+{
+    <span class="kw">if</span> (имена[i] == търсено)
+    {
+        намерено = <span class="kw">true</span>;
+    }
+}
+
+<span class="kw">if</span> (намерено) Console.WriteLine(<span class="str">"В масива ✓"</span>);
+<span class="kw">else</span> Console.WriteLine(<span class="str">"Няма го ✕"</span>);</pre>
+  </div>
+
+  <div class="concept mustard">
+    <h3>④ БРОЕНЕ НА ЧЕТНИ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">колко четни числа има?</span></div>
+<pre class="code-body"><span class="type">int</span>[] числа = { <span class="num">3</span>, <span class="num">8</span>, <span class="num">7</span>, <span class="num">4</span>, <span class="num">2</span>, <span class="num">5</span> };
+<span class="type">int</span> брой = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; числа.<span class="prop">Length</span>; i++)
+{
+    <span class="kw">if</span> (числа[i] % <span class="num">2</span> == <span class="num">0</span>)
+    {
+        брой++;
+    }
+}
+
+Console.WriteLine(<span class="str">"Четни: "</span> + брой); <span class="cm">// 3 (8, 4, 2)</span></pre>
+  </div>
+</section>
+
+<!-- 08 -->
+<section id="s08">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>ЧЕСТИ ГРЕШКИ</h2>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:12px;margin-bottom:14px;color:var(--rose-ink);">✕ ГРЕШКА 1 — IndexOutOfRangeException</h3>
+  <div class="compare">
+    <div class="compare-card bad">
+      <h4>✕ ИЗВЪН ГРАНИЦИТЕ</h4>
+      <p>Масив от 3 елемента, а търсим индекс 3:</p>
+      <pre><span class="type">int</span>[] a = { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span> };
+Console.WriteLine(a[<span class="num">3</span>]);</pre>
+      <p>💥 Грешка! Валидни са 0, 1, 2.</p>
+    </div>
+    <div class="compare-card bad">
+      <h4>✕ ОТРИЦАТЕЛЕН ИНДЕКС</h4>
+      <p>C# <strong>не позволява</strong> отрицателни:</p>
+      <pre><span class="type">int</span>[] a = { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span> };
+Console.WriteLine(a[-<span class="num">1</span>]);</pre>
+      <p>💥 Грешка! Няма индекс −1.</p>
+    </div>
+    <div class="compare-card good">
+      <h4>✓ ПРАВИЛНО</h4>
+      <p>Последният = Length − 1:</p>
+      <pre><span class="type">int</span>[] a = { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span> };
+Console.WriteLine(a[a.<span class="prop">Length</span>-<span class="num">1</span>]);</pre>
+      <p>Работи за всяка дължина.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--pixel);font-size:12px;margin:24px 0 14px;color:var(--rose-ink);">✕ ГРЕШКА 2 — &lt;= ВМЕСТО &lt; В ЦИКЪЛА</h3>
+  <div class="compare two">
+    <div class="compare-card bad">
+      <h4>✕ ГРЕШНО</h4>
+      <pre><span class="kw">for</span> (<span class="type">int</span> i=<span class="num">0</span>; i &lt;= a.<span class="prop">Length</span>; i++)
+{
+    Console.WriteLine(a[i]);
+}</pre>
+      <p>На последната итерация i = Length → 💥 IndexOutOfRangeException</p>
+    </div>
+    <div class="compare-card good">
+      <h4>✓ ПРАВИЛНО</h4>
+      <pre><span class="kw">for</span> (<span class="type">int</span> i=<span class="num">0</span>; i &lt; a.<span class="prop">Length</span>; i++)
+{
+    Console.WriteLine(a[i]);
+}</pre>
+      <p>Спираме точно преди Length.</p>
+    </div>
+  </div>
+
+  <div class="concept rose" style="margin-top:20px;">
+    <h3>✕ ГРЕШКА 3 — РАЗМЕР vs ПОСЛЕДЕН ИНДЕКС</h3>
+    <p>Масив с 10 елемента:</p>
+    <ul>
+      <li><code>.Length</code> е <strong>10</strong> (брой елементи)</li>
+      <li>Последен индекс е <strong>9</strong> (Length − 1)</li>
+    </ul>
+    <p>Това не са едно и също число!</p>
+  </div>
+</section>
+
+<!-- 09 DEMO -->
+<section id="s09">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>ИНТЕРАКТИВНА ДЕМОНСТРАЦИЯ</h2>
+  </div>
+
+  <div class="demo-wrap">
+    <div class="demo-head">
+      <span class="badge">DEMO</span>
+      <h4>FOR ОБХОЖДА МАСИВ — СТЪПКА ПО СТЪПКА</h4>
+    </div>
+    <div class="demo-body">
+      <p style="font-family:var(--mono);font-size:12.5px;color:var(--ink-3);margin-bottom:10px;">
+        Въведи числа, разделени със запетаи, натисни СТАРТ и виж как <code>i</code> минава през всеки индекс.
+      </p>
+      <input class="demo-input" id="arrInput" type="text" value="5, 6, 4, 6, 5" placeholder="напр. 5, 6, 4, 6, 5">
+      <div>
+        <button class="demo-btn" onclick="startArrDemo()">▶ СТАРТ</button>
+        <button class="demo-btn alt" onclick="resetArrDemo()">НУЛИРАЙ</button>
+      </div>
+
+      <div class="arr-vis" style="box-shadow:none;border:2px solid var(--line-2);background:var(--paper);margin-top:18px;padding:20px;">
+        <div id="liveArray" class="arr-row"></div>
+        <div id="liveIdx" class="arr-idx-row"></div>
+      </div>
+
+      <div class="demo-status" id="arrStatus">// натисни СТАРТ...</div>
+      <div class="demo-output" id="arrOutput">// итерациите ще се появят тук</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 EXERCISES -->
+<section id="s10">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2>УПРАЖНЕНИЯ</h2>
+  </div>
+
+  <div class="ex-card">
+    <div class="ex-bg-num">1</div>
+    <div class="ex-header"><span class="diff-badge">ЛЕСНО</span><span class="ex-title">Отпечатай масив</span></div>
+    <p class="ex-desc">Създай масив с числата 10, 20, 30, 40, 50 и отпечатай всеки на нов ред.</p>
+    <div class="ex-task"><ul>
+      <li>Създай int[] с 5 стойности</li>
+      <li>for цикъл от 0 до .Length − 1</li>
+      <li>Console.WriteLine(числа[i])</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int[] числа = { 10, 20, 30, 40, 50 };
+for (int i = 0; i &lt; числа.Length; i++)
+{
+    Console.WriteLine(числа[i]);
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] числа = { 10, 20, 30, 40, 50 };
+
+        for (int i = 0; i &lt; числа.Length; i++)
+        {
+            Console.WriteLine(числа[i]);
+        }
+    }
+}</div>
+  </div>
+
+  <div class="ex-card">
+    <div class="ex-bg-num">2</div>
+    <div class="ex-header"><span class="diff-badge">ЛЕСНО</span><span class="ex-title">Средна оценка</span></div>
+    <p class="ex-desc">Даден е масив с оценките на ученик. Изчисли и отпечатай средната оценка.</p>
+    <div class="ex-task"><ul>
+      <li>double[] оценки = { 5.50, 6.00, 4.75, 5.25, 6.00 };</li>
+      <li>Сумирай всички с for цикъл</li>
+      <li>Раздели на .Length</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">double сума = 0;
+for (int i = 0; i &lt; оценки.Length; i++)
+{
+    сума += оценки[i];
+}
+double средна = сума / оценки.Length;</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        double[] оценки = { 5.50, 6.00, 4.75, 5.25, 6.00 };
+        double сума = 0;
+
+        for (int i = 0; i &lt; оценки.Length; i++)
+        {
+            сума += оценки[i];
+        }
+
+        double средна = сума / оценки.Length;
+        Console.WriteLine("Средна оценка: " + средна);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card med">
+    <div class="ex-bg-num">3</div>
+    <div class="ex-header"><span class="diff-badge">СРЕДНО</span><span class="ex-title">Четене от потребителя</span></div>
+    <p class="ex-desc">Прочети N числа и ги отпечатай в обратен ред.</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N от конзолата</li>
+      <li>Създай int[] с размер N</li>
+      <li>Запиши числата в цикъл</li>
+      <li>Отпечатай от N − 1 до 0</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int n = int.Parse(Console.ReadLine());
+int[] числа = new int[n];
+for (int i = 0; i &lt; n; i++)
+    числа[i] = int.Parse(Console.ReadLine());
+for (int i = n - 1; i &gt;= 0; i--)
+    Console.WriteLine(числа[i]);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Брой числа: ");
+        int n = int.Parse(Console.ReadLine());
+
+        int[] числа = new int[n];
+
+        for (int i = 0; i &lt; n; i++)
+        {
+            Console.Write("Число " + (i + 1) + ": ");
+            числа[i] = int.Parse(Console.ReadLine());
+        }
+
+        Console.WriteLine("В обратен ред:");
+        for (int i = n - 1; i &gt;= 0; i--)
+        {
+            Console.WriteLine(числа[i]);
+        }
+    }
+}</div>
+  </div>
+
+  <div class="ex-card med">
+    <div class="ex-bg-num">4</div>
+    <div class="ex-header"><span class="diff-badge">СРЕДНО</span><span class="ex-title">Min и max</span></div>
+    <p class="ex-desc">Даден масив. Намери най-малкото и най-голямото число.</p>
+    <div class="ex-task"><ul>
+      <li>int[] числа = { 7, 2, 9, 4, 11, 3, 8 };</li>
+      <li>min = числа[0], max = числа[0]</li>
+      <li>Обходи от индекс 1</li>
+      <li>Актуализирай при нужда</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int min = числа[0];
+int max = числа[0];
+for (int i = 1; i &lt; числа.Length; i++)
+{
+    if (числа[i] &lt; min) min = числа[i];
+    if (числа[i] &gt; max) max = числа[i];
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] числа = { 7, 2, 9, 4, 11, 3, 8 };
+
+        int min = числа[0];
+        int max = числа[0];
+
+        for (int i = 1; i &lt; числа.Length; i++)
+        {
+            if (числа[i] &lt; min) min = числа[i];
+            if (числа[i] &gt; max) max = числа[i];
+        }
+
+        Console.WriteLine("Най-малко: " + min);
+        Console.WriteLine("Най-голямо: " + max);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card hard">
+    <div class="ex-bg-num">5</div>
+    <div class="ex-header"><span class="diff-badge">ТРУДНО</span><span class="ex-title">Брой срещания</span></div>
+    <p class="ex-desc">Прочети число. Преброй колко пъти се среща в даден масив.</p>
+    <div class="ex-task"><ul>
+      <li>int[] числа = { 3, 7, 3, 9, 3, 1, 7, 3 };</li>
+      <li>Прочети търсено число</li>
+      <li>Обходи масива</li>
+      <li>Увеличи брояча при всяко съвпадение</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int търсено = int.Parse(Console.ReadLine());
+int брой = 0;
+for (int i = 0; i &lt; числа.Length; i++)
+{
+    if (числа[i] == търсено) брой++;
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] числа = { 3, 7, 3, 9, 3, 1, 7, 3 };
+
+        Console.Write("Търсено число: ");
+        int търсено = int.Parse(Console.ReadLine());
+
+        int брой = 0;
+        for (int i = 0; i &lt; числа.Length; i++)
+        {
+            if (числа[i] == търсено) брой++;
+        }
+
+        Console.WriteLine("Среща се " + брой + " пъти");
+    }
+}</div>
+  </div>
+
+  <div class="ex-card bonus">
+    <div class="ex-bg-num">★</div>
+    <div class="ex-header"><span class="diff-badge">БОНУС</span><span class="ex-title">Търсене в списък с имена</span></div>
+    <p class="ex-desc">Прочети име. Провери дали се среща в масив от ученици.</p>
+    <div class="ex-task"><ul>
+      <li>string[] ученици = { "Ана", "Иван", "Петя", "Мая", "Георги" };</li>
+      <li>Прочети име от потребителя</li>
+      <li>Обходи и сравнявай всеки елемент</li>
+      <li>Отпечатай "Намерено" или "Няма го"</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">bool намерено = false;
+for (int i = 0; i &lt; ученици.Length; i++)
+{
+    if (ученици[i] == име) намерено = true;
+}
+if (намерено) Console.WriteLine("Намерено");
+else Console.WriteLine("Няма го");</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] ученици = { "Ана", "Иван", "Петя", "Мая", "Георги" };
+
+        Console.Write("Въведи име: ");
+        string име = Console.ReadLine();
+
+        bool намерено = false;
+
+        for (int i = 0; i &lt; ученици.Length; i++)
+        {
+            if (ученици[i] == име) намерено = true;
+        }
+
+        if (намерено)
+            Console.WriteLine("✓ " + име + " е в списъка");
+        else
+            Console.WriteLine("✕ " + име + " не е в списъка");
+    }
+}</div>
+  </div>
+</section>
+
+<!-- 11 QUIZ -->
+<section id="s11">
+  <div class="section-header">
+    <span class="section-num">11</span>
+    <h2>ТЕСТ ЗА РАЗБИРАНЕ</h2>
+  </div>
+  <div id="quizContainer"></div>
+  <div id="quizScore"></div>
+</section>
+
+<nav class="lesson-nav">
+  <a href="streamreader-streamwriter.html" class="nav-link prev">
+    <span class="dir">◀ НАЗАД</span>
+    LV 05 · StreamReader & StreamWriter
+  </a>
+  <a href="../index.html" class="home-btn">⌂</a>
+  <a href="../index.html" class="nav-link next">
+    <span class="dir">КЪМ НАЧАЛО ▶</span>
+    Избери следващ урок
+  </a>
+</nav>
+
+</main>
+
+<footer class="footer">
+  <b>C# АКАДЕМИЯ</b> · 8 КЛАС ИНФОРМАТИКА · УРОК 06 — масиви
+</footer>
+
+<script>
+// ─── INTERACTIVE ARRAY DEMO ───
+let demoTimer = null;
+
+function parseArrInput(){
+  const raw = document.getElementById('arrInput').value.trim();
+  if(!raw) return [];
+  return raw.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+}
+
+function renderLiveArr(values, activeIdx = -1){
+  const rowEl = document.getElementById('liveArray');
+  const idxEl = document.getElementById('liveIdx');
+  rowEl.innerHTML = '';
+  idxEl.innerHTML = '';
+  values.forEach((v,i)=>{
+    const cell = document.createElement('div');
+    cell.className = 'arr-cell' + (i===activeIdx ? ' new' : '');
+    cell.textContent = v;
+    rowEl.appendChild(cell);
+    const idx = document.createElement('div');
+    idx.className = 'arr-idx' + (i===activeIdx ? ' hi' : '');
+    idx.textContent = '['+i+']';
+    idxEl.appendChild(idx);
+  });
+}
+
+function startArrDemo(){
+  if(demoTimer){ clearInterval(demoTimer); demoTimer = null; }
+  const values = parseArrInput();
+  if(values.length === 0){
+    document.getElementById('arrStatus').textContent = '⚠ Въведи поне една стойност!';
+    return;
+  }
+  renderLiveArr(values, -1);
+  document.getElementById('arrOutput').textContent = '';
+  document.getElementById('arrStatus').textContent = 'Стартирам for цикъл...';
+  let i = 0;
+  demoTimer = setInterval(()=>{
+    if(i >= values.length){
+      clearInterval(demoTimer); demoTimer = null;
+      renderLiveArr(values, -1);
+      document.getElementById('arrStatus').textContent = '✓ Готово — посетени ' + values.length + ' елемента. Цикълът спря (i = ' + values.length + ', не < ' + values.length + ').';
+      return;
+    }
+    renderLiveArr(values, i);
+    const prev = document.getElementById('arrOutput').textContent;
+    const line = 'i = ' + i + '  →  a[' + i + '] = ' + values[i];
+    document.getElementById('arrOutput').textContent = prev ? prev + '\n' + line : line;
+    i++;
+  }, 700);
+}
+
+function resetArrDemo(){
+  if(demoTimer){ clearInterval(demoTimer); demoTimer = null; }
+  document.getElementById('arrInput').value = '5, 6, 4, 6, 5';
+  document.getElementById('arrOutput').textContent = '// итерациите ще се появят тук';
+  document.getElementById('arrStatus').textContent = '// натисни СТАРТ...';
+  renderLiveArr(parseArrInput(), -1);
+}
+
+renderLiveArr(parseArrInput(), -1);
+
+// ─── HINTS & SOLUTIONS ───
+function toggleHint(btn){
+  const c = btn.closest('.ex-card').querySelector('.hint-content');
+  c.classList.toggle('show');
+  btn.textContent = c.classList.contains('show') ? 'СКРИЙ' : 'ПОДСКАЗКА';
+}
+function toggleSolution(btn){
+  const c = btn.closest('.ex-card').querySelector('.solution-content');
+  c.classList.toggle('show');
+  btn.textContent = c.classList.contains('show') ? 'СКРИЙ' : 'РЕШЕНИЕ';
+}
+
+// ─── QUIZ ───
+const quizData = [
+  { q:"От кой индекс започва първият елемент на масив в C#?",
+    opts:["1","0","Зависи от типа","-1"], ans:1 },
+  { q:"Масив има 7 елемента. Кой е индексът на последния?",
+    opts:["7","6","8",".Length"], ans:1 },
+  { q:"Какво отпечатва: int[] a = { 10, 20, 30 }; Console.WriteLine(a[1]);",
+    opts:["10","20","30","Грешка"], ans:1 },
+  { q:"Кой запис е правилен за обхождане на целия масив?",
+    opts:["for (int i = 1; i <= a.Length; i++)","for (int i = 0; i < a.Length; i++)","for (int i = 0; i <= a.Length; i++)","for (int i = 1; i < a.Length - 1; i++)"], ans:1 },
+  { q:"Какво ще се случи: int[] a = { 1, 2, 3 }; Console.WriteLine(a[3]);",
+    opts:["Ще отпечата 3","Ще отпечата 0","IndexOutOfRangeException","Нищо, програмата спира тихо"], ans:2 },
+  { q:"Какво връща a.Length за string[] a = { \"x\", \"y\", \"z\", \"w\" };",
+    opts:["3","4","5","\"w\""], ans:1 },
+  { q:"Как се създава празен масив за 10 цели числа?",
+    opts:["int[] a = {10};","int[] a = new int[10];","int a[10];","int[10] a;"], ans:1 }
+];
+
+let answered = new Set();
+
+function initQuiz(){
+  const c = document.getElementById('quizContainer');
+  quizData.forEach((q,idx)=>{
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = 'q' + idx;
+    let opts = '';
+    q.opts.forEach((opt,oi)=>{
+      opts += `<button class="quiz-opt" onclick="checkAnswer(${idx},${oi})" id="q${idx}o${oi}">${opt}</button>`;
+    });
+    card.innerHTML = `
+      <div class="quiz-q">${idx+1}. ${q.q}</div>
+      <div class="quiz-options">${opts}</div>
+      <div class="quiz-feedback" id="fb${idx}"></div>`;
+    c.appendChild(card);
+  });
+}
+
+function checkAnswer(qIdx, optIdx){
+  if(answered.has(qIdx)) return;
+  const correct = quizData[qIdx].ans;
+  const fb = document.getElementById('fb'+qIdx);
+  const opts = document.querySelectorAll('#q'+qIdx+' .quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  if(optIdx === correct){
+    opts[optIdx].classList.add('correct');
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✓ Правилно!';
+  } else {
+    opts[optIdx].classList.add('wrong');
+    opts[correct].classList.add('correct');
+    fb.className = 'quiz-feedback show err';
+    fb.textContent = '✕ Грешно. Правилен отговор: ' + quizData[qIdx].opts[correct];
+  }
+  answered.add(qIdx);
+  if(answered.size === quizData.length) showScore();
+}
+
+function showScore(){
+  let score = 0;
+  quizData.forEach((q,idx)=>{
+    const sel = document.querySelector('#q'+idx+' .quiz-opt.correct');
+    if(sel && !document.querySelector('#q'+idx+' .quiz-opt.wrong')) score++;
+  });
+  const box = document.getElementById('quizScore');
+  box.style.display = 'block';
+  const pct = Math.round(score/quizData.length*100);
+  let msg;
+  if(pct===100) msg = '★★★ ПЕРФЕКТНО! Владееш масивите.';
+  else if(pct>=66) msg = '★★ МНОГО ДОБРЕ.';
+  else if(pct>=50) msg = '★ Още малко практика.';
+  else msg = '↻ Прегледай материала.';
+  box.innerHTML = `<h3>${score} / ${quizData.length}  •  ${pct}%</h3><p>${msg}</p>`;
+}
+
+initQuiz();
+
+document.querySelectorAll('.toc a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const id = a.getAttribute('href');
+    if(id && id.startsWith('#')){
+      const el = document.querySelector(id);
+      if(el){ e.preventDefault(); window.scrollTo({top:el.offsetTop-80, behavior:'smooth'}); }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

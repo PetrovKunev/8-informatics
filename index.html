@@ -3,365 +3,472 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>8 клас — Информатика</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<title>C# Академия — 8 клас Информатика</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0a0e1a;
-  --surface: #111827;
-  --surface2: #1a2340;
-  --border: #1e2d4a;
-  --accent: #00d4aa;
-  --accent2: #7c6fff;
-  --accent3: #ff6b9d;
-  --text: #e8eaf0;
-  --text-dim: #8892a8;
-  --code-bg: #0d1220;
+/* ============================================================
+   DESIGN SYSTEM — paper + arcade palette
+   Warm cream background, near-black text, playful accents
+   ============================================================ */
+:root{
+  /* paper / surface */
+  --paper:        #f4f1e8;
+  --paper-2:      #ece7d6;
+  --paper-3:      #e0d9c2;
+  --ink:          #1a1814;
+  --ink-2:        #3d3932;
+  --ink-3:        #6b6558;
+  --muted:        #8a8472;
+
+  /* arcade accents (desaturated for daylight) */
+  --red:          #d14836;   /* primary action / "play" */
+  --red-ink:      #a32d1e;
+  --teal:         #2d8d8f;   /* info / secondary */
+  --teal-ink:     #1d6568;
+  --mustard:      #d4a017;   /* xp / stars */
+  --mustard-ink:  #a67a0c;
+  --plum:         #8b5a8c;   /* special */
+  --leaf:         #5a8a3a;   /* success / completed */
+
+  /* sheets */
+  --line:         #d4cdb8;
+  --line-2:       #b8b09a;
+  --shadow:       6px 6px 0 0 var(--ink);
+  --shadow-sm:    3px 3px 0 0 var(--ink);
+
+  /* type */
+  --sans:   'Space Grotesk', system-ui, sans-serif;
+  --mono:   'JetBrains Mono', monospace;
+  --pixel:  'Press Start 2P', monospace;
+  --crt:    'VT323', monospace;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  line-height: 1.7;
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden;}
+body{
+  /* subtle paper grid */
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(26,24,20,0.06) 1px, transparent 0);
+  background-size: 22px 22px;
+  min-height:100vh;
 }
 
-/* HERO */
-.hero {
-  position: relative;
-  padding: 80px 32px 60px;
-  text-align: center;
-  overflow: hidden;
-  background: linear-gradient(160deg, #0a0e1a 0%, #0f1a30 40%, #131f3d 70%, #0a0e1a 100%);
-  border-bottom: 1px solid var(--border);
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* ============================================================
+   SHARED — cards, badges, buttons
+   ============================================================ */
+.stars{display:inline-flex;gap:2px;color:var(--mustard);font-size:12px;}
+.star-off{color:var(--line-2);}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  padding:3px 8px;border:1.5px solid var(--ink);
+  background:#fff;text-transform:uppercase;letter-spacing:0.5px;
 }
-.hero-glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
+.pill.done{background:var(--leaf);color:#fff;border-color:var(--ink);}
+.pill.xp{background:var(--mustard);}
+.pill.locked{background:var(--paper-3);color:var(--ink-3);}
+
+/* =============================================================================
+   PIXEL CARDS (grid)
+   Light, airy grid of lesson cards with pixel illustrations + XP
+   ============================================================================= */
+.cards-hero{
+  padding:76px 24px 36px;
+  border-bottom:2px solid var(--ink);
+  display:grid; grid-template-columns:1fr auto; align-items:end; gap:24px;
+  max-width:1200px; margin:0 auto;
 }
-.hero-glow.g1 {
-  top: -120px; right: -80px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 65%);
+.eyebrow{
+  font-family:var(--mono); font-size:12px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--plum); margin-bottom:14px;
+  display:inline-flex; align-items:center; gap:8px;
 }
-.hero-glow.g2 {
-  bottom: -100px; left: -60px;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(124,111,255,0.07) 0%, transparent 65%);
+.eyebrow::before{
+  content:''; width:8px;height:8px;background:var(--plum);
+  animation: blink 1s infinite;
 }
-.hero-glow.g3 {
-  top: 30%; left: 50%;
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(255,107,157,0.05) 0%, transparent 65%);
+@keyframes blink{50%{opacity:0.2;}}
+.cards-hero h1{
+  font-family:var(--pixel); font-size:clamp(28px,5vw,56px);
+  line-height:1.15; margin-bottom:18px;
+}
+.cards-hero h1 .accent{color:var(--plum);}
+.cards-hero p{
+  font-family:var(--sans); font-size:17px; color:var(--ink-2); max-width:560px;
+  line-height:1.6;
+}
+/* typing hero code */
+.typing-panel{
+  background:var(--ink); color:#e6e0cf;
+  font-family:var(--mono); font-size:13px;
+  padding:18px 20px; width:320px;
+  border:2.5px solid var(--ink); box-shadow:var(--shadow);
+  position:relative;
+}
+.typing-panel .dot-row{
+  display:flex;gap:6px;margin-bottom:12px;
+}
+.typing-panel .dot{width:10px;height:10px;background:var(--ink-3);border-radius:0;}
+.typing-panel .dot.r{background:var(--red);}
+.typing-panel .dot.y{background:var(--mustard);}
+.typing-panel .dot.g{background:var(--leaf);}
+.typing-panel pre{
+  white-space:pre-wrap; line-height:1.6; min-height:9em;
+  color:#e6e0cf;
+}
+.typing-panel .k{color:#f4a066;}
+.typing-panel .s{color:#95c98a;}
+.typing-panel .c{color:#7d8a7a;font-style:italic;}
+.caret{display:inline-block;width:8px;height:16px;background:var(--mustard);vertical-align:middle;animation:blink 0.9s step-end infinite;}
+
+/* controls bar */
+.controls{
+  max-width:1200px; margin:0 auto; padding:28px 24px 0;
+  display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+}
+.search-box{
+  display:flex; align-items:center; gap:8px;
+  background:#fff; border:2px solid var(--ink); padding:8px 12px;
+  box-shadow:var(--shadow-sm); flex:1; min-width:220px; max-width:360px;
+}
+.search-box input{
+  flex:1; border:none; outline:none; background:transparent;
+  font-family:var(--mono); font-size:13px; color:var(--ink);
+}
+.search-box::before{content:'⌕';font-family:var(--pixel);font-size:12px;color:var(--ink-3);}
+.filters{display:flex; gap:8px; flex-wrap:wrap;}
+.filter-btn{
+  font-family:var(--mono); font-size:11px; font-weight:600;
+  padding:8px 12px; background:#fff; border:2px solid var(--ink);
+  text-transform:uppercase; letter-spacing:0.5px;
+  transition:all .15s;
+}
+.filter-btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-sm);}
+.filter-btn.active{background:var(--ink);color:var(--paper);}
+
+/* progress meta */
+.progress-strip{
+  max-width:1200px; margin:20px auto 0; padding:0 24px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px;
+}
+.prog-stat{
+  background:#fff; border:2px solid var(--ink); padding:12px 14px;
+  box-shadow:var(--shadow-sm);
+}
+.prog-stat .lbl{font-family:var(--mono);font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:1px;}
+.prog-stat .val{font-family:var(--pixel);font-size:14px;margin-top:4px;color:var(--ink);}
+.prog-stat.red .val{color:var(--red);}
+.prog-stat.teal .val{color:var(--teal-ink);}
+.prog-stat.mustard .val{color:var(--mustard-ink);}
+
+.cards-grid{
+  max-width:1200px; margin:0 auto; padding:28px 24px 80px;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:22px;
+}
+.pxcard{
+  position:relative; background:#fff; border:2.5px solid var(--ink);
+  box-shadow:var(--shadow);
+  transition:transform .15s, box-shadow .15s;
+  overflow:hidden;
+}
+.pxcard:hover{transform:translate(-3px,-3px); box-shadow:9px 9px 0 0 var(--ink);}
+.pxcard.hidden{display:none;}
+
+.pxcard-art{
+  position:relative; aspect-ratio: 16/9;
+  border-bottom:2.5px solid var(--ink);
+  display:grid; place-items:center;
+  overflow:hidden;
+  image-rendering:pixelated;
+}
+.pxcard-art.a1{background:repeating-linear-gradient(45deg,#ffe6a8,#ffe6a8 10px,#f7d98a 10px,#f7d98a 20px);}
+.pxcard-art.a2{background:repeating-linear-gradient(45deg,#b7e2e3,#b7e2e3 10px,#a0d3d5 10px,#a0d3d5 20px);}
+.pxcard-art.a3{background:repeating-linear-gradient(45deg,#f4b8a8,#f4b8a8 10px,#e8a091 10px,#e8a091 20px);}
+.pxcard-art.a4{background:repeating-linear-gradient(45deg,#c9d8a8,#c9d8a8 10px,#b3c692 10px,#b3c692 20px);}
+.pxcard-art.a5{background:repeating-linear-gradient(45deg,#d8c0e0,#d8c0e0 10px,#c8abd3 10px,#c8abd3 20px);}
+.pxcard-art svg{width:82px;height:82px; filter: drop-shadow(3px 3px 0 var(--ink));}
+.pxcard-art .level-no{
+  position:absolute;top:10px;left:12px;
+  font-family:var(--pixel);font-size:9px;background:var(--ink);color:var(--paper);
+  padding:4px 7px; letter-spacing:0.5px;
+}
+.pxcard-art .time{
+  position:absolute;top:10px;right:12px;
+  font-family:var(--mono);font-size:11px;font-weight:700;background:#fff;color:var(--ink);
+  padding:3px 7px; border:1.5px solid var(--ink);
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0,212,170,0.10);
-  border: 1px solid rgba(0,212,170,0.25);
-  color: var(--accent);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  padding: 6px 16px;
-  border-radius: 6px;
-  margin-bottom: 24px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-.badge::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+.pxcard-body{padding:18px 20px 20px;}
+.pxcard-body h3{font-size:17px;font-weight:700;line-height:1.25;margin-bottom:6px;}
+.pxcard-body p{font-size:13.5px; color:var(--ink-3); line-height:1.55; margin-bottom:14px;}
+.pxcard-foot{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
 
-.hero h1 {
-  font-size: clamp(28px, 5vw, 56px);
-  font-weight: 900;
-  margin-bottom: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* shared FOOTER */
+.footer{
+  border-top:2px solid var(--ink); background:var(--paper-2);
+  padding:24px; text-align:center;
+  font-family:var(--mono); font-size:12px; color:var(--ink-3);
+  letter-spacing:0.5px;
 }
+.footer b{color:var(--plum);}
 
-.hero p {
-  font-size: clamp(15px, 2vw, 19px);
-  color: var(--text-dim);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* LESSONS GRID */
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 60px 24px 80px;
-}
-
-.section-title {
-  font-size: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--accent2);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 32px;
-}
-
-.lessons {
-  display: grid;
-  gap: 20px;
-}
-
-.lesson-card {
-  position: relative;
-  display: flex;
-  align-items: stretch;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.35s ease;
-  text-decoration: none;
-  color: var(--text);
-}
-.lesson-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,212,170,0.08);
-}
-
-.card-accent {
-  width: 5px;
-  flex-shrink: 0;
-  background: linear-gradient(180deg, var(--accent), var(--accent2));
-  border-radius: 16px 0 0 16px;
-}
-.lesson-card:nth-child(2) .card-accent {
-  background: linear-gradient(180deg, var(--accent2), var(--accent3));
-}
-
-.card-body {
-  flex: 1;
-  padding: 28px 32px;
-}
-
-.card-number {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--accent);
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-.lesson-card:nth-child(2) .card-number {
-  color: var(--accent2);
-}
-
-.card-title {
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.card-desc {
-  font-size: 15px;
-  color: var(--text-dim);
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  background: rgba(0,212,170,0.08);
-  border: 1px solid rgba(0,212,170,0.15);
-  color: var(--accent);
-}
-.lesson-card:nth-child(2) .tag {
-  background: rgba(124,111,255,0.08);
-  border-color: rgba(124,111,255,0.15);
-  color: var(--accent2);
-}
-
-.lesson-card:nth-child(3) .card-accent {
-  background: linear-gradient(180deg, var(--accent3), #ff9a3c);
-}
-.lesson-card:nth-child(3) .card-number { color: var(--accent3); }
-.lesson-card:nth-child(3) .tag {
-  background: rgba(255,107,157,0.08);
-  border-color: rgba(255,107,157,0.15);
-  color: var(--accent3);
-}
-
-.lesson-card:nth-child(4) .card-accent {
-  background: linear-gradient(180deg, #00b4d8, var(--accent));
-}
-.lesson-card:nth-child(4) .card-number { color: #00b4d8; }
-.lesson-card:nth-child(4) .tag {
-  background: rgba(0,180,216,0.08);
-  border-color: rgba(0,180,216,0.15);
-  color: #00b4d8;
-}
-
-.lesson-card:nth-child(5) .card-accent {
-  background: linear-gradient(180deg, #f59e0b, #ef4444);
-}
-.lesson-card:nth-child(5) .card-number { color: #f59e0b; }
-.lesson-card:nth-child(5) .tag {
-  background: rgba(245,158,11,0.08);
-  border-color: rgba(245,158,11,0.15);
-  color: #f59e0b;
-}
-
-.card-arrow {
-  display: flex;
-  align-items: center;
-  padding: 0 28px;
-  font-size: 24px;
-  color: var(--text-dim);
-  transition: all 0.3s;
-}
-.lesson-card:hover .card-arrow {
-  color: var(--accent);
-  transform: translateX(4px);
-}
-
-/* FOOTER */
-.footer {
-  text-align: center;
-  padding: 32px;
-  color: var(--text-dim);
-  font-size: 13px;
-  border-top: 1px solid var(--border);
-}
-.footer span {
-  color: var(--accent);
-}
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  .hero { padding: 60px 20px 40px; }
-  .container { padding: 40px 16px 60px; }
-  .card-body { padding: 20px 20px; }
-  .card-arrow { padding: 0 16px; }
+/* Responsive */
+@media (max-width:720px){
+  .cards-hero{grid-template-columns:1fr;}
+  .typing-panel{width:100%;}
 }
 </style>
 </head>
 <body>
 
-<section class="hero">
-  <div class="hero-glow g1"></div>
-  <div class="hero-glow g2"></div>
-  <div class="hero-glow g3"></div>
-  <div class="badge">8 клас</div>
-  <h1>Информатика</h1>
-  <p>Интерактивни уроци по програмиране на C# — потоци от данни, четене и запис на файлове</p>
-</section>
+<section>
 
-<div class="container">
-  <div class="section-title">// Уроци</div>
+  <header class="cards-hero">
+    <div>
+      <div class="eyebrow">Курс · Информатика · 8 клас</div>
+      <h1>Програмирай на <span class="accent">C#</span><br>в 6 нива.</h1>
+      <p>Всеки урок е мини-игра — четеш, пишеш код, решаваш, печелиш XP. Започни, където ти е удобно.</p>
+    </div>
+    <div class="typing-panel" aria-hidden="true">
+      <div class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+      <pre id="typing-code"></pre>
+    </div>
+  </header>
 
-  <div class="lessons">
+  <div class="controls">
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Търси урок — напр. 'цикъл'">
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Всички</button>
+      <button class="filter-btn" data-filter="basics">Основи</button>
+      <button class="filter-btn" data-filter="control">Контрол</button>
+      <button class="filter-btn" data-filter="loops">Цикли</button>
+      <button class="filter-btn" data-filter="arrays">Масиви</button>
+    </div>
+  </div>
 
-    <a href="streamreader-intro.html" class="lesson-card">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">УРОК 01</div>
-        <div class="card-title">Потоци от данни — StreamReader</div>
-        <div class="card-desc">Въведение в потоците от данни в C#. Какво е StreamReader, как се чете от текстов файл ред по ред и управление на ресурси с <code>using</code>.</div>
-        <div class="card-tags">
-          <span class="tag">StreamReader</span>
-          <span class="tag">ReadLine()</span>
-          <span class="tag">using</span>
-          <span class="tag">файлове</span>
+  <div class="progress-strip">
+    <div class="prog-stat red"><div class="lbl">Завършени</div><div class="val"><span id="done-count">0</span>/6</div></div>
+    <div class="prog-stat mustard"><div class="lbl">XP</div><div class="val"><span id="xp-cards">0</span> / 760</div></div>
+    <div class="prog-stat teal"><div class="lbl">Общо време</div><div class="val">~140 мин</div></div>
+    <div class="prog-stat"><div class="lbl">Следващ урок</div><div class="val">Ниво 1</div></div>
+  </div>
+
+  <div class="cards-grid" id="cards-grid">
+
+    <a href="уроци/if-else.html" class="pxcard" data-cat="control" data-keywords="if else switch условие оператори контрол">
+      <div class="pxcard-art a3">
+        <span class="level-no">LV 01</span><span class="time">25 мин</span>
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <polygon points="8,2 14,8 8,14 2,8" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="7" y="5" width="2" height="4" fill="#1a1814"/>
+          <rect x="7" y="10" width="2" height="1" fill="#1a1814"/>
+        </svg>
+      </div>
+      <div class="pxcard-body">
+        <h3>Условни оператори — if / else</h3>
+        <p>Как програмата взема решения? if, else if, switch и операторите за сравнение.</p>
+        <div class="pxcard-foot">
+          <span class="pill xp">+100 XP</span>
+          <span class="stars"><span>★</span><span>★</span><span class="star-off">★</span></span>
         </div>
       </div>
-      <div class="card-arrow">→</div>
     </a>
 
-    <a href="streamreader-streamwriter.html" class="lesson-card">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">УРОК 02</div>
-        <div class="card-title">StreamReader & StreamWriter</div>
-        <div class="card-desc">Пълна работа с файлове — четене чрез StreamReader и запис чрез StreamWriter. Практически примери за обработка на текстови данни.</div>
-        <div class="card-tags">
-          <span class="tag">StreamReader</span>
-          <span class="tag">StreamWriter</span>
-          <span class="tag">Read / Write</span>
-          <span class="tag">encoding</span>
+    <a href="уроци/for-loop.html" class="pxcard" data-cat="loops" data-keywords="for цикъл брояч итерация вложени">
+      <div class="pxcard-art a4">
+        <span class="level-no">LV 02</span><span class="time">20 мин</span>
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <path d="M 3 8 A 5 5 0 1 1 13 8" fill="none" stroke="#1a1814" stroke-width="1"/>
+          <polygon points="13,8 11,6 11,10" fill="#1a1814"/>
+          <circle cx="8" cy="11" r="1" fill="#1a1814"/>
+        </svg>
+      </div>
+      <div class="pxcard-body">
+        <h3>Цикъл for</h3>
+        <p>Повторение на действия определен брой пъти. Синтаксис, вложени цикли, чести грешки.</p>
+        <div class="pxcard-foot">
+          <span class="pill xp">+130 XP</span>
+          <span class="stars"><span>★</span><span>★</span><span>★</span></span>
         </div>
       </div>
-      <div class="card-arrow">→</div>
     </a>
 
-    <a href="if-else.html" class="lesson-card">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">УРОК 03</div>
-        <div class="card-title">Условни оператори — if / else</div>
-        <div class="card-desc">Как програмата взема решения? Научи if, else if, else и switch — с визуализации, оператори за сравнение и практически примери.</div>
-        <div class="card-tags">
-          <span class="tag">if / else</span>
-          <span class="tag">else if</span>
-          <span class="tag">switch</span>
-          <span class="tag">оператори</span>
+    <a href="уроци/while-loop.html" class="pxcard" data-cat="loops" data-keywords="while do break continue цикъл безкраен">
+      <div class="pxcard-art a5">
+        <span class="level-no">LV 03</span><span class="time">25 мин</span>
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <path d="M 8 3 A 4 4 0 1 1 4 7" fill="none" stroke="#1a1814" stroke-width="1"/>
+          <polygon points="4,7 2,5 6,5" fill="#1a1814"/>
+          <rect x="10" y="10" width="2" height="2" fill="#1a1814"/>
+        </svg>
+      </div>
+      <div class="pxcard-body">
+        <h3>Цикъл while и do...while</h3>
+        <p>Повторение докато условието е вярно. break, continue, безкрайни цикли.</p>
+        <div class="pxcard-foot">
+          <span class="pill xp">+150 XP</span>
+          <span class="stars"><span>★</span><span>★</span><span>★</span></span>
         </div>
       </div>
-      <div class="card-arrow">→</div>
     </a>
 
-    <a href="for-loop.html" class="lesson-card">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">УРОК 04</div>
-        <div class="card-title">Цикъл for</div>
-        <div class="card-desc">Повторение на действия определен брой пъти. Синтаксис, стъпка по стъпка изпълнение, вложени цикли и чести грешки.</div>
-        <div class="card-tags">
-          <span class="tag">for</span>
-          <span class="tag">вложени цикли</span>
-          <span class="tag">брояч</span>
-          <span class="tag">итерация</span>
+    <a href="уроци/streamreader-intro.html" class="pxcard" data-cat="basics" data-keywords="streamreader потоци файлове using">
+      <div class="pxcard-art a1">
+        <span class="level-no">LV 04</span><span class="time">15 мин</span>
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <rect x="3" y="2" width="10" height="12" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="5" y="5" width="6" height="1" fill="#1a1814"/>
+          <rect x="5" y="7" width="6" height="1" fill="#1a1814"/>
+          <rect x="5" y="9" width="4" height="1" fill="#1a1814"/>
+          <rect x="5" y="11" width="5" height="1" fill="#1a1814"/>
+        </svg>
+      </div>
+      <div class="pxcard-body">
+        <h3>Потоци от данни — StreamReader</h3>
+        <p>Въведение в потоците. Четене от текстов файл ред по ред и управление на ресурси.</p>
+        <div class="pxcard-foot">
+          <span class="pill xp">+100 XP</span>
+          <span class="stars"><span>★</span><span class="star-off">★</span><span class="star-off">★</span></span>
         </div>
       </div>
-      <div class="card-arrow">→</div>
     </a>
 
-    <a href="while-loop.html" class="lesson-card">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">УРОК 05</div>
-        <div class="card-title">Цикъл while и do...while</div>
-        <div class="card-desc">Повторение докато условието е вярно. while, do...while, безкраен цикъл, break и continue — с интерактивни демонстрации.</div>
-        <div class="card-tags">
-          <span class="tag">while</span>
-          <span class="tag">do...while</span>
-          <span class="tag">break</span>
-          <span class="tag">continue</span>
+    <a href="уроци/streamreader-streamwriter.html" class="pxcard" data-cat="basics" data-keywords="streamreader streamwriter запис четене encoding">
+      <div class="pxcard-art a2">
+        <span class="level-no">LV 05</span><span class="time">20 мин</span>
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <rect x="2" y="3" width="5" height="10" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="9" y="3" width="5" height="10" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="7" y="7" width="2" height="1" fill="#1a1814"/>
+          <rect x="7" y="8" width="2" height="1" fill="#1a1814"/>
+        </svg>
+      </div>
+      <div class="pxcard-body">
+        <h3>StreamReader & StreamWriter</h3>
+        <p>Пълна работа с файлове — четене и запис. Обработка на текстови данни с примери.</p>
+        <div class="pxcard-foot">
+          <span class="pill xp">+120 XP</span>
+          <span class="stars"><span>★</span><span>★</span><span class="star-off">★</span></span>
         </div>
       </div>
-      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="уроци/arrays.html" class="pxcard" data-cat="arrays" data-keywords="масив array int[] length индекс колекции">
+      <div class="pxcard-art" style="background:repeating-linear-gradient(45deg,#e8d6ec,#e8d6ec 10px,#d8c0e0 10px,#d8c0e0 20px);">
+        <span class="level-no">LV 06</span><span class="time">35 мин</span>
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+          <rect x="1" y="6" width="3" height="4" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="4" y="6" width="3" height="4" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="7" y="6" width="3" height="4" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="10" y="6" width="3" height="4" fill="#fff" stroke="#1a1814" stroke-width="0.5"/>
+          <rect x="2" y="7" width="1" height="2" fill="#1a1814"/>
+          <rect x="5" y="7" width="1" height="2" fill="#1a1814"/>
+          <rect x="8" y="7" width="1" height="2" fill="#1a1814"/>
+          <rect x="11" y="7" width="1" height="2" fill="#1a1814"/>
+        </svg>
+      </div>
+      <div class="pxcard-body">
+        <h3>Масиви — int[]</h3>
+        <p>Една променлива, много стойности. Индекси, .Length и обхождане с for.</p>
+        <div class="pxcard-foot">
+          <span class="pill xp">+160 XP</span>
+          <span class="stars"><span>★</span><span>★</span><span>★</span></span>
+        </div>
+      </div>
     </a>
 
   </div>
-</div>
+</section>
 
 <footer class="footer">
-  <span>8 клас Информатика</span> · Интерактивни уроци по C#
+  <b>C# АКАДЕМИЯ</b> · 8 КЛАС ИНФОРМАТИКА · НАПРАВЕНО С ♥ ЗА УЧЕНИЦИ
 </footer>
+
+<script>
+/* ---------- Typing animation ---------- */
+const typingEl = document.getElementById('typing-code');
+const script = [
+  {t:'// потоци + цикли = магия\n', cls:'c'},
+  {t:'using ', cls:'k'},
+  {t:'(var sr = ', cls:''},
+  {t:'new ', cls:'k'},
+  {t:'StreamReader(', cls:''},
+  {t:'"story.txt"', cls:'s'},
+  {t:'))\n{\n  ', cls:''},
+  {t:'while ', cls:'k'},
+  {t:'(!sr.EndOfStream)\n  {\n    ', cls:''},
+  {t:'Console.WriteLine(sr.ReadLine());\n  }\n}', cls:''},
+];
+let scriptIdx=0, charIdx=0, html='';
+function typeStep(){
+  if(scriptIdx >= script.length){
+    setTimeout(()=>{ typingEl.innerHTML=''; scriptIdx=0; charIdx=0; html=''; typeStep(); }, 2800);
+    return;
+  }
+  const seg = script[scriptIdx];
+  if(charIdx < seg.t.length){
+    charIdx++;
+    const done = script.slice(0, scriptIdx).map(s=>{
+      const c = s.cls?` class="${s.cls}"`:''; return `<span${c}>${escapeHtml(s.t)}</span>`;
+    }).join('');
+    const c = seg.cls?` class="${seg.cls}"`:'';
+    const cur = `<span${c}>${escapeHtml(seg.t.slice(0,charIdx))}</span>`;
+    typingEl.innerHTML = done + cur + '<span class="caret"></span>';
+    setTimeout(typeStep, 22 + Math.random()*30);
+  } else {
+    scriptIdx++; charIdx=0;
+    setTimeout(typeStep, 60);
+  }
+}
+function escapeHtml(s){return s.replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+setTimeout(typeStep, 400);
+
+/* ---------- Search + filters ---------- */
+const searchInput = document.getElementById('search-input');
+const filterBtns = document.querySelectorAll('.filter-btn');
+let currentFilter = 'all';
+let currentQuery = '';
+
+function applyFilter(){
+  const cards = document.querySelectorAll('.pxcard');
+  cards.forEach(c=>{
+    const matchesCat = currentFilter==='all' || c.dataset.cat===currentFilter;
+    const hay = (c.dataset.keywords + ' ' + c.textContent).toLowerCase();
+    const matchesQuery = !currentQuery || hay.includes(currentQuery.toLowerCase());
+    c.classList.toggle('hidden', !(matchesCat && matchesQuery));
+  });
+}
+searchInput && searchInput.addEventListener('input', e=>{currentQuery=e.target.value;applyFilter();});
+filterBtns.forEach(b=>{
+  b.addEventListener('click', ()=>{
+    filterBtns.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentFilter = b.dataset.filter;
+    applyFilter();
+  });
+});
+
+/* ---------- Progress (localStorage) ---------- */
+function getProgress(){
+  try{ return JSON.parse(localStorage.getItem('csacad_progress')||'{}'); }catch(e){return {};}
+}
+function updateProgressUI(){
+  const p = getProgress();
+  const done = Object.values(p).filter(Boolean).length;
+  const xpTable = {1:100,2:120,3:100,4:130,5:150,6:160};
+  let xp = 0;
+  Object.keys(p).forEach(k=>{ if(p[k]) xp += (xpTable[k]||0); });
+
+  const dc = document.getElementById('done-count'); if(dc) dc.textContent = done;
+  const xc = document.getElementById('xp-cards'); if(xc) xc.textContent = xp;
+}
+updateProgressUI();
+</script>
 
 </body>
 </html>

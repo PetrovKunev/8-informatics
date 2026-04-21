@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 03 · while цикъл — C# Академия</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f1e8; --paper-2:#ece7d6; --paper-3:#e0d9c2;
+  --ink:#1a1814; --ink-2:#3d3932; --ink-3:#6b6558; --muted:#8a8472;
+  --red:#8b5a8c; --red-ink:#6b3e6e;
+  --teal:#2d8d8f; --teal-ink:#1d6568;
+  --mustard:#d4a017; --mustard-ink:#a67a0c;
+  --leaf:#5a8a3a; --leaf-ink:#3f6a28;
+  --rose:#c76b7a; --rose-ink:#9b4a59;
+  --line:#d4cdb8; --line-2:#b8b09a;
+  --shadow:6px 6px 0 0 var(--ink);
+  --shadow-sm:3px 3px 0 0 var(--ink);
+  --sans:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --pixel:'Press Start 2P',monospace;
+  --accent:var(--mustard); --accent-ink:var(--mustard-ink);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden;}
+body{
+  background-image:radial-gradient(circle at 1px 1px, rgba(26,24,20,0.06) 1px, transparent 0);
+  background-size:22px 22px; min-height:100vh; line-height:1.65;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+code{font-family:var(--mono);background:var(--paper-2);padding:1px 6px;border:1.5px solid var(--line);font-size:0.92em;}
+strong{color:var(--ink);}
+
+.topbar{
+  position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:2px solid var(--ink);
+  padding:10px 20px;display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--pixel);font-size:11px;}
+.brand-mark{
+  width:28px;height:28px;background:var(--accent);border:2px solid var(--ink);
+  display:grid;place-items:center;color:var(--ink);font-family:var(--pixel);font-size:11px;
+  box-shadow:var(--shadow-sm);
+}
+.breadcrumb{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:0.5px;}
+.breadcrumb .sep{color:var(--line-2);margin:0 6px;}
+.breadcrumb a{color:var(--ink-2);border-bottom:1.5px solid var(--line-2);}
+.breadcrumb a:hover{color:var(--accent-ink);border-color:var(--accent-ink);}
+.hud{display:flex;gap:8px;font-family:var(--mono);font-size:11px;align-items:center;}
+.hud .chip{background:#fff;border:2px solid var(--ink);padding:5px 10px;box-shadow:var(--shadow-sm);}
+.hud .chip b{font-family:var(--pixel);font-size:9px;color:var(--accent-ink);margin-right:5px;}
+
+.hero{
+  padding:64px 24px 48px; text-align:center; position:relative;
+  border-bottom:2px dashed var(--line-2);
+  background:linear-gradient(180deg,transparent,rgba(212,160,23,0.08));
+}
+.hero .lv-tag{
+  display:inline-block; font-family:var(--pixel); font-size:10px;
+  background:var(--ink); color:var(--paper); padding:6px 12px; letter-spacing:0.5px;
+  margin-bottom:24px;
+}
+.hero h1{font-family:var(--pixel); font-size:clamp(26px,5vw,48px); line-height:1.2; margin-bottom:18px;}
+.hero h1 .kw{color:var(--accent-ink);}
+.hero h1 .br{color:var(--ink-3);}
+.hero p{max-width:620px;margin:0 auto 28px;font-size:17px;color:var(--ink-2);}
+.hero-stars{display:inline-flex;gap:8px;margin-bottom:20px;font-size:20px;color:var(--mustard);}
+.hero-stars .off{color:var(--line-2);}
+.toc{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.toc a{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:6px 12px;background:#fff;border:2px solid var(--ink);
+  box-shadow:var(--shadow-sm);transition:all .15s;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.toc a:hover{background:var(--ink);color:var(--paper);transform:translate(-2px,-2px);}
+
+.page{max-width:920px;margin:0 auto;padding:48px 24px 80px;}
+section{margin-bottom:56px;scroll-margin-top:90px;}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:26px;border-bottom:2.5px solid var(--ink);padding-bottom:12px;}
+.section-num{
+  font-family:var(--pixel);font-size:11px;
+  background:var(--accent);color:var(--ink);padding:6px 10px;
+  border:2px solid var(--ink);box-shadow:var(--shadow-sm);
+}
+.section-header h2{font-family:var(--pixel);font-size:clamp(14px,2.2vw,18px);line-height:1.3;flex:1;}
+
+.concept{
+  background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);
+  padding:20px 24px; margin-bottom:18px; position:relative;
+}
+.concept::before{content:'';position:absolute;left:-2.5px;top:-2.5px;bottom:-2.5px;width:8px;background:var(--accent);}
+.concept.red::before{background:var(--red);}
+.concept.teal::before{background:var(--teal);}
+.concept.leaf::before{background:var(--leaf);}
+.concept.rose::before{background:var(--rose);}
+.concept h3{font-family:var(--pixel);font-size:11px;color:var(--accent-ink);margin-bottom:12px;letter-spacing:0.5px;line-height:1.4;}
+.concept.red h3{color:var(--red-ink);}
+.concept.teal h3{color:var(--teal-ink);}
+.concept.leaf h3{color:var(--leaf-ink);}
+.concept.rose h3{color:var(--rose-ink);}
+.concept p, .concept li{font-size:15px;color:var(--ink-2);margin-bottom:6px;}
+.concept p:last-child, .concept li:last-child{margin-bottom:0;}
+.concept ul{padding-left:22px;margin:8px 0;}
+
+.code-block{background:var(--ink);border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden;}
+.code-header{background:var(--ink-2);color:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:2px solid var(--ink);font-family:var(--mono);font-size:11px;}
+.code-header .dots{display:flex;gap:5px;}
+.code-header .dots span{width:10px;height:10px;border:1.5px solid var(--paper);}
+.code-header .dots span:nth-child(1){background:var(--red);}
+.code-header .dots span:nth-child(2){background:var(--mustard);}
+.code-header .dots span:nth-child(3){background:var(--leaf);}
+.code-lang{font-family:var(--pixel);font-size:9px;color:var(--mustard);letter-spacing:1px;}
+.code-title{color:var(--paper-3);font-size:11px;}
+.code-body{padding:20px 24px;color:#e6e0cf;font-family:var(--mono);font-size:13.5px;line-height:1.8;overflow-x:auto;white-space:pre;}
+.code-body .kw{color:#f4a066;}
+.code-body .type{color:#8ec5fc;}
+.code-body .str{color:#b8d898;}
+.code-body .cm{color:#7d8a7a;font-style:italic;}
+.code-body .num{color:#d4a017;}
+.code-body .fn{color:#95c98a;}
+
+.flow-wrap{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:28px 20px;margin-bottom:22px;overflow-x:auto;}
+.flow-title{font-family:var(--pixel);font-size:10px;color:var(--ink-3);letter-spacing:1px;text-align:center;margin-bottom:22px;text-transform:uppercase;}
+.flow-vertical{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.flow-box{padding:14px 20px;font-family:var(--mono);font-size:12.5px;font-weight:700;border:2.5px solid var(--ink);white-space:nowrap;min-width:220px;text-align:center;box-shadow:3px 3px 0 0 var(--ink);}
+.flow-box.cond{background:#fff;color:var(--ink);}
+.flow-box.body{background:#f8e8c0;color:var(--mustard-ink);}
+.flow-box.stop{background:#f5d9de;color:var(--rose-ink);}
+.flow-label{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:4px;}
+.flow-arrow{font-family:var(--pixel);font-size:14px;color:var(--ink);}
+.flow-arrow.loop{color:var(--accent-ink);}
+.flow-arrow.stop{color:var(--rose-ink);}
+
+/* COMPARE */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+.compare-card{padding:20px 22px;border:2.5px solid var(--ink);box-shadow:var(--shadow-sm);background:#fff;}
+.compare-card.bad{background:#f5d9de;}
+.compare-card.good{background:#e8f0d8;}
+.compare-card.alt{background:var(--paper-2);}
+.compare-card h4{font-family:var(--pixel);font-size:11px;margin-bottom:10px;letter-spacing:0.5px;}
+.compare-card.bad h4{color:var(--rose-ink);}
+.compare-card.good h4{color:var(--leaf-ink);}
+.compare-card ul{padding-left:20px;margin:6px 0;}
+.compare-card li{font-size:13.5px;color:var(--ink-2);margin-bottom:6px;}
+.compare-card p{font-size:13.5px;color:var(--ink-2);margin-bottom:6px;}
+@media(max-width:640px){.compare{grid-template-columns:1fr;}}
+
+/* DEMO */
+.demo-wrap{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);margin-bottom:22px;}
+.demo-head{background:var(--paper-2);border-bottom:2px solid var(--ink);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.demo-head .badge{font-family:var(--pixel);font-size:9px;background:var(--accent);border:2px solid var(--ink);padding:4px 8px;}
+.demo-head h4{font-family:var(--pixel);font-size:12px;color:var(--ink);}
+.demo-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.demo-panel{padding:20px 22px;}
+.demo-panel.input{border-right:2px solid var(--ink);background:var(--paper);}
+.demo-panel h5{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-3);margin-bottom:10px;}
+.demo-input{width:100%;padding:10px 14px;font-family:var(--mono);font-size:15px;background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:var(--shadow-sm);margin-bottom:12px;}
+.demo-input:focus{outline:none;border-color:var(--accent);}
+.demo-btn{font-family:var(--pixel);font-size:9px;padding:10px 14px;background:var(--accent);color:var(--ink);border:2px solid var(--ink);box-shadow:var(--shadow-sm);margin-right:6px;letter-spacing:0.5px;transition:transform .1s;}
+.demo-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
+.demo-btn.alt{background:#fff;color:var(--ink);}
+.demo-output{background:var(--ink);color:#e6e0cf;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;min-height:140px;border:2px solid var(--ink);max-height:320px;overflow-y:auto;}
+
+/* EXERCISES */
+.ex-card{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;position:relative;}
+.ex-bg-num{position:absolute;top:10px;right:18px;font-family:var(--pixel);font-size:36px;color:var(--paper-2);opacity:0.9;pointer-events:none;}
+.ex-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.diff-badge{font-family:var(--pixel);font-size:9px;background:var(--leaf);color:#fff;border:2px solid var(--ink);padding:4px 8px;letter-spacing:0.5px;}
+.ex-card.med .diff-badge{background:var(--mustard);color:var(--ink);}
+.ex-card.hard .diff-badge{background:var(--rose);color:#fff;}
+.ex-card.bonus .diff-badge{background:var(--teal);color:#fff;}
+.ex-title{font-family:var(--sans);font-size:17px;font-weight:700;}
+.ex-desc{font-size:14.5px;color:var(--ink-2);margin-bottom:12px;}
+.ex-task{background:var(--paper);border:2px solid var(--line-2);padding:12px 16px;margin-bottom:12px;}
+.ex-task ul{padding-left:20px;}
+.ex-task li{font-size:13.5px;color:var(--ink-2);font-family:var(--mono);margin-bottom:4px;}
+.ex-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+.hint-btn, .solution-btn{font-family:var(--pixel);font-size:9px;padding:8px 12px;border:2px solid var(--ink);background:#fff;box-shadow:var(--shadow-sm);letter-spacing:0.5px;transition:transform .1s;}
+.hint-btn{background:var(--mustard);}
+.solution-btn{background:var(--leaf);color:#fff;}
+.hint-btn:hover, .solution-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
+.hint-content, .solution-content{display:none;margin-top:12px;padding:14px 16px;background:var(--ink);color:#e6e0cf;font-family:var(--mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;border:2px solid var(--ink);}
+.hint-content.show, .solution-content.show{display:block;}
+
+/* QUIZ */
+.quiz-card{background:#fff;border:2.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px;}
+.quiz-q{font-family:var(--sans);font-weight:700;font-size:16px;margin-bottom:14px;}
+.quiz-q code{font-size:13px;display:inline-block;margin-top:6px;}
+.quiz-options{display:grid;gap:8px;}
+.quiz-opt{text-align:left;padding:12px 16px;font-family:var(--mono);font-size:13px;background:var(--paper);border:2px solid var(--line-2);transition:all .15s;}
+.quiz-opt:hover:not(:disabled){background:#fff;border-color:var(--ink);transform:translateX(3px);}
+.quiz-opt:disabled{cursor:default;opacity:0.7;}
+.quiz-opt.correct{background:#d6e7c2;border-color:var(--leaf-ink);color:var(--leaf-ink);font-weight:700;opacity:1;}
+.quiz-opt.wrong{background:#f5d9de;border-color:var(--rose-ink);color:var(--rose-ink);font-weight:700;opacity:1;}
+.quiz-feedback{display:none;margin-top:12px;padding:10px 14px;font-family:var(--mono);font-size:12.5px;border:2px solid var(--ink);}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.ok{background:#e8f0d8;color:var(--leaf-ink);}
+.quiz-feedback.err{background:#f5d9de;color:var(--rose-ink);}
+
+#quizScore{display:none;background:var(--ink);color:var(--paper);border:2.5px solid var(--ink);padding:28px 24px;text-align:center;margin-top:20px;box-shadow:var(--shadow);}
+#quizScore h3{font-family:var(--pixel);font-size:18px;margin-bottom:10px;}
+#quizScore p{font-family:var(--mono);font-size:13px;color:var(--paper-3);}
+
+/* NAV */
+.lesson-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;padding:28px 0;border-top:2px solid var(--ink);margin-top:48px;align-items:center;}
+.nav-link{font-family:var(--mono);font-size:13px;padding:14px 18px;background:#fff;border:2px solid var(--ink);box-shadow:var(--shadow-sm);transition:all .15s;}
+.nav-link:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow);}
+.nav-link.next{background:var(--accent);color:var(--ink);text-align:right;}
+.nav-link.prev{text-align:left;}
+.nav-link .dir{font-family:var(--pixel);font-size:8px;opacity:0.7;display:block;margin-bottom:4px;letter-spacing:1px;}
+.home-btn{width:50px;height:50px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--pixel);font-size:16px;box-shadow:var(--shadow-sm);}
+.home-btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow);}
+
+.footer{border-top:2px solid var(--ink);background:var(--paper-2);padding:22px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+.footer b{color:var(--accent-ink);}
+
+@media(max-width:720px){
+  .demo-cols{grid-template-columns:1fr;}
+  .demo-panel.input{border-right:none;border-bottom:2px solid var(--ink);}
+  .lesson-nav{grid-template-columns:1fr;}
+  .hero h1{font-size:28px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">C#</div>
+    <span>C# АКАДЕМИЯ</span>
+  </div>
+  <div class="breadcrumb">
+    <a href="../index.html">⌂ начало</a>
+    <span class="sep">/</span>
+    <span>урок 03</span>
+    <span class="sep">/</span>
+    <span style="color:var(--accent-ink);">while цикъл</span>
+  </div>
+  <div class="hud">
+    <span class="chip"><b>LV</b>03</span>
+    <span class="chip"><b>XP</b>+140</span>
+    <span class="chip">⏱ 30 мин</span>
+  </div>
+</div>
+
+<section class="hero">
+  <span class="lv-tag">НИВО 03 · ЦИКЛИ</span>
+  <h1><span class="kw">while</span> <span class="br">(</span> true <span class="br">)</span></h1>
+  <div class="hero-stars"><span>★</span><span>★</span><span>★</span></div>
+  <p>Повтори блок код <strong>докато условието е вярно</strong> — без да знаеш колко пъти. Идеално за очакване на потребителски вход или обработка докато има данни.</p>
+  <nav class="toc">
+    <a href="#s01">01 · Какво е</a>
+    <a href="#s02">02 · Синтаксис</a>
+    <a href="#s03">03 · while vs do..while</a>
+    <a href="#s04">04 · Примери</a>
+    <a href="#s05">05 · break / continue</a>
+    <a href="#s06">06 · while vs for</a>
+    <a href="#s07">07 · Демо</a>
+    <a href="#s08">08 · Упражнения</a>
+    <a href="#s09">09 · Тест</a>
+  </nav>
+</section>
+
+<main class="page">
+
+<!-- 01 -->
+<section id="s01">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>КАКВО Е WHILE?</h2>
+  </div>
+
+  <div class="concept">
+    <h3>◉ ИДЕЯ</h3>
+    <p><strong>while цикъл</strong> повтаря един блок код <strong>докато условието е вярно</strong>. Щом стане невярно (false), цикълът спира. Като: "Докато съм гладен → яж. Престана ли → спри."</p>
+  </div>
+
+  <div class="concept leaf">
+    <h3>◈ АНАЛОГИИ ОТ ЖИВОТА</h3>
+    <ul>
+      <li><strong>Докато съм буден</strong>, ще работя. Щом заспя — спирам.</li>
+      <li><strong>Докато числото е по-голямо от 0</strong>, ще го деля на 2.</li>
+      <li><strong>Докато има хора на опашка</strong>, продължи обслужването.</li>
+      <li><strong>Докато батерията е заредена</strong>, телефонът работи.</li>
+    </ul>
+  </div>
+
+  <div class="concept rose">
+    <h3>▲ ВАЖНО</h3>
+    <p>Условието се проверява <strong>ПРЕДИ</strong> всяка итерация. Ако е невярно още от началото, цикълът <strong>изобщо не се изпълнява</strong> — нито веднъж.</p>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="s02">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>СИНТАКСИС</h2>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">базова структура</span></div>
+<pre class="code-body"><span class="kw">while</span> (условие)
+{
+    <span class="cm">// тяло — повтаря се, докато условието е true</span>
+}</pre>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-title">поток на while цикъл</div>
+    <div class="flow-vertical">
+      <div class="flow-box cond">Провери условие</div>
+      <div class="flow-label">вярно ли е?</div>
+      <div class="flow-arrow loop">▼ TRUE</div>
+      <div class="flow-box body">Изпълни тяло</div>
+      <div class="flow-label">един кръг</div>
+      <div class="flow-arrow loop">↻ обратно към проверката</div>
+      <div class="flow-box stop">FALSE → ИЗХОД</div>
+      <div class="flow-label">цикълът спира</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">практичен пример</span></div>
+<pre class="code-body"><span class="type">int</span> i = <span class="num">1</span>;
+<span class="kw">while</span> (i &lt;= <span class="num">5</span>)
+{
+    Console.WriteLine(<span class="str">"Число: "</span> + i);
+    i++;  <span class="cm">// ВАЖНО: увеличаваме i</span>
+}
+<span class="cm">// цикълът спира, когато i = 6 (вече не е <= 5)</span></pre>
+  </div>
+
+  <div class="concept rose">
+    <h3>◆ КРИТИЧНО!</h3>
+    <p>Трябва да <strong>променяш променливата в условието</strong>! Ако не, цикълът никога няма да спре и програмата "зависва". Това се нарича <strong>безкраен цикъл</strong>.</p>
+  </div>
+</section>
+
+<!-- 03 while vs do..while -->
+<section id="s03">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>WHILE СРЕЩУ DO...WHILE</h2>
+  </div>
+
+  <div class="compare">
+    <div class="compare-card">
+      <h4 style="color:var(--accent-ink);">while</h4>
+      <ul>
+        <li>Проверка <strong>ПРЕДИ</strong> изпълнение</li>
+        <li>Ако условието е false → <strong>не се изпълнява нито веднъж</strong></li>
+        <li>Най-често използваната форма</li>
+        <li>Добро за "докато x &lt; 10"</li>
+      </ul>
+    </div>
+    <div class="compare-card alt">
+      <h4 style="color:var(--teal-ink);">do...while</h4>
+      <ul>
+        <li>Проверка <strong>СЛЕД</strong> изпълнение</li>
+        <li>Винаги се изпълнява <strong>поне веднъж</strong></li>
+        <li>По-рядко срещано</li>
+        <li>Добро за менюта и повторяем вход</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">синтаксис един до друг</span></div>
+<pre class="code-body"><span class="cm">// ─── while: проверка ПРЕДИ ───</span>
+<span class="kw">while</span> (условие) {
+    <span class="cm">// тяло</span>
+}
+
+<span class="cm">// ─── do...while: проверка СЛЕД ───</span>
+<span class="kw">do</span> {
+    <span class="cm">// винаги поне веднъж</span>
+} <span class="kw">while</span> (условие);</pre>
+  </div>
+
+  <div class="concept teal">
+    <h3>◎ КОНКРЕТНА РАЗЛИКА</h3>
+    <p><strong>Сценарий:</strong> питаме потребителя за число от 1 до 10.</p>
+    <p><strong>while:</strong> ако вече имаме валидно число → не питаме.<br>
+    <strong>do...while:</strong> винаги питаме поне веднъж, после проверяваме.</p>
+  </div>
+</section>
+
+<!-- 04 ПРИМЕРИ -->
+<section id="s04">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>ПРИМЕРИ ОТ РЕАЛНИЯ СВЯТ</h2>
+  </div>
+
+  <div class="concept">
+    <h3>① ИГРА — ОТГАТНИ ЧИСЛОТО</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span> secret = <span class="num">7</span>;
+<span class="type">int</span> guess = <span class="num">0</span>;
+
+<span class="kw">while</span> (guess != secret)
+{
+    Console.Write(<span class="str">"Отгатни число: "</span>);
+    guess = <span class="type">int</span>.Parse(Console.ReadLine());
+
+    <span class="kw">if</span> (guess &lt; secret) Console.WriteLine(<span class="str">"Твърде малко!"</span>);
+    <span class="kw">else if</span> (guess &gt; secret) Console.WriteLine(<span class="str">"Твърде голямо!"</span>);
+}
+
+Console.WriteLine(<span class="str">"Браво! Числото е "</span> + secret);</pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>② СУМА ДОКАТО 0</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span> sum = <span class="num">0</span>;
+<span class="type">int</span> number = <span class="num">-1</span>;
+
+Console.WriteLine(<span class="str">"Въведи числа (0 = край):"</span>);
+
+<span class="kw">while</span> (number != <span class="num">0</span>)
+{
+    Console.Write(<span class="str">"Число: "</span>);
+    number = <span class="type">int</span>.Parse(Console.ReadLine());
+    sum += number;
+}
+
+Console.WriteLine(<span class="str">"Сума: "</span> + sum);</pre>
+  </div>
+
+  <div class="concept teal">
+    <h3>③ БРОЕНЕ НА ЦИФРИ В ЧИСЛО</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span> num = <span class="num">12345</span>;
+<span class="type">int</span> count = <span class="num">0</span>;
+
+<span class="kw">while</span> (num &gt; <span class="num">0</span>)
+{
+    count++;
+    num /= <span class="num">10</span>;  <span class="cm">// премахваме последната цифра</span>
+}
+
+Console.WriteLine(<span class="str">"Брой цифри: "</span> + count);  <span class="cm">// 5</span></pre>
+  </div>
+
+  <div class="concept rose">
+    <h3>④ ВАЛИДИРАНЕ НА ВЪВЕЖДАНЕ</h3>
+  </div>
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span></div>
+<pre class="code-body"><span class="type">int</span> age = <span class="num">0</span>;
+
+<span class="kw">while</span> (age &lt; <span class="num">1</span> || age &gt; <span class="num">120</span>)
+{
+    Console.Write(<span class="str">"Въведи възраст (1-120): "</span>);
+    age = <span class="type">int</span>.Parse(Console.ReadLine());
+}
+
+Console.WriteLine(<span class="str">"Благодаря! Възраст: "</span> + age);</pre>
+  </div>
+</section>
+
+<!-- 05 BREAK / CONTINUE -->
+<section id="s05">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>БЕЗКРАЕН ЦИКЪЛ · break / continue</h2>
+  </div>
+
+  <div class="concept rose">
+    <h3>✕ БЕЗКРАЕН ЦИКЪЛ — НЕ ПУСКАЙ!</h3>
+    <p>Безкраен е цикълът, чието условие винаги е true. Програмата "зависва" и нищо не продължава.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">пример за безкраен цикъл</span></div>
+<pre class="code-body"><span class="cm">// ✕ НЕ ЗАПУСКАЙ — няма изход</span>
+<span class="kw">while</span> (<span class="kw">true</span>)
+{
+    Console.WriteLine(<span class="str">"Хело"</span>);
+    <span class="cm">// няма break, няма промяна → завинаги</span>
+}</pre>
+  </div>
+
+  <div class="concept leaf">
+    <h3>▣ break — ВЕДНАГА ИЗХОД</h3>
+    <p><code>break</code> прекратява цикъла незабавно, независимо от условието.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">break пример</span></div>
+<pre class="code-body"><span class="kw">while</span> (<span class="kw">true</span>)
+{
+    Console.Write(<span class="str">"Въведи 'изход' за край: "</span>);
+    <span class="type">string</span> input = Console.ReadLine();
+
+    <span class="kw">if</span> (input == <span class="str">"изход"</span>)
+    {
+        <span class="kw">break</span>;  <span class="cm">// излизаме от цикъла</span>
+    }
+
+    Console.WriteLine(<span class="str">"Продължавай..."</span>);
+}</pre>
+  </div>
+
+  <div class="concept">
+    <h3>▸ continue — ПРЕСКОЧИ НА СЛЕДВАЩА ИТЕРАЦИЯ</h3>
+    <p><code>continue</code> пропуска остатъка от тялото и минава на следващия кръг.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">continue пример</span></div>
+<pre class="code-body"><span class="type">int</span> i = <span class="num">0</span>;
+<span class="kw">while</span> (i &lt; <span class="num">5</span>)
+{
+    i++;
+    <span class="kw">if</span> (i == <span class="num">3</span>) <span class="kw">continue</span>;  <span class="cm">// прескачаме 3</span>
+    Console.WriteLine(<span class="str">"Число: "</span> + i);
+}
+<span class="cm">// отпечатва: 1, 2, 4, 5 (без 3)</span></pre>
+  </div>
+</section>
+
+<!-- 06 while vs for -->
+<section id="s06">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>WHILE ИЛИ FOR — КОГА КОЕ?</h2>
+  </div>
+
+  <div class="compare">
+    <div class="compare-card">
+      <h4 style="color:var(--accent-ink);">while — когато</h4>
+      <ul>
+        <li>Не знаеш колко пъти ще се завърти</li>
+        <li>Условието е сложно или зависи от вход</li>
+        <li>Четеш докато има данни</li>
+        <li>Обновяването не е редовно</li>
+      </ul>
+    </div>
+    <div class="compare-card alt">
+      <h4 style="color:var(--teal-ink);">for — когато</h4>
+      <ul>
+        <li>Знаеш точно колко пъти ще се завърти</li>
+        <li>Условието е просто (i &lt; 10)</li>
+        <li>Обхождаш известен диапазон</li>
+        <li>Стъпката е редовна (i++)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dots"><span></span><span></span><span></span></div><span class="code-lang">C#</span><span class="code-title">сравнение в действие</span></div>
+<pre class="code-body"><span class="cm">// FOR — знам колко пъти (10)</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">10</span>; i++)
+{
+    Console.WriteLine(i);
+}
+
+<span class="cm">// WHILE — не знам колко (зависи от потребителя)</span>
+<span class="type">string</span> answer = <span class="str">""</span>;
+<span class="kw">while</span> (answer != <span class="str">"край"</span>)
+{
+    Console.Write(<span class="str">"Команда (край = стоп): "</span>);
+    answer = Console.ReadLine();
+}</pre>
+  </div>
+</section>
+
+<!-- 07 DEMO -->
+<section id="s07">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>ИНТЕРАКТИВНА ДЕМОНСТРАЦИЯ</h2>
+  </div>
+
+  <div class="demo-wrap">
+    <div class="demo-head">
+      <span class="badge">DEMO</span>
+      <h4>ДЕЛЕНЕ НА 2 ДОКАТО > 0</h4>
+    </div>
+    <div class="demo-cols">
+      <div class="demo-panel input">
+        <h5>ВЪВЕДИ ЧИСЛО</h5>
+        <input class="demo-input" id="demoInput" type="number" placeholder="напр. 16, 100..." />
+        <div>
+          <button class="demo-btn" onclick="runDemoLoop()">▶ СТАРТ</button>
+          <button class="demo-btn alt" onclick="resetDemo()">НУЛИРАЙ</button>
+        </div>
+        <p style="font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:14px;line-height:1.7;">
+          while (num &gt; 0) {<br>
+          &nbsp;&nbsp;num = num / 2;<br>
+          }
+        </p>
+      </div>
+      <div class="demo-panel">
+        <h5>ИТЕРАЦИИ</h5>
+        <div class="demo-output" id="demoOutput">// итерациите ще се появят тук</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 EXERCISES -->
+<section id="s08">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>УПРАЖНЕНИЯ</h2>
+  </div>
+
+  <div class="ex-card">
+    <div class="ex-bg-num">1</div>
+    <div class="ex-header"><span class="diff-badge">ЛЕСНО</span><span class="ex-title">Брой до N</span></div>
+    <p class="ex-desc">Чети число N и отпечатай числата 1, 2, ..., N с while цикъл.</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N от потребителя</li>
+      <li>i = 1, while (i &lt;= N)</li>
+      <li>WriteLine(i), i++</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int N = int.Parse(Console.ReadLine());
+int i = 1;
+while (i &lt;= N)
+{
+    Console.WriteLine(i);
+    i++;
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Въведи N: ");
+        int N = int.Parse(Console.ReadLine());
+
+        int i = 1;
+        while (i &lt;= N)
+        {
+            Console.WriteLine(i);
+            i++;
+        }
+    }
+}</div>
+  </div>
+
+  <div class="ex-card">
+    <div class="ex-bg-num">2</div>
+    <div class="ex-header"><span class="diff-badge">ЛЕСНО</span><span class="ex-title">Четни от 2 до 20</span></div>
+    <p class="ex-desc">Отпечатай всички четни числа от 2 до 20 с while цикъл.</p>
+    <div class="ex-task"><ul>
+      <li>i = 2, while (i &lt;= 20)</li>
+      <li>WriteLine(i)</li>
+      <li>i += 2 (не i++)</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int i = 2;
+while (i &lt;= 20)
+{
+    Console.WriteLine(i);
+    i += 2;
+}</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int i = 2;
+        while (i &lt;= 20)
+        {
+            Console.WriteLine(i);
+            i += 2;
+        }
+    }
+}</div>
+  </div>
+
+  <div class="ex-card med">
+    <div class="ex-bg-num">3</div>
+    <div class="ex-header"><span class="diff-badge">СРЕДНО</span><span class="ex-title">Сума на първите N числа</span></div>
+    <p class="ex-desc">Прочети N и изчисли сумата 1 + 2 + ... + N с while цикъл.</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N</li>
+      <li>sum = 0, i = 1</li>
+      <li>while (i &lt;= N) { sum += i; i++; }</li>
+      <li>Отпечатай сумата</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int N = int.Parse(Console.ReadLine());
+int sum = 0, i = 1;
+while (i &lt;= N) { sum += i; i++; }
+Console.WriteLine("Сума: " + sum);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Въведи N: ");
+        int N = int.Parse(Console.ReadLine());
+
+        int sum = 0;
+        int i = 1;
+        while (i &lt;= N)
+        {
+            sum += i;
+            i++;
+        }
+
+        Console.WriteLine("Сума: " + sum);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card med">
+    <div class="ex-bg-num">4</div>
+    <div class="ex-header"><span class="diff-badge">СРЕДНО</span><span class="ex-title">Положителни числа</span></div>
+    <p class="ex-desc">Чети числа, докато потребителят не въведе отрицателно. Преброй колко са положителните.</p>
+    <div class="ex-task"><ul>
+      <li>number = 0, count = 0</li>
+      <li>while (number &gt;= 0) — чети ново</li>
+      <li>Ако е положително → count++</li>
+      <li>Отпечатай count</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int number = 0;
+int count = 0;
+while (number &gt;= 0)
+{
+    number = int.Parse(Console.ReadLine());
+    if (number &gt;= 0) count++;
+}
+Console.WriteLine("Брой: " + count);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int number = 0;
+        int count = 0;
+
+        Console.WriteLine("Числа (отрицателно = край):");
+
+        while (number &gt;= 0)
+        {
+            Console.Write("Число: ");
+            number = int.Parse(Console.ReadLine());
+            if (number &gt;= 0) count++;
+        }
+
+        Console.WriteLine("Брой положителни: " + count);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card hard">
+    <div class="ex-bg-num">5</div>
+    <div class="ex-header"><span class="diff-badge">ТРУДНО</span><span class="ex-title">Обърнато число</span></div>
+    <p class="ex-desc">Чети число и го обърни (123 → 321) с while цикъл.</p>
+    <div class="ex-task"><ul>
+      <li>Чети num, reversed = 0</li>
+      <li>while (num &gt; 0):</li>
+      <li>&nbsp;&nbsp;digit = num % 10</li>
+      <li>&nbsp;&nbsp;reversed = reversed * 10 + digit</li>
+      <li>&nbsp;&nbsp;num /= 10</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">За 123:
+- last digit = 123 % 10 = 3
+- премахни: 123 / 10 = 12
+- reversed = reversed * 10 + digit</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Число: ");
+        int num = int.Parse(Console.ReadLine());
+        int original = num;
+        int reversed = 0;
+
+        while (num &gt; 0)
+        {
+            int digit = num % 10;
+            reversed = reversed * 10 + digit;
+            num /= 10;
+        }
+
+        Console.WriteLine(original + " → " + reversed);
+    }
+}</div>
+  </div>
+
+  <div class="ex-card bonus">
+    <div class="ex-bg-num">★</div>
+    <div class="ex-header"><span class="diff-badge">БОНУС</span><span class="ex-title">Факториел с while</span></div>
+    <p class="ex-desc">Изчисли N! (напр. 5! = 120) с while цикъл.</p>
+    <div class="ex-task"><ul>
+      <li>Прочети N</li>
+      <li>factorial = 1, i = N</li>
+      <li>while (i &gt; 0) { factorial *= i; i--; }</li>
+    </ul></div>
+    <div class="ex-buttons">
+      <button class="hint-btn" onclick="toggleHint(this)">ПОДСКАЗКА</button>
+      <button class="solution-btn" onclick="toggleSolution(this)">РЕШЕНИЕ</button>
+    </div>
+    <div class="hint-content">int N = int.Parse(Console.ReadLine());
+int factorial = 1;
+int i = N;
+while (i &gt; 0) { factorial *= i; i--; }
+Console.WriteLine(N + "! = " + factorial);</div>
+    <div class="solution-content">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("N: ");
+        int N = int.Parse(Console.ReadLine());
+
+        int factorial = 1;
+        int i = N;
+        while (i &gt; 0)
+        {
+            factorial *= i;
+            i--;
+        }
+
+        Console.WriteLine(N + "! = " + factorial);
+    }
+}</div>
+  </div>
+</section>
+
+<!-- 09 QUIZ -->
+<section id="s09">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>ТЕСТ ЗА РАЗБИРАНЕ</h2>
+  </div>
+  <div id="quizContainer"></div>
+  <div id="quizScore"></div>
+</section>
+
+<nav class="lesson-nav">
+  <a href="for-loop.html" class="nav-link prev">
+    <span class="dir">◀ НАЗАД</span>
+    LV 02 · for цикъл
+  </a>
+  <a href="../index.html" class="home-btn">⌂</a>
+  <a href="streamreader-intro.html" class="nav-link next">
+    <span class="dir">СЛЕДВАЩ УРОК ▶</span>
+    LV 04 · StreamReader
+  </a>
+</nav>
+
+</main>
+
+<footer class="footer">
+  <b>C# АКАДЕМИЯ</b> · 8 КЛАС ИНФОРМАТИКА · УРОК 03 — while цикъл
+</footer>
+
+<script>
+function runDemoLoop(){
+  const input = document.getElementById('demoInput');
+  const output = document.getElementById('demoOutput');
+  const num = parseInt(input.value);
+  if(isNaN(num) || num < 0){
+    output.textContent = '✕ Въведи положително число!';
+    return;
+  }
+  let html = '';
+  let current = num;
+  let i = 0;
+  const limit = 200;
+  while(current > 0 && i < limit){
+    i++;
+    const next = Math.floor(current / 2);
+    html += `итер. ${i.toString().padStart(2,' ')} · num = ${current}  →  ${current} / 2 = ${next}\n`;
+    current = next;
+  }
+  html += `\n✓ цикълът спира, защото num = 0 (условието num > 0 вече е false)`;
+  output.textContent = html;
+}
+function resetDemo(){
+  document.getElementById('demoInput').value = '';
+  document.getElementById('demoOutput').textContent = '// итерациите ще се появят тук';
+}
+
+function toggleHint(btn){
+  const c = btn.closest('.ex-card').querySelector('.hint-content');
+  c.classList.toggle('show');
+  btn.textContent = c.classList.contains('show') ? 'СКРИЙ' : 'ПОДСКАЗКА';
+}
+function toggleSolution(btn){
+  const c = btn.closest('.ex-card').querySelector('.solution-content');
+  c.classList.toggle('show');
+  btn.textContent = c.classList.contains('show') ? 'СКРИЙ' : 'РЕШЕНИЕ';
+}
+
+const quizData = [
+  { q:"Кога се проверява условието във while цикъл?",
+    opts:["Преди всяка итерация","След всяка итерация","Само веднъж","Никога"], ans:0 },
+  { q:"Какво се случва, ако условието е false от началото?",
+    opts:["Изпълнява се веднъж","Изобщо не се изпълнява","Програмата крашва","Безкраен цикъл"], ans:1 },
+  { q:"Каква е разликата между while и do...while?",
+    opts:["Няма разлика","do...while се изпълнява поне веднъж","while е по-бърз","do...while не работи"], ans:1 },
+  { q:"Какво прави break вътре в цикъл?",
+    opts:["Прескача на следваща итерация","Веднага излиза от цикъла","Спира цялата програма","Нищо"], ans:1 },
+  { q:"Какво прави continue?",
+    opts:["Излиза от цикъла","Прескача остатъка и минава на следващия кръг","Спира програмата","Повтаря итерацията"], ans:1 },
+  { q:"Кой цикъл е подходящ, когато не знаеш колко пъти ще се повтори?",
+    opts:["for","do...while","while","Няма значение"], ans:2 }
+];
+
+let answered = new Set();
+
+function initQuiz(){
+  const c = document.getElementById('quizContainer');
+  quizData.forEach((q,idx)=>{
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = 'q' + idx;
+    let opts = '';
+    q.opts.forEach((opt,oi)=>{
+      opts += `<button class="quiz-opt" onclick="checkAnswer(${idx},${oi})" id="q${idx}o${oi}">${opt}</button>`;
+    });
+    card.innerHTML = `
+      <div class="quiz-q">${idx+1}. ${q.q}</div>
+      <div class="quiz-options">${opts}</div>
+      <div class="quiz-feedback" id="fb${idx}"></div>`;
+    c.appendChild(card);
+  });
+}
+
+function checkAnswer(qIdx, optIdx){
+  if(answered.has(qIdx)) return;
+  const correct = quizData[qIdx].ans;
+  const fb = document.getElementById('fb'+qIdx);
+  const opts = document.querySelectorAll('#q'+qIdx+' .quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  if(optIdx === correct){
+    opts[optIdx].classList.add('correct');
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✓ Правилно!';
+  } else {
+    opts[optIdx].classList.add('wrong');
+    opts[correct].classList.add('correct');
+    fb.className = 'quiz-feedback show err';
+    fb.textContent = '✕ Грешно. Правилният отговор: ' + quizData[qIdx].opts[correct];
+  }
+  answered.add(qIdx);
+  if(answered.size === quizData.length) showScore();
+}
+
+function showScore(){
+  let score = 0;
+  quizData.forEach((q,idx)=>{
+    const sel = document.querySelector('#q'+idx+' .quiz-opt.correct');
+    if(sel && !document.querySelector('#q'+idx+' .quiz-opt.wrong')) score++;
+  });
+  const box = document.getElementById('quizScore');
+  box.style.display = 'block';
+  const pct = Math.round(score/quizData.length*100);
+  let msg;
+  if(pct===100) msg = '★★★ ПЕРФЕКТНО! Владееш while цикъла.';
+  else if(pct>=66) msg = '★★ МНОГО ДОБРЕ.';
+  else if(pct>=50) msg = '★ Още малко практика.';
+  else msg = '↻ Прегледай материала.';
+  box.innerHTML = `<h3>${score} / ${quizData.length}  •  ${pct}%</h3><p>${msg}</p>`;
+}
+
+initQuiz();
+
+document.querySelectorAll('.toc a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const id = a.getAttribute('href');
+    if(id && id.startsWith('#')){
+      const el = document.querySelector(id);
+      if(el){ e.preventDefault(); window.scrollTo({top:el.offsetTop-80, behavior:'smooth'}); }
+    }
+  });
+});
+</script>
+
+</body>
+</html>
