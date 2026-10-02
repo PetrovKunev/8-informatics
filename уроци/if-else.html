@@ -2,6 +2,7 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
+<script>try{if(localStorage.getItem('csacad_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Урок 01 · if / else — C# Академия</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -378,6 +379,35 @@ section{margin-bottom:56px;scroll-margin-top:90px;}
   .lesson-nav{grid-template-columns:1fr;}
   .hero h1{font-size:30px;}
 }
+
+/* ===== СВЕТЪЛ РЕЖИМ (за по-лесно четене) ===== */
+html[data-theme="light"]{
+  --paper:#ffffff; --paper-2:#f7f6f2; --paper-3:#ece9e0;
+  --ink-2:#2b2822; --ink-3:#4a463d; --muted:#625d50;
+}
+html[data-theme="light"] body{background-image:none;}
+html[data-theme="light"] :is(.code-block,.typing-panel,.demo-output,.demo-output-code,.demo-output-result,.hint-content,.solution-content,.ex-reveal,.compare-card pre,.tri-card code,.using-box pre,pre[style*="var(--ink)"]){
+  background:#f7f6f2 !important; color:var(--ink) !important;
+}
+html[data-theme="light"] :is(.code-body,.code-block pre,.typing-panel pre){color:var(--ink);}
+html[data-theme="light"] .code-header{background:#ece9e0;color:var(--ink);}
+html[data-theme="light"] .dots span{border-color:var(--ink);}
+html[data-theme="light"] :is(.code-name,.code-title,.code-lang,.code-tag){color:var(--ink-3);border-color:var(--ink-3);}
+html[data-theme="light"] :is(.code-body,pre,code,.typing-panel) :is(.kw,.k){color:#b3471d;}
+html[data-theme="light"] :is(.code-body,pre,code) :is(.type,.tp,.op){color:#1d5c8a;}
+html[data-theme="light"] :is(.code-body,pre,code,.typing-panel) :is(.str,.s){color:#3b7520;}
+html[data-theme="light"] :is(.code-body,pre,code,.typing-panel) :is(.cm,.c){color:#6f6a5c;}
+html[data-theme="light"] :is(.code-body,pre,code) .num{color:#8f5f00;}
+html[data-theme="light"] :is(.code-body,pre,code) .fn{color:#2b6b45;}
+
+.theme-toggle{
+  position:fixed;right:18px;bottom:18px;z-index:200;
+  font-family:var(--pixel);font-size:9px;letter-spacing:0.5px;
+  padding:10px 12px;background:#fff;color:var(--ink);
+  border:2px solid var(--ink);box-shadow:var(--shadow-sm);
+  cursor:pointer;transition:transform .1s;
+}
+.theme-toggle:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--ink);}
 </style>
 </head>
 <body>
@@ -1181,5 +1211,20 @@ document.querySelectorAll('.toc a').forEach(a=>{
 });
 </script>
 
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Превключи светъл режим за по-лесно четене"></button>
+<script>
+function updateThemeBtn(){
+  const light = document.documentElement.getAttribute('data-theme')==='light';
+  document.getElementById('themeToggle').textContent = light ? '◐ ХАРТИЯ' : '☀ СВЕТЪЛ РЕЖИМ';
+}
+function toggleTheme(){
+  const r = document.documentElement;
+  const light = r.getAttribute('data-theme')!=='light';
+  if(light) r.setAttribute('data-theme','light'); else r.removeAttribute('data-theme');
+  try{ localStorage.setItem('csacad_theme', light ? 'light' : 'paper'); }catch(e){}
+  updateThemeBtn();
+}
+updateThemeBtn();
+</script>
 </body>
 </html>

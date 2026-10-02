@@ -28,6 +28,7 @@ The redesigned site uses a warm paper + retro arcade aesthetic. Do **not** mix i
   - `--pixel` = `Press Start 2P` (hero headings, CTAs, "level" labels)
   - `--crt` = `VT323` (terminal/CRT-style flourishes)
 - All four CSS variable blocks are duplicated into each lesson file — keep them consistent across files when tweaking the palette.
+- **Light reading mode**: every page ends its `<style>` with a `/* ===== СВЕТЪЛ РЕЖИМ ... */` block (`html[data-theme="light"]` overrides: white paper, no dot grid, light code panels with darker syntax colors) and has a fixed `.theme-toggle` button + `toggleTheme()` before `</body>`. A tiny script right after `<meta charset>` applies the saved choice (`localStorage['csacad_theme']`) before paint. The block is duplicated into each file — keep it identical, and when adding a new dark code panel class, add it to the selector list there.
 
 ## Lesson page conventions
 
